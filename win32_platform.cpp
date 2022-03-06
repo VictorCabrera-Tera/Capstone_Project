@@ -20,6 +20,8 @@ global_variable Render_State render_state;
 
 
 
+
+
 #include "renderer.cpp"
 #include "game.cpp"
 
@@ -153,6 +155,11 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	performance_frequency = (float)perf.QuadPart;
   }
 
+  //PlaySound(L"C:\\Users\\steve\\Desktop\\My_First_Cpp_Game\\My_First_Cpp_Game\\Satorl_Marsh2.wav", 0, SND_FILENAME | SND_ASYNC | SND_NODEFAULT);
+  //C:\Users\steve\Desktop\My_First_Cpp_Game\My_First_Cpp_Game\\Satorl_Marsh_Night.wav
+  
+
+  Coin_State coins = {};
 
 
   //Game Loop to keep window open
@@ -176,12 +183,13 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		case(WM_KEYUP):
 		case(WM_KEYDOWN): {
 		  u32 vk_code = (u32)message.wParam;
+		  //bit 31 hold the transition state of the key
 		  bool is_down = ((message.lParam & (1 << 31)) == 0);
 
 #define process_button(b,vk)\
 case (vk): {\
+input.buttons[b].changed = is_down != input.buttons[b].is_down;\
 input.buttons[b].is_down = is_down;\
-input.buttons[b].changed = true;\
 } break;
 
 		   
@@ -191,6 +199,7 @@ input.buttons[b].changed = true;\
 			process_button(BUTTON_LEFT, VK_LEFT);
 			process_button(BUTTON_RIGHT, VK_RIGHT);
 			process_button(BUTTON_SPACEBAR, VK_SPACE);
+			process_button(BUTTON_ENTER, VK_RETURN);
 		  }
 		} break;
 		default:
@@ -205,7 +214,7 @@ input.buttons[b].changed = true;\
 	//draw_rect(0,0,20,20,0x00ff22);//x,y,halfx,halfy and color
 	
 
-	simulate_game(&input, delta_time);
+	simulate_game(&input, delta_time, &coins);
 	//draw_rect(0, 0, 1, 1, 0x00ff22);
 
 	
