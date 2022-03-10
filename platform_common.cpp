@@ -11,6 +11,7 @@ enum {
 
   BUTTON_SPACEBAR,
   BUTTON_ENTER,
+  BUTTON_ESCAPE,
   BUTTON_COUNT, //Should be the last item, used for keeping track for array of buttons
 };
 

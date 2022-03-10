@@ -40,6 +40,7 @@ restart_pos() {
 
 
 
+
 internal void
 modify_color_up(u32 &color, u32 increment, u32 end, COLORDIRECTION &direction) {
   if (direction == INCREMENT)
@@ -95,7 +96,8 @@ setCoins(Coin_State* coins, u32 coin1, u32 coin2, u32 coin3) {
 
 internal void
 Level1Coins(Coin_State* coins) {
-  
+  int collected_coins = 0;
+  static int cc = 0;
 
   if (coin(0, collected) == false) {
 	draw_coin(-10, -10, 6, 6, coins->coin[0].color);
@@ -103,6 +105,7 @@ Level1Coins(Coin_State* coins) {
   }
   else if (coin(0, collected) == true) {
 	draw_coin(-85, 49, 3, 1, coins->coin[0].color);
+	collected_coins++;
   }
 
 
@@ -112,6 +115,7 @@ Level1Coins(Coin_State* coins) {
   }
   else if (coin(1, collected) == true) {
 	draw_coin(-80, 49, 3, 1, coins->coin[1].color);
+	collected_coins++;
   }
 
   if (coin(2, collected) == false) {
@@ -120,6 +124,13 @@ Level1Coins(Coin_State* coins) {
   }
   else if (coin(2, collected) == true) {
 	draw_coin(-75, 49, 3, 1, coins->coin[2].color);
+	collected_coins++;
+  }
+
+  //beeps once when coin is collected
+  if (collected_coins != cc) {
+	Beep(440, 100);
+	cc = collected_coins;
   }
 
 }
@@ -136,11 +147,20 @@ GAMEMODE options = MAINMENU;
 int helper = 1;
 
 float speed = 50.f; //unit per second
+
+char szBuffer[] = "Hello, World!";
+
+
 internal void
-simulate_game(Input* input, float dt, Coin_State* coins) {
+simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
   
-  clear_screen(BLACK);
+  clear_screen(RED);
   draw_rect(0, 0, 90, 45, WHITE);
+
+  
+
+
+
   if (coins_set == false) {
 	setCoins(coins, 0xFFD800, 0xFFD900,0xFFDA00);
   }
@@ -165,10 +185,10 @@ simulate_game(Input* input, float dt, Coin_State* coins) {
   else {
 	timer +=1;
   }
+  
   */
 
-
-
+	InvalidateRect(window, NULL, TRUE);
 	// unit / second * second/ frame = unit / frame
 	if (is_down(BUTTON_UP)) {
 	  //Maintain the original position
@@ -206,7 +226,7 @@ simulate_game(Input* input, float dt, Coin_State* coins) {
 	if (pressed(BUTTON_SPACEBAR)) {
 	  speed += 10.50;
 	}
-	if released(BUTTON_SPACEBAR) 	PlaySound(L"C:\\Users\\steve\\Desktop\\My_First_Cpp_Game\\My_First_Cpp_Game\\Satorl_Marsh2.wav", 0, SND_FILENAME | SND_ASYNC | SND_NODEFAULT);
+	if released(BUTTON_SPACEBAR)	PlaySound(L"C:\\Users\\steve\\Desktop\\My_First_Cpp_Game\\My_First_Cpp_Game\\Satorl_Marsh2.wav", 0, SND_FILENAME | SND_ASYNC | SND_NODEFAULT);
 
 
 	//draw_right_tri(85, -45, 5, 0x00ffff);
@@ -218,13 +238,17 @@ simulate_game(Input* input, float dt, Coin_State* coins) {
 
 
 	//The player
+	
+
+
+
+	draw_circle(0, 0, 5, BLUE);
+	//draw_circle(-30, 0, 5, RED);
+	//draw_circle(-60, 0, 5, RED);
+	//draw_ticket(0, 0, 6, 8, YELLOW);
+
 	collision(coins);
-
-
-	//draw_ticket(player_posX, player_posY, 6, 8, YELLOW);
-
-
-	//draw_rect(-20, 20, 8, 3, 0x00ff22, vacancy);
+	//draw_rect(0,0, 5, 5, 0x00ff22);
 
 	//draw_enemy(266, 615, 386, player_posY2, 0x00ff22);
 	//draw_tri(player_posX, player_posY, player_posX2, (player_posY+200), 0x00ff22);

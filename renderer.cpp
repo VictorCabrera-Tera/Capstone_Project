@@ -269,7 +269,7 @@ draw_enemy(int x0, int y0, int x1, int y1, u32 color) {
   
   iterations = y0 - (middle/2);
   iterations = clamp(0, render_state.height, iterations);
-  for (int y = y0; y > iterations; y--) {
+  for (int y = y0-1; y > iterations; y--) {
 	u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
 	for (int x = x0; x < x1; x++) {
 	  *pixel = color;
@@ -472,3 +472,48 @@ draw_ticket(int start_x, int start_y, int width, int height, u32 color) {
 
 
 */
+
+ internal void
+draw_circle_in_pixels(int x0, int y0, int x1, int y1, int radius, int centerX, int centerY, u32 color) {
+
+   x0 = clamp(0, render_state.width, x0);
+   y0 = clamp(0, render_state.height, y0);
+   x1 = clamp(0, render_state.width, x1);
+   y1 = clamp(0, render_state.height, y1);
+
+   for (int y = y0; y < y1; y++) {
+	 u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
+	 for (int x = x0; x < x1; x++) {
+
+	   if (abs(int((int)sqrt((pow(x - centerX, 2) + pow(y - centerY, 2))))) < radius) {
+		 *pixel = color;
+	   }
+	   pixel++;
+
+	 }
+   }
+
+}
+
+
+internal void 
+draw_circle(int centerX, int centerY, int radius, u32 color) {
+
+  centerX *= render_state.height * render_scale;
+  centerY *= render_state.height * render_scale;
+
+
+  centerX += render_state.width / 2.f;
+  centerY += render_state.height / 2.f;
+
+  float r0 = radius * render_state.height * render_scale;
+
+  int x0 = centerX - r0;
+  int x1 = centerX + r0;
+  int y0 = centerY - r0;
+  int y1 = centerY + r0;
+
+
+  draw_circle_in_pixels(x0, y0, x1, y1, r0, centerX, centerY, color);
+
+}
