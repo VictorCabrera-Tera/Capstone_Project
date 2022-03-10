@@ -1,6 +1,7 @@
 #include "utils.cpp"
 #include <windows.h>
 #include "platform_common.cpp"
+#include "math.h"
 
 
 global_variable bool running = true;
@@ -24,6 +25,16 @@ global_variable Render_State render_state;
 
 #include "renderer.cpp"
 #include "game.cpp"
+
+internal void
+DrawScene(HWND hwnd, HDC paintbrush) {
+  char string[] = "Level 1";
+  RECT rect;
+  SetRect(&rect, render_state.width/2, 20, render_state.width, 0);
+  SetBkMode(paintbrush, TRANSPARENT);
+  DrawTextA(paintbrush, string, -1, &rect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+}
+
 
 //Callback function using the window documentation
 LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -86,6 +97,13 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	} 
 	  break;
 	//Otherwise, do the default behavior for the message
+	case(WM_PAINT): {
+	  PAINTSTRUCT ps;
+	  BeginPaint(hwnd, &ps);
+	  DrawScene(hwnd, ps.hdc); 
+	  EndPaint(hwnd, &ps);
+	 
+	}break;
 	//Includes moving the window, minimizing, reshaping
 	default:
 	  return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -161,6 +179,9 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
   Coin_State coins = {};
 
+  
+
+
 
   //Game Loop to keep window open
   while (running)
@@ -200,6 +221,10 @@ input.buttons[b].is_down = is_down;\
 			process_button(BUTTON_RIGHT, VK_RIGHT);
 			process_button(BUTTON_SPACEBAR, VK_SPACE);
 			process_button(BUTTON_ENTER, VK_RETURN);
+		  case(VK_ESCAPE):
+		  {
+			InvalidateRect(window, NULL, TRUE);
+		  }
 		  }
 		} break;
 		default:
@@ -212,11 +237,13 @@ input.buttons[b].is_down = is_down;\
 	//Simulate
 	
 	//draw_rect(0,0,20,20,0x00ff22);//x,y,halfx,halfy and color
-	
 
-	simulate_game(&input, delta_time, &coins);
+	simulate_game(&input, delta_time, &coins, window);
 	//draw_rect(0, 0, 1, 1, 0x00ff22);
 
+	//if (input.buttons[BUTTON_ENTER].is_down) {
+
+	//}
 	
 	//Render
 
@@ -239,6 +266,7 @@ input.buttons[b].is_down = is_down;\
 	delta_time = (float)(frame_end_time.QuadPart - frame_begin_time.QuadPart) / performance_frequency;
 
 	frame_begin_time = frame_end_time;
+	
   }
-
+  ReleaseDC(window, hdc);
 };
