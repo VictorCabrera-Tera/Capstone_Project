@@ -39,8 +39,9 @@ int count2 = 0;
 int max2 = 100;
 int min2 = 0;
 
-
-
+float yvelocity;
+float xvelocity = 0;
+float accel = 15.0;
 float enemy_x = 10;
 float enemy_y = 10;
 
@@ -89,16 +90,20 @@ modify_color_down(u32& color, u32 increment, u32 end, COLORDIRECTION& direction)
 
 
 internal void
-collision(Coin_State* coins) {
+collision(Coin_State* coins, float dt) {
 
 	draw_rect(player_posX, player_posY, 4, 4, 0x00ff22, vacancy, coins);
 	if (!vacancy) {
 		//restart_pos();
+		yvelocity = 0;
 		player_posX = old_X;
 		player_posX2 = old_X2;
 		player_posY = old_Y;
 		player_posY2 = old_Y2;
 		draw_rect(player_posX, player_posY, 4, 4, 0x00ff22);
+	}
+	else {
+		yvelocity += accel*dt;
 	}
 }
 
@@ -208,6 +213,8 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 
 		InvalidateRect(window, NULL, TRUE);
 		// unit / second * second/ frame = unit / frame
+
+		/*
 		if (is_down(BUTTON_UP)) {
 			//Maintain the original position
 			old_Y = player_posY;
@@ -224,34 +231,38 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 			player_posY -= speed * dt;
 			player_posY2 -= speed + dt;
 		}
+		*/
 		if (is_down(BUTTON_LEFT)) {
 
 			old_X = player_posX;
-			old_X2 = player_posX2;
-
 			player_posX -= speed * dt;
-			player_posX2 -= speed * dt;
+			
 		}
 		if (is_down(BUTTON_RIGHT)) {
 
 			old_X = player_posX;
-			old_X2 = player_posX2;
-
 			player_posX += speed * dt;
-			player_posX2 += speed * dt;
-
+			
 		}
 		if (pressed(BUTTON_SPACEBAR)) {
-			player_posY += 3000*dt;
-			player_posY2 += 3000*dt;
+			//player_posY += speed * dt;
+			yvelocity -= 4000 *dt;
 		}
-		//old_Y = player_posY;
-		//player_posY -= 40 * dt;
-	
+		//if (released(BUTTON_SPACEBAR)) {
+			//VEL_Y = accel;
+		//}
 
 
+
+		old_Y = player_posY;
+		old_X = player_posX;
+		player_posY -= yvelocity *dt;
+		//player_posX += xvelocity * dt;
+		yvelocity += accel*dt;
 		
-		collision(coins);
+		
+		
+		collision(coins,dt);
 		
 		//old_Y = player_posY;
 		
@@ -271,8 +282,9 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20 );
 		move_vertical(&enemy_x2, delta2, dt, 20);
 
-		draw_tri(enemy_x, enemy_y, 10, 10, 0x00ff22);
-		draw_tri(enemy_x2, enemy_y2, 10, 10, 0x00ff22);
+		draw_rect(30, 10, 10, 10, RED);
+		draw_tri(enemy_x, enemy_y, 10, 10, RED);
+		draw_tri(enemy_x2, enemy_y2, 10, 10, RED);
 		//draw_coin(-85, 49, 3, 1, YELLOW);
 		
 	}
