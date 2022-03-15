@@ -20,6 +20,7 @@ float old_Y2;
 bool vacancy = true;
 
 
+
 u32 background = BLACK;
 int timer = 0;
 COLORDIRECTION direction = INCREMENT;
@@ -29,7 +30,52 @@ u32 color1 = RED;
 u32 color2 = BLACK;
 u32 color3 = BLACK;
 
+
+
+int delta = 1;
+int count = 0;
+int max = 500;
+int min = 0;
+
+int delta2 = 1;
+int count2 = 0;
+int max2 = 100;
+int min2 = 0;
+
+
+
+float enemy_x = 10;
+float enemy_y = 10;
+
+
+float enemy_x2 = 20;
+
+float enemy_y2 = 20;
+
 bool coins_set = false;
+
+
+
+float value = 79;
+float value2 = -39;
+
+void Timerproc(HWND hwnd,UINT Umsg,UINT_PTR idEvent,DWORD dwTime)
+{
+  switch (idEvent)
+  {
+   case(1):
+	{
+	  KillTimer(hwnd, 2);
+	  KillTimer(hwnd, 1);
+	}break;
+   case(2):
+   {
+	 value -=5;
+   }break;
+
+  };
+  
+}
 
 internal void
 restart_pos() {
@@ -37,6 +83,7 @@ restart_pos() {
   player_posX = 0;
   player_posY = 0;
 }
+
 
 
 
@@ -67,19 +114,23 @@ modify_color_down(u32 &color, u32 increment, u32 end, COLORDIRECTION& direction)
 }
 
 
-internal void 
+
+
+
+internal void
 collision(Coin_State* coins) {
 
   draw_rect(player_posX, player_posY, 4, 4, 0x00ff22, vacancy, coins);
   if (!vacancy) {
-	//restart_pos();
-	player_posX = old_X;
-	player_posX2 = old_X2;
-	player_posY = old_Y;
-	player_posY2 = old_Y2;
+	restart_pos();
+	//player_posX = old_X;
+	//player_posX2 = old_X2;
+	//player_posY = old_Y;
+	//player_posY2 = old_Y2;
 	draw_rect(player_posX, player_posY, 4, 4, 0x00ff22);
   }
 }
+
 
 
 
@@ -148,18 +199,33 @@ int helper = 1;
 
 float speed = 50.f; //unit per second
 
-char szBuffer[] = "Hello, World!";
-
-
 internal void
 simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
   
-  clear_screen(RED);
-  draw_rect(0, 0, 90, 45, WHITE);
+  clear_screen(0x00ffff);
+  draw_rect(0, 0,90 ,45, WHITE);
+  /*
+  {
+	int x = .10 * render_state.width;
+	int y = .10 * render_state.height;
 
-  
+	int half_size_x = 90 * render_state.height * 0.01;
+	int half_size_y = 45 * render_state.height * 0.01;
+
+	//Need to center it, the window's center is at 0,0
+
+	//x += render_state.width / 2.f;
+	//y += render_state.height / 2.f;
 
 
+	//simple method to get the min and max points
+	int x0 = x - half_size_x;
+	int x1 = x + half_size_x;
+	int y0 = y - half_size_y;
+	int y1 = y + half_size_y;
+	draw_rect_in_pixels(x, y, render_state.width * .90,render_state.height * .90,WHITE);
+  }
+  */
 
   if (coins_set == false) {
 	setCoins(coins, 0xFFD800, 0xFFD900,0xFFDA00);
@@ -185,7 +251,7 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
   else {
 	timer +=1;
   }
-  
+
   */
 
 	InvalidateRect(window, NULL, TRUE);
@@ -224,39 +290,56 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 
 	}
 	if (pressed(BUTTON_SPACEBAR)) {
-	  speed += 10.50;
+	  player_posY += 3000 * dt;
+	  player_posY2 += 3000 * dt;
 	}
-	if released(BUTTON_SPACEBAR)	PlaySound(L"C:\\Users\\steve\\Desktop\\My_First_Cpp_Game\\My_First_Cpp_Game\\Satorl_Marsh2.wav", 0, SND_FILENAME | SND_ASYNC | SND_NODEFAULT);
+	//old_Y = player_posY;
+	//player_posY -= 40 * dt;
+	//if released(BUTTON_SPACEBAR)	Beep(400, 200); //PlaySound(L"C:\\Users\\steve\\Desktop\\My_First_Cpp_Game\\My_First_Cpp_Game\\Satorl_Marsh2.wav", 0, SND_FILENAME | SND_ASYNC | SND_NODEFAULT);
 
 
-	//draw_right_tri(85, -45, 5, 0x00ffff);
-	//draw_rect(30, 30, 5, 5, 0xffff22, vacancy);
 
-	//draw_tri(-65, 25, 10, 8, YELLOW);
+	//printPhrase("Level One", -40, 50, 9, RED);
+	//SetTimer(window, 1, 500, (TIMERPROC)Timerproc);
 
-	Level1Coins(coins);
+	//SetTimer(window, 2, 1, (TIMERPROC)Timerproc);
+	
+	//value -= .1;
+	//value2 += .1;
+	//draw_rect(value, value2, 10,2, 0x00FFFF);
+	
+
+	run_loop(&delta, &count, max, min);
+	run_loop(&delta2, &count2, max2, min2);
+
+	//move_sideways(&enemy_x, delta, dt, 20);
+	//move_vertical(&enemy_y, delta, dt, 20);
+	move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);
+	move_vertical(&enemy_x2, delta2, dt, 20);
+
+	draw_tri(enemy_x, enemy_y, 10, 10, 0x00ffff);
+	draw_tri(enemy_x2, enemy_y2, 10, 10, 0x00ffff);
+	//draw_coin(-85, 49, 3, 1, YELLOW);
+	//Level1Coins(coins);
+
 
 
 	//The player
+	collision(coins);
+
+
+
+
+	
 	
 
-
-
-	draw_circle(0, 0, 5, BLUE);
-	//draw_circle(-30, 0, 5, RED);
-	//draw_circle(-60, 0, 5, RED);
-	//draw_ticket(0, 0, 6, 8, YELLOW);
-
-	collision(coins);
-	//draw_rect(0,0, 5, 5, 0x00ff22);
-
-	//draw_enemy(266, 615, 386, player_posY2, 0x00ff22);
-	//draw_tri(player_posX, player_posY, player_posX2, (player_posY+200), 0x00ff22);
-	//draw_coin(-85, 49, 3, 1, YELLOW);
+	
   }
   else if (options == MAINMENU) {
 	
 	draw_rect(0, 0, 90, 45, BLUE);
+
+	printPhrase("Main Menu", -43, 25, 13, true,ticket,GREEN);
 	u32 temp;
 	//draw_rect()
 	if (pressed(BUTTON_LEFT)) {
@@ -283,13 +366,19 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		color2 = BLACK;
 	  }
 	}
-	draw_rect(-20, 0, 1, 10, color1);
+
+	if (color1 == RED) {
+	  printPhrase("Start-Level",-50, -20, 6, false, square, RED);
+	}
+	draw_rect(-20, 0, 1, 10, color1); //left side
 	draw_rect(-20, -10, 10, 1, color1);
 	draw_rect(-24, 10,5, 1, color1);
 
-	
+	if (color2 == RED) {
+	  printPhrase("Level-Select", -50, -20, 6, false, square, RED);
+	}
 
-	draw_rect(10, 10, 1, 3, color2);
+	draw_rect(10, 10, 1, 3, color2); //Right side
 	{
 	  draw_rect(13, 10, 1, 1, color2);
 	  draw_rect(16, 10, 1, 1, color2);
@@ -312,7 +401,9 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
   }
   else if (options == LEVELSELECT) {
 
-
+  
+  printPhrase("Pick-A-Level", -48, 40, 6, false, square, RED);
+  
   if (pressed(BUTTON_DOWN)) {
 	helper++;
 	if (helper > 3) {

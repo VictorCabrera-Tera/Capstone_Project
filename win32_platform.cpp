@@ -24,15 +24,18 @@ global_variable Render_State render_state;
 
 
 #include "renderer.cpp"
+#include "text.cpp"
 #include "game.cpp"
 
+
+
 internal void
-DrawScene(HWND hwnd, HDC paintbrush) {
+DrawScene(HWND hwnd, LPPAINTSTRUCT lpPS) {
   char string[] = "Level 1";
   RECT rect;
   SetRect(&rect, render_state.width/2, 20, render_state.width, 0);
-  SetBkMode(paintbrush, TRANSPARENT);
-  DrawTextA(paintbrush, string, -1, &rect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+  SetBkMode(lpPS->hdc, TRANSPARENT);
+  DrawTextA(lpPS->hdc, string, -1, &rect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 }
 
 
@@ -99,11 +102,13 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	//Otherwise, do the default behavior for the message
 	case(WM_PAINT): {
 	  PAINTSTRUCT ps;
+	  //PAINTSTRUCT::fErase;
 	  BeginPaint(hwnd, &ps);
-	  DrawScene(hwnd, ps.hdc); 
+	  DrawScene(hwnd, &ps); 
 	  EndPaint(hwnd, &ps);
 	 
 	}break;
+	
 	//Includes moving the window, minimizing, reshaping
 	default:
 	  return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -141,7 +146,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
   //If you remove that then it will decide which to call
   //Creating an object of HWND will allow us to create the window, and also process the messages from that window
   HWND window = CreateWindow(window_class.lpszClassName, L"My First Game!",
-				WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, 
+				WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME| WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, 
 				1280, 720, 0,0,hInstance,0);
 
   //obtain the device context of the window
