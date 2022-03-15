@@ -81,7 +81,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 	y0 = clamp(0, render_state.height, y0);
 	x1 = clamp(0, render_state.width, x1);
 	y1 = clamp(0, render_state.height, y1);
-
+	///////
 	for (int i = y0; i < y1; i++) {
 		u32* lowerL_pixel = (u32*)render_state.memory + x0 + i * render_state.width;
 

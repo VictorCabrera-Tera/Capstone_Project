@@ -18,7 +18,7 @@ float old_X2;
 float old_Y2;
 
 bool vacancy = true;
-
+bool clear = true;
 
 u32 background = BLACK;
 int timer = 0;
@@ -31,7 +31,7 @@ u32 color3 = BLACK;
 
 int delta = 1;
 int count = 0;
-int max = 500;
+int max = 100;
 int min = 0;
 
 int delta2 = 1;
@@ -94,8 +94,10 @@ collision(Coin_State* coins, float dt) {
 
 	draw_rect(player_posX, player_posY, 4, 4, 0x00ff22, vacancy, coins);
 	if (!vacancy) {
-		//restart_pos();
+		//restart_pos();;
+		clear = false;
 		yvelocity = 0;
+		//xvelocity = 0;
 		player_posX = old_X;
 		player_posX2 = old_X2;
 		player_posY = old_Y;
@@ -103,7 +105,9 @@ collision(Coin_State* coins, float dt) {
 		draw_rect(player_posX, player_posY, 4, 4, 0x00ff22);
 	}
 	else {
+		clear = true;
 		yvelocity += accel*dt;
+		
 	}
 }
 
@@ -233,17 +237,51 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		}
 		*/
 		if (is_down(BUTTON_LEFT)) {
+			if (clear == true) {
+				//player_posX -= speed * dt;
+				xvelocity = -50;
 
-			old_X = player_posX;
-			player_posX -= speed * dt;
-			
+				/*
+				if (xvelocity > 0) {
+					xvelocity -= 200 * dt;
+				}
+				xvelocity -= 100 * dt;
+				if (xvelocity < -250) {
+					xvelocity = -250;
+				}
+				*/
+			}
 		}
+
+		if (released(BUTTON_LEFT)) {
+			xvelocity = 0;
+
+		}
+
 		if (is_down(BUTTON_RIGHT)) {
-
-			old_X = player_posX;
-			player_posX += speed * dt;
-			
+			if (clear == true) {
+				//player_posX += speed * dt;
+				xvelocity = 50;
+				/*
+				if (xvelocity < 0) {
+					xvelocity += 200 * dt;
+				}
+				
+				xvelocity += 100 * dt;
+				if (xvelocity > 250) {
+					xvelocity = 250;
+				}
+				*/
+			}
 		}
+
+		if (released(BUTTON_RIGHT)) {
+			xvelocity = 0;
+
+		}
+
+
+
 		if (pressed(BUTTON_SPACEBAR)) {
 			//player_posY += speed * dt;
 			yvelocity -= 4000 *dt;
@@ -257,12 +295,12 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		old_Y = player_posY;
 		old_X = player_posX;
 		player_posY -= yvelocity *dt;
-		//player_posX += xvelocity * dt;
+		player_posX += xvelocity * dt;
 		yvelocity += accel*dt;
 		
 		
 		
-		collision(coins,dt);
+		
 		
 		//old_Y = player_posY;
 		
@@ -286,6 +324,7 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		draw_tri(enemy_x, enemy_y, 10, 10, RED);
 		draw_tri(enemy_x2, enemy_y2, 10, 10, RED);
 		//draw_coin(-85, 49, 3, 1, YELLOW);
+		collision(coins, dt);
 		
 	}
 	else if (options == MAINMENU) {
