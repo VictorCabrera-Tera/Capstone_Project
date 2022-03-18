@@ -1,2 +1,2 @@
 # Capstone_Project
-our capstone project lol.
+our capstone project: Making a 2d engine. 
