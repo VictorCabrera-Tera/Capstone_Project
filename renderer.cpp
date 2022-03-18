@@ -2,7 +2,7 @@
 	Will draw the screen to a specified color
 	@param color is the color wished to draw the screen
 **/
-internal void 
+internal void
 clear_screen(u32 color) {
   u32* pixel = (u32*)render_state.memory;
 
@@ -15,9 +15,9 @@ clear_screen(u32 color) {
 }
 
 
-internal void 
+internal void
 draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
-  
+
   x0 = clamp(0, render_state.width, x0);
   y0 = clamp(0, render_state.height, y0);
   x1 = clamp(0, render_state.width, x1);
@@ -25,13 +25,13 @@ draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
   int temp = (x1 - x0);
   int left = (int)(temp / 4);
-  int right = left + left+ left;
+  int right = left + left + left;
   int ys = (int)(y0 + y1) / 2;
 
   for (int y = y0; y < y1; y++) {
-	u32* pixel = (u32*)render_state.memory + x0 + y*render_state.width;
+	u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
 	for (int x = x0; x < x1; x++) {
-	  if ((y == ys) || (y == ys+1) || (y == ys-1 )) {
+	  if ((y == ys) || (y == ys + 1) || (y == ys - 1)) {
 		if (x == (x0 + left) || x == (x0 + right)) {
 		  *pixel = 0x000000;
 		}
@@ -45,7 +45,7 @@ draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 	  pixel++;
 	}
   }
-  
+
 }
 
 
@@ -59,14 +59,14 @@ global_variable float render_scale = 0.01f;
 
 
 internal void
-draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, bool &vacant, Coin_State* coins) {
+draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, bool& vacant, Coin_State* coins) {
   //Change to pixels
   //get the percentage of the screen relative to the current dimensions
 
-  
+
   x *= render_state.height * render_scale;
   y *= render_state.height * render_scale;
-   
+
   half_size_x *= render_state.height * render_scale;
   half_size_y *= render_state.height * render_scale;
 
@@ -81,7 +81,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
   int x1 = x + half_size_x;
   int y0 = y - half_size_y;
   int y1 = y + half_size_y;
-  
+
 
   x0 = clamp(0, render_state.width, x0);
   y0 = clamp(0, render_state.height, y0);
@@ -89,13 +89,13 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
   y1 = clamp(0, render_state.height, y1);
 
   for (int i = y0; i < y1; i++) {
-	u32 *lowerL_pixel = (u32*)render_state.memory + x0 + i * render_state.width;
-	
+	u32* lowerL_pixel = (u32*)render_state.memory + x0 + i * render_state.width;
+
 	for (int x = x0; x < x1; x++) {
-	  if ((*lowerL_pixel == 0xffff22) || (*lowerL_pixel == 0x00ffff))
+	  if ((*lowerL_pixel == 0xffff22) || (*lowerL_pixel == 0x00ffff) || (*lowerL_pixel == RED))
 	  {
 		vacant = false;
-		
+
 		return;
 	  }
 	  if (*lowerL_pixel == coins->coin[0].color)
@@ -115,10 +115,10 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
   }
 
 
- 
-	vacant = true;
-  	draw_rect_in_pixels(x0, y0, x1, y1, color);
-  
+
+  vacant = true;
+  draw_rect_in_pixels(x0, y0, x1, y1, color);
+
 
 }
 
@@ -177,7 +177,7 @@ draw_right_triangle_in_pixels(int x0, int y0, int x1, u32 color) {
 
 
 internal void
-draw_right_tri(float start_x,  float y, float width, u32 color) {
+draw_right_tri(float start_x, float y, float width, u32 color) {
   start_x *= render_state.height * render_scale;
   y *= render_state.height * render_scale;
 
@@ -192,7 +192,7 @@ draw_right_tri(float start_x,  float y, float width, u32 color) {
 
   int x0 = start_x - width;
   int x1 = start_x + width;
-  
+
 
   draw_right_triangle_in_pixels(x0, y, x1, color);
 
@@ -228,7 +228,7 @@ draw_triangle_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
   Will create a triangle, but with a small enough end_y will make a trapezoid
 */
 internal void
-draw_tri(float start_x, float start_y, float width, float height ,u32 color) {
+draw_tri(float start_x, float start_y, float width, float height, u32 color) {
   start_x *= render_state.height * render_scale;
   start_y *= render_state.height * render_scale;
 
@@ -237,14 +237,14 @@ draw_tri(float start_x, float start_y, float width, float height ,u32 color) {
   //Need to center it, the window's center is at 0,0
 
   start_x += render_state.width / 2.f;
- // end_x += render_state.width / 2.f;
+  // end_x += render_state.width / 2.f;
   start_y += render_state.height / 2.f;
- // end_y += render_state.height / 2.f;
-  int x0 = start_x - width; 
+  // end_y += render_state.height / 2.f;
+  int x0 = start_x - width;
   int x1 = start_x + width;
   int y0 = start_y - height;
   int y1 = start_y + height;
-  
+
 
 
   draw_triangle_in_pixels(x0, y0, x1, y1, color);
@@ -264,7 +264,7 @@ draw_enemy(int x0, int y0, int x1, int y1, u32 color) {
 
   int middle = (x1 + x0) / 2;
   middle = middle - x0;
-  int iterations = y0 + (middle/2);
+  int iterations = y0 + (middle / 2);
   iterations = clamp(0, render_state.height, iterations);
   for (int y = y0; y < iterations; y++) {
 	u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
@@ -275,10 +275,10 @@ draw_enemy(int x0, int y0, int x1, int y1, u32 color) {
 	x1--;
 	x0++;
   }
-  
-  iterations = y0 - (middle/2);
+
+  iterations = y0 - (middle / 2);
   iterations = clamp(0, render_state.height, iterations);
-  for (int y = y0-1; y > iterations; y--) {
+  for (int y = y0 - 1; y > iterations; y--) {
 	u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
 	for (int x = x0; x < x1; x++) {
 	  *pixel = color;
@@ -301,17 +301,17 @@ draw_coin_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
   x1 = clamp(0, render_state.width, x1);
   y1 = clamp(0, render_state.height, y1);
 
-  
+
   int temp1 = x1;
   int temp0 = x0;
 
-  
+
   int middle = ((x1 + x0) / 2);
   middle = middle - x0;
   int iterations = y0 + (middle / 2);
   iterations = clamp(0, render_state.height, iterations);
-  
-  for (int y = y0; y < iterations ; y++) {
+
+  for (int y = y0; y < iterations; y++) {
 	u32* pixel = (u32*)render_state.memory + temp0 + y * render_state.width;
 	for (int x = temp0; x < temp1; x++) {
 	  *pixel = color;
@@ -323,11 +323,11 @@ draw_coin_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
   temp1 = x1;
   temp0 = x0;
-   
+
   iterations = y0 - (middle / 2);
   iterations = clamp(0, render_state.height, iterations);
 
-  for (int y = y0-1; y > iterations; y--) {
+  for (int y = y0 - 1; y > iterations; y--) {
 	u32* pixel = (u32*)render_state.memory + temp0 + y * render_state.width;
 	for (int x = temp0; x < temp1; x++) {
 	  *pixel = color;
@@ -362,7 +362,7 @@ draw_coin(int start_x, int start_y, float width, float height, u32 color) //  Co
   int y1 = start_y + height;
 
   draw_coin_in_pixels(x0, y0, x1, y1, color);
-  
+
 }
 
 
@@ -372,7 +372,7 @@ draw_coin(int start_x, int start_y, float width, float height, u32 color) //  Co
 	@param x1 is the ending pixel for the x axis
 	@param y0 is the starting pixel for the y axis
 	@param y1 is the ending pixel for the y axis
-	
+
 	@param color is the color of the ticket
 **/
 internal void
@@ -395,7 +395,7 @@ draw_ticket_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
   //Adding y0 by mid/2 will give how many iterations is necessary 
   //The goal is to draw an upside-down trapezoid
-  int iterations = y0 + (middle / 2); 
+  int iterations = y0 + (middle / 2);
   iterations = clamp(0, render_state.height, iterations); //make sure the value is within bounds 
 
 
@@ -429,7 +429,7 @@ draw_ticket_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 	}
 	pixel_x1--; //Will result in a shorter row above the previous one
 	pixel_x0++;//Will result in a shorter row above the previous one
-	
+
   }
 
 }
@@ -443,9 +443,9 @@ draw_ticket_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 	@param height is the height of the ticket
 	@param color is the color of the ticket
 **/
-internal void 
+internal void
 draw_ticket(int start_x, int start_y, float width, float height, u32 color) {
-  
+
   //render_scale is so people could use the function without using decimals
   //Will adjust the parameters to a pixel
   start_x *= render_state.height * render_scale;
@@ -453,7 +453,7 @@ draw_ticket(int start_x, int start_y, float width, float height, u32 color) {
 
   width *= render_state.height * render_scale;
   height *= render_state.height * render_scale;
-  
+
   //Need to center it, the window's center is at 0,0
   start_x += render_state.width / 2.f;
   start_y += render_state.height / 2.f;
@@ -479,40 +479,40 @@ draw_ticket(int start_x, int start_y, float width, float height, u32 color) {
 	@param centerY is the y coordinate for the center of the circle in pixels
 	@param color is the color of the circle
 **/
- internal void
+internal void
 draw_circle_in_pixels(int x0, int y0, int x1, int y1, int radius, int centerX, int centerY, u32 color) {
 
-   //makes sure the parameters are usuable values
-   x0 = clamp(0, render_state.width, x0);
-   y0 = clamp(0, render_state.height, y0);
-   x1 = clamp(0, render_state.width, x1);
-   y1 = clamp(0, render_state.height, y1);
+  //makes sure the parameters are usuable values
+  x0 = clamp(0, render_state.width, x0);
+  y0 = clamp(0, render_state.height, y0);
+  x1 = clamp(0, render_state.width, x1);
+  y1 = clamp(0, render_state.height, y1);
 
-   for (int y = y0; y < y1; y++) {
-	 u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width; //get the pixel
-	 for (int x = x0; x < x1; x++) { 
-	   //uses the distance formula & equation of a circle 
-	   if (abs(int((int)sqrt((pow(x - centerX, 2) + pow(y - centerY, 2))))) < radius) {
-		 *pixel = color; 
-	   }
-	   pixel++; //access the next pixel
+  for (int y = y0; y < y1; y++) {
+	u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width; //get the pixel
+	for (int x = x0; x < x1; x++) {
+	  //uses the distance formula & equation of a circle 
+	  if (abs(int((int)sqrt((pow(x - centerX, 2) + pow(y - centerY, 2))))) < radius) {
+		*pixel = color;
+	  }
+	  pixel++; //access the next pixel
 
-	 }
-   }
-   
+	}
+  }
+
 }
 
 
 
- /**
-	 Caller Function
-	 Will first adjust the parameters to pixels, then call a function to draw
-	 @param centerX is the x coordinate for the center of the circle
-	 @param centerY is the y coordinate for the center of the circle
-	 @param radius is the circle's radius
-	 @param color is the color of the circle
- **/
-internal void 
+/**
+	Caller Function
+	Will first adjust the parameters to pixels, then call a function to draw
+	@param centerX is the x coordinate for the center of the circle
+	@param centerY is the y coordinate for the center of the circle
+	@param radius is the circle's radius
+	@param color is the color of the circle
+**/
+internal void
 draw_circle(int centerX, int centerY, float radius, u32 color) {
 
   //render_scale is so people could use the function without using decimals
@@ -542,8 +542,12 @@ draw_circle(int centerX, int centerY, float radius, u32 color) {
 //grav is the gravity value
 internal void
 Gravit(float* player_posY, int dt, int grav) {
-  *player_posY += grav * dt;
+	*player_posY += grav * dt;
 }
+
+
+
+
 
 
 //the only variable you would change here would be int max, changing int max would increase the amount of time it moves in one direction NOT speed
@@ -554,10 +558,10 @@ Gravit(float* player_posY, int dt, int grav) {
 //int min = 0;
 internal void
 run_loop(int* delta, int* count, int max, int min) {
-  *count += *delta;
-  if (*count == min || *count == max) {
-	*delta = -*delta;
-  }
+	*count += *delta;
+	if (*count == min || *count == max) {
+		*delta = -*delta;
+	}
 }
 
 //enemy1_posX = x variable of what you want to move, NEED & IN FRONT OF VARIABLE
@@ -566,55 +570,54 @@ run_loop(int* delta, int* count, int max, int min) {
 // speed can be any number, represents how fast you want it to move
 internal void
 move_sideways(float* enemy1_posX, int delta, float dt, int speed) {
-  if (delta == 1) {
-	*enemy1_posX += speed * dt;
-  }
-  if (delta == -1) {
-	*enemy1_posX -= speed * dt;
-  }
+	if (delta == 1) {
+		*enemy1_posX += speed * dt;
+	}
+	if (delta == -1) {
+		*enemy1_posX -= speed * dt;
+	}
 }
 
 internal void
 move_vertical(float* enemy1_posY, int delta, float dt, int speed) {
-  if (delta == 1) {
-	*enemy1_posY += speed * dt;
-  }
-  if (delta == -1) {
-	*enemy1_posY -= speed * dt;
-  }
+	if (delta == 1) {
+		*enemy1_posY += speed * dt;
+	}
+	if (delta == -1) {
+		*enemy1_posY -= speed * dt;
+	}
 }
-
 
 internal void
 move_diagonal_br(float* enemy1_posX, float* enemy1_posY, int delta, float dt, int speed) {
-  if (delta == 1) {
-	*enemy1_posX += speed * dt;
-	*enemy1_posY -= speed * dt;
-  }
-  if (delta == -1) {
-	*enemy1_posX -= speed * dt;
-	*enemy1_posY += speed * dt;
-  }
+	if (delta == 1) {
+		*enemy1_posX += speed * dt;
+		*enemy1_posY -= speed * dt;
+	}
+	if (delta == -1) {
+		*enemy1_posX -= speed * dt;
+		*enemy1_posY += speed * dt;
+	}
 }
 internal void
 move_diagonal_bl(float* enemy1_posX, float* enemy1_posY, int delta, float dt, int speed) {
-  if (delta == 1) {
-	*enemy1_posX -= speed * dt;
-	*enemy1_posY -= speed * dt;
-  }
-  if (delta == -1) {
-	*enemy1_posX += speed * dt;
-	*enemy1_posY += speed * dt;
-  }
+	if (delta == 1) {
+		*enemy1_posX -= speed * dt;
+		*enemy1_posY -= speed * dt;
+	}
+	if (delta == -1) {
+		*enemy1_posX += speed * dt;
+		*enemy1_posY += speed * dt;
+	}
 }
 internal void
 move_diagonal_tl(float* enemy1_posX, float* enemy1_posY, int delta, float dt, int speed) {
-  if (delta == 1) {
-	*enemy1_posX -= speed * dt;
-	*enemy1_posY += speed * dt;
-  }
-  if (delta == -1) {
-	*enemy1_posX += speed * dt;
-	*enemy1_posY -= speed * dt;
-  }
+	if (delta == 1) {
+		*enemy1_posX -= speed * dt;
+		*enemy1_posY += speed * dt;
+	}
+	if (delta == -1) {
+		*enemy1_posX += speed * dt;
+		*enemy1_posY -= speed * dt;
+	}
 }

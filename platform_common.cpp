@@ -52,18 +52,19 @@ struct Coin_State {
 };
 
 
-enum charType{
+enum charType {
   alpha,
   symbol,
   neither,
 };
 
-enum Font{
+enum Font {
   square,
   circle,
   triangle,
   ticket,
 };
+
 const char* alphabet[26][7] = {
 	"   *   ",
 	" *   * ",
@@ -325,7 +326,7 @@ const char* symbols[15][7] = {
   "*   ***",
 
 
-  " ***     ",  
+  " ***     ",
   "*   *    ",
   " *  *    ",
   "  **     ",
@@ -410,4 +411,3 @@ const char* symbols[15][7] = {
   " *     ",
   "*      ",
 };
-

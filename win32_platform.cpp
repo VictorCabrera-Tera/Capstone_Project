@@ -2,10 +2,13 @@
 #include <windows.h>
 #include "platform_common.cpp"
 #include "math.h"
+#define _USE_MATH_DEFINES
+#include <cmath>
+#include <string>
 
 
 global_variable bool running = true;
-
+global_variable bool paused = false;
 
 
 struct Render_State
@@ -28,15 +31,6 @@ global_variable Render_State render_state;
 #include "game.cpp"
 
 
-
-internal void
-DrawScene(HWND hwnd, LPPAINTSTRUCT lpPS) {
-  char string[] = "Level 1";
-  RECT rect;
-  SetRect(&rect, render_state.width/2, 20, render_state.width, 0);
-  SetBkMode(lpPS->hdc, TRANSPARENT);
-  DrawTextA(lpPS->hdc, string, -1, &rect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
-}
 
 
 //Callback function using the window documentation
@@ -100,15 +94,10 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	} 
 	  break;
 	//Otherwise, do the default behavior for the message
-	case(WM_PAINT): {
-	  PAINTSTRUCT ps;
-	  //PAINTSTRUCT::fErase;
-	  BeginPaint(hwnd, &ps);
-	  DrawScene(hwnd, &ps); 
-	  EndPaint(hwnd, &ps);
-	 
+
+	case(WM_MOVE): {
+	  paused = true;
 	}break;
-	
 	//Includes moving the window, minimizing, reshaping
 	default:
 	  return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -226,10 +215,8 @@ input.buttons[b].is_down = is_down;\
 			process_button(BUTTON_RIGHT, VK_RIGHT);
 			process_button(BUTTON_SPACEBAR, VK_SPACE);
 			process_button(BUTTON_ENTER, VK_RETURN);
-		  case(VK_ESCAPE):
-		  {
-			InvalidateRect(window, NULL, TRUE);
-		  }
+			process_button(BUTTON_ESCAPE, VK_ESCAPE);
+
 		  }
 		} break;
 		default:
@@ -240,15 +227,18 @@ input.buttons[b].is_down = is_down;\
 	}
 
 	//Simulate
-	
+	/*
+	if (input.buttons[BUTTON_ESCAPE].changed && input.buttons[BUTTON_ESCAPE].is_down) {
+	  paused = !paused;
+	}
 	//draw_rect(0,0,20,20,0x00ff22);//x,y,halfx,halfy and color
+	if (paused == false) {
+	  simulate_game(&input, delta_time, &coins, window);
+	}
+	*/
 
 	simulate_game(&input, delta_time, &coins, window);
-	//draw_rect(0, 0, 1, 1, 0x00ff22);
-
-	//if (input.buttons[BUTTON_ENTER].is_down) {
-
-	//}
+	
 	
 	//Render
 
