@@ -1,9 +1,4 @@
 
-//grav is the gravity value
-internal void
-Gravit(float* player_posY, int dt, int grav) {
-	*player_posY += grav * dt;
-}
 
 //the only variable you would change here would be int max, changing int max would increase the amount of time it moves in one direction NOT speed
 //create variables outside of simulate game, for example
@@ -13,10 +8,10 @@ Gravit(float* player_posY, int dt, int grav) {
 //int min = 0;
 internal void
 run_loop(int* delta, int* count, int max, int min) {
-	*count += *delta;
-	if (*count == min || *count == max) {
-		*delta = -*delta;
-	}
+  *count += *delta;
+  if (*count == min || *count == max) {
+	*delta = -*delta;
+  }
 }
 
 //enemy1_posX = x variable of what you want to move, NEED & IN FRONT OF VARIABLE
@@ -25,54 +20,54 @@ run_loop(int* delta, int* count, int max, int min) {
 // speed can be any number, represents how fast you want it to move
 internal void
 move_sideways(float* enemy1_posX, int delta, float dt, int speed) {
-	if (delta == 1) {
-		*enemy1_posX += speed * dt;
-	}
-	if (delta == -1) {
-		*enemy1_posX -= speed * dt;
-	}
+  if (delta == 1) {
+	*enemy1_posX += speed * dt;
+  }
+  if (delta == -1) {
+	*enemy1_posX -= speed * dt;
+  }
 }
 
 internal void
 move_vertical(float* enemy1_posY, int delta, float dt, int speed) {
-	if (delta == 1) {
-		*enemy1_posY += speed * dt;
-	}
-	if (delta == -1) {
-		*enemy1_posY -= speed * dt;
-	}
+  if (delta == 1) {
+	*enemy1_posY += speed * dt;
+  }
+  if (delta == -1) {
+	*enemy1_posY -= speed * dt;
+  }
 }
 
 internal void
 move_diagonal_br(float* enemy1_posX, float* enemy1_posY, int delta, float dt, int speed) {
-	if (delta == 1) {
-		*enemy1_posX += speed * dt;
-		*enemy1_posY -= speed * dt;
-	}
-	if (delta == -1) {
-		*enemy1_posX -= speed * dt;
-		*enemy1_posY += speed * dt;
-	}
+  if (delta == 1) {
+	*enemy1_posX += speed * dt;
+	*enemy1_posY -= speed * dt;
+  }
+  if (delta == -1) {
+	*enemy1_posX -= speed * dt;
+	*enemy1_posY += speed * dt;
+  }
 }
 internal void
 move_diagonal_bl(float* enemy1_posX, float* enemy1_posY, int delta, float dt, int speed) {
-	if (delta == 1) {
-		*enemy1_posX -= speed * dt;
-		*enemy1_posY -= speed * dt;
-	}
-	if (delta == -1) {
-		*enemy1_posX += speed * dt;
-		*enemy1_posY += speed * dt;
-	}
+  if (delta == 1) {
+	*enemy1_posX -= speed * dt;
+	*enemy1_posY -= speed * dt;
+  }
+  if (delta == -1) {
+	*enemy1_posX += speed * dt;
+	*enemy1_posY += speed * dt;
+  }
 }
 internal void
 move_diagonal_tl(float* enemy1_posX, float* enemy1_posY, int delta, float dt, int speed) {
-	if (delta == 1) {
-		*enemy1_posX -= speed * dt;
-		*enemy1_posY += speed * dt;
-	}
-	if (delta == -1) {
-		*enemy1_posX += speed * dt;
-		*enemy1_posY -= speed * dt;
-	}
+  if (delta == 1) {
+	*enemy1_posX -= speed * dt;
+	*enemy1_posY += speed * dt;
+  }
+  if (delta == -1) {
+	*enemy1_posX += speed * dt;
+	*enemy1_posY -= speed * dt;
+  }
 }
