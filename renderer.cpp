@@ -43,11 +43,6 @@ draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
 }
 
-
-
-
-
-
 //used so its easier to input whole numbers instead of decimals like 100 for 1 when using draw rect
 global_variable float render_scale = 0.01f;
 
@@ -107,8 +102,6 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 		}
 	}
 
-
-
 	vacant = true;
 
 	draw_rect_in_pixels(x0, y0, x1, y1, color);
@@ -140,8 +133,6 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color) {
 
 }
 
-
-
 internal void
 draw_right_triangle_in_pixels(int x0, int y0, int x1, u32 color) {
 
@@ -169,7 +160,6 @@ draw_right_triangle_in_pixels(int x0, int y0, int x1, u32 color) {
 	}
 }
 
-
 internal void
 draw_right_tri(float start_x, float y, float width, u32 color) {
 	start_x *= render_state.height * render_scale;
@@ -192,8 +182,6 @@ draw_right_tri(float start_x, float y, float width, u32 color) {
 
 }
 
-
-
 internal void
 draw_triangle_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
@@ -214,8 +202,6 @@ draw_triangle_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
 	}
 }
-
-
 /*
   Will create a triangle, but with a small enough end_y will make a trapezoid
 */
@@ -508,86 +494,112 @@ draw_circle(int centerX, int centerY, int radius, u32 color) {
 	draw_circle_in_pixels(x0, y0, x1, y1, r0, centerX, centerY, color);
 
 }
+#define internal static
+internal void         //40    //25    //25    //5
+draw_diamond_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
+	u32 blue = BLUE;
+	x0 = clamp(0, render_state.width, x0);
+	y0 = clamp(0, render_state.height, y0);
+	x1 = clamp(0, render_state.width, x1);
+	y1 = clamp(0, render_state.height, y1);
 
-//grav is the gravity value
-internal void
-Gravit(float* player_posY, int dt, int grav) {
-	*player_posY += grav * dt;
+	int temp1 = x1;
+	int temp0 = x0;
+
+	for (int y = y0; y < y1; y++) {
+		u32* pixel = (u32*)render_state.memory + temp0 + y * render_state.width;
+		for (int x = temp0; x < temp1; x++)
+		{
+			*pixel = RED;
+			pixel++;
+		}
+		temp1--;
+		temp0++;
+	}
+	temp1 = x1;
+	temp0 = x0;
+
+	for (int y = y0; y * 2 > y1; y--) {
+		u32* pixel = (u32*)render_state.memory + temp0 + y * render_state.width;
+		//iterations--;
+		for (int x = temp0; x < temp1; x++) {
+			*pixel = RED;
+			pixel++;
+		}
+		temp1 = temp1 - 1;
+		temp0 = temp0 + 1;
+	}
+
 }
+internal void //40         //15           //15       //5
+draw_diamond(float start_x, float start_y, float width, float height, u32 color)
+{
+	start_x *= render_state.height * render_scale;
+	start_y *= render_state.height * render_scale;
 
+	width *= render_state.height * render_scale;
+	height *= render_state.height * render_scale;
+	//Need to center it, the window's center is at 0,0
 
+	start_x += render_state.width / 2.f;
+	// end_x += render_state.width / 2.f;
+	start_y += render_state.height / 2.f;
+	// end_y += render_state.height / 2.f;
+	int x0 = start_x - width;   //left triangle
+	int x1 = start_x + width;  //right of the triangle
+	int y0 = start_y - height;
+	int y1 = start_y + height;
 
-
-
-
-//the only variable you would change here would be int max, changing int max would increase the amount of time it moves in one direction NOT speed
-//create variables outside of simulate game, for example
-//int delta = 1; ,NEED & in front 
-//int count = 0; ,NEED & in front
-//int max = 10;
-//int min = 0;
-internal void
-run_loop(int* delta, int* count, int max, int min) {
-	*count += *delta;
-	if (*count == min || *count == max) {
-		*delta = -*delta;
-	}
-}
-
-//enemy1_posX = x variable of what you want to move, NEED & IN FRONT OF VARIABLE
-// delta= delta, write the name of the looprun delta you are using , NEED & IN FRONT OF VARIABLE
-// dt =dt , just write dt 
-// speed can be any number, represents how fast you want it to move
-internal void
-move_sideways(float* enemy1_posX, int delta, float dt, int speed) {
-	if (delta == 1) {
-		*enemy1_posX += speed * dt;
-	}
-	if (delta == -1) {
-		*enemy1_posX -= speed * dt;
-	}
-}
-
-internal void
-move_vertical(float* enemy1_posY, int delta, float dt, int speed) {
-	if (delta == 1) {
-		*enemy1_posY += speed * dt;
-	}
-	if (delta == -1) {
-		*enemy1_posY -= speed * dt;
-	}
-}
-
-internal void
-move_diagonal_br(float* enemy1_posX, float* enemy1_posY, int delta, float dt, int speed) {
-	if (delta == 1) {
-		*enemy1_posX += speed * dt;
-		*enemy1_posY -= speed * dt;
-	}
-	if (delta == -1) {
-		*enemy1_posX -= speed * dt;
-		*enemy1_posY += speed * dt;
-	}
+	draw_diamond_in_pixels(x0, y0, x1, y1, color);
 }
 internal void
-move_diagonal_bl(float* enemy1_posX, float* enemy1_posY, int delta, float dt, int speed) {
-	if (delta == 1) {
-		*enemy1_posX -= speed * dt;
-		*enemy1_posY -= speed * dt;
+draw_heart_in_pixels(int x0, int y0, int x1, int y1, int w, int h, int n, u32 color) {
+
+	x0 = clamp(0, render_state.width, x0);
+	y0 = clamp(0, render_state.height, y0);
+	x1 = clamp(0, render_state.width, x1);
+	y1 = clamp(0, render_state.height, y1);
+
+	for (int y = y0; y < y1; y++) {
+		u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
+		for (int x = x0; x < x1; x++) {
+
+			//if (abs(int((int)sqrt((pow(x - centerX, 2) + pow(y - centerY, 2))))) < radius) {
+			//if (y <= int(y1)) {
+			if (y > (n * acos(1 - abs(x / n - w)) + h - n * M_PI) && y < (n * sqrt(1 - (pow(abs(x / n - w) - 1, 2))) + h)) {
+				*pixel = color;
+			}
+			pixel++;
+
+		}
 	}
-	if (delta == -1) {
-		*enemy1_posX += speed * dt;
-		*enemy1_posY += speed * dt;
-	}
+
 }
+
 internal void
-move_diagonal_tl(float* enemy1_posX, float* enemy1_posY, int delta, float dt, int speed) {
-	if (delta == 1) {
-		*enemy1_posX -= speed * dt;
-		*enemy1_posY += speed * dt;
-	}
-	if (delta == -1) {
-		*enemy1_posX += speed * dt;
-		*enemy1_posY -= speed * dt;
-	}
+draw_heart(int w, int h, int n, u32 color) {
+	w *= render_state.height * render_scale;
+	h *= render_state.height * render_scale;
+
+	//half_size_x *= render_state.height * render_scale;
+	//half_size_y *= render_state.height * render_scale;
+
+	//Need to center it, the window's center is at 0,0
+
+	//w += render_state.width / 2.f;
+	//h += render_state.height / 2.f;
+
+	n *= render_state.height * render_scale;
+	float two = 2 * render_state.height * render_scale;
+	float pi = M_PI * render_state.height * render_scale;
+
+
+	//simple method to get the min and max points
+	float x0 = w - two * n; //n*(w-two); left-most
+	float x1 = w + two * n; //n*(w+two); right-most
+	float y0 = h - n * pi;//h - n*pi;
+	float y1 = h + n;//h + n;
+
+	draw_heart_in_pixels(x0, y0, x1, y1, w, h, n, color);
+
 }

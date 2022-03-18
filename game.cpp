@@ -305,7 +305,7 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 
 		//draw_enemy(266, 615, 386, player_posY2, 0x00ff22);
 
-
+		draw_diamond(30, 15, 20, 15, YELLOW);
 		run_loop(&delta, &count, max, min);
 		run_loop(&delta2, &count2, max2, min2);
 
@@ -314,11 +314,11 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);
 		move_vertical(&enemy_x2, delta2, dt, 20);
 
-		draw_rect(30, 10, 10, 10, RED);
-		draw_tri(enemy_x, enemy_y, 10, 10, RED);
-		draw_tri(enemy_x2, enemy_y2, 10, 10, RED);
+		//draw_rect(30, 10, 10, 10, RED);
+		//draw_tri(enemy_x, enemy_y, 10, 10, RED);
+		//draw_tri(enemy_x2, enemy_y2, 10, 10, RED);
 		//draw_coin(-85, 49, 3, 1, YELLOW);
-		collision(coins, dt);
+		//collision(coins, dt);
 
 	}
 	else if (options == MAINMENU) {
