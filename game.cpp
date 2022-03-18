@@ -100,7 +100,7 @@ enum GAMEMODE {
 };
 
 GAMEMODE options = MAINMENU;
-int helper = 1;
+int selected = 1;
 
 float speed = 50.f; //unit per second
 
@@ -275,19 +275,19 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		printPhrase("Pick-A-Level", -48, 40, 6, false, square, RED);
 
 		if (pressed(BUTTON_DOWN)) {
-			helper++;
-			if (helper > 3) {
-				helper = 1;
+			selected++;
+			if (selected > 3) {
+			  selected = 1;
 			}
 		}
 
 		if (pressed(BUTTON_UP)) {
-			helper--;
-			if (helper < 1) {
-				helper = 3;
+		  selected--;
+			if (selected < 1) {
+			  selected = 3;
 			}
 		}
-		switch (helper) {
+		switch (selected) {
 		case(1):
 			color1 = RED;
 			color2 = BLACK;
@@ -315,10 +315,10 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 
 
 		if (pressed(BUTTON_ENTER)) {
-			if (helper == 1) {
+			if (selected == 1) {
 				options = LEVEL1;
 			}
-			else  if (helper == 2) {
+			else  if (selected == 2) {
 				options = LEVEL2;
 			}
 			else {
