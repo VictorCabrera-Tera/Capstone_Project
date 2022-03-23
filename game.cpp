@@ -17,12 +17,78 @@ restart_pos() {
 
 internal void
 collision(Coin_State* coins, float dt) {
+	/*
+	draw_rect(player_posX, player_posY, 4, 4, 0x00ff22, vacancy,bottom,left,right,top, coins);
 
-	draw_rect(player_posX, player_posY, 4, 4, 0x00ff22, vacancy, coins);
+	if (bottom == FALSE) {
+		yvelocity = 0;
+
+	}
+	else {
+		yvelocity += accel * dt;
+
+	}
+	if (left == FALSE) {
+		leftclear = TRUE;
+		draw_tri(enemy_x, enemy_y, 10, 10, RED);
+		yvelocity += accel * dt;
+	}
+	else {
+		leftclear = false;
+
+	}
+	if (right == FALSE) {
+		rightclear = TRUE;
+		yvelocity += accel * dt;
+	}
+	else {
+		rightclear = FALSE;
+
+	}
+	if (!vacancy) {
+		//restart_pos();;
+		player_posX = old_X;
+		player_posY = old_Y;
+		draw_rect(player_posX, player_posY, 4, 4, 0x00ff22)
+
+		/*
+		if (top = TRUE) {
+			//n
+		}
+		else {
+			//n
+		}
+
+		//xvelocity = 0;
+;
+	}
+	else {
+		yvelocity += accel * dt;
+	}
+	*/
+
+	draw_rect(player_posX, player_posY, 4, 4, 0x00ff22, vacancy, bottom, left, right, top, coins);
 	if (!vacancy) {
 		//restart_pos();;
 		clear = false;
-		yvelocity = 0;
+
+		if (bottom == false) {
+			yvelocity = 0;
+		}
+		if (left == false) {
+			leftclear = false;
+			xvelocity = 0;
+		}
+		else {
+			leftclear = true;
+		}
+		if (right == false) {
+			rightclear = false;
+			xvelocity = 0;
+		}
+		else {
+			rightclear = true;
+		}
 		//xvelocity = 0;
 		player_posX = old_X;
 		player_posX2 = old_X2;

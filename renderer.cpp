@@ -238,10 +238,10 @@ draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 	}
 
 } 
-
+*/
 
 internal void
-draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, bool& vacant, Coin_State* coins) {
+draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, bool& vacant, bool& bottom, bool& left, bool& right, bool& top, Coin_State* coins) {
 	//Change to pixels
 	//get the percentage of the screen relative to the current dimensions
 
@@ -270,6 +270,58 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 	x1 = clamp(0, render_state.width, x1);
 	y1 = clamp(0, render_state.height, y1);
 	///////
+
+
+	for (int i = (x0 + 4); i < (x1 - 4); i++) {
+		u32* bottom_pixels = (u32*)render_state.memory + i + y0 * render_state.width;
+		if (*bottom_pixels == RED)
+		{
+			bottom = FALSE;
+			break;
+		}
+		*bottom_pixels = BLUE;
+
+		bottom_pixels++;
+
+
+
+	}
+
+	//if left side touches red set left set left to false
+	for (int i = (y0 + 1); i < (y1 - 1); i++) {
+		u32* left_pixels = (u32*)render_state.memory + x0 + i * render_state.width;
+		if ((*left_pixels == RED))
+		{
+			left = FALSE;
+			break;
+		}
+		left_pixels++;
+
+	}
+	//  if right side touches red set right to false
+	for (int i = (y0 + 1); i < (y1 - 1); i++) {
+		u32* right_pixels = (u32*)render_state.memory + (x1 - 1) + i * render_state.width;
+		if ((*right_pixels == RED))
+		{
+			right = FALSE;
+			break;
+		}
+		right_pixels++;
+
+	}
+
+	/*
+	for (int i = x0; i < x1; i++) {
+		u32* top_pixels = (u32*)render_state.memory + i + (y1-1) * render_state.width;
+		if ((*top_pixels == 0x00ffff) || (*top_pixels == 0xffff22) || (*top_pixels == RED))
+		{
+			top = TRUE;
+			return;
+		}
+		top_pixels++;
+	}
+	*/
+
 	for (int i = y0; i < y1; i++) {
 		u32* lowerL_pixel = (u32*)render_state.memory + x0 + i * render_state.width;
 
@@ -294,13 +346,14 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 			lowerL_pixel++;
 		}
 	}
-
+	bottom = TRUE;
+	left = TRUE;
+	right = TRUE;
 	vacant = true;
-
 	draw_rect_in_pixels(x0, y0, x1, y1, color);
 
 
-} */
+}
 
 internal void
 draw_enemy(int x0, int y0, int x1, int y1, u32 color) {

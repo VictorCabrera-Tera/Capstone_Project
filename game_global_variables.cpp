@@ -38,6 +38,15 @@ float enemy_x2 = 20;
 
 float enemy_y2 = 20;
 
+bool bottom = TRUE;
+bool left = TRUE;
+bool right = TRUE;
+bool top = TRUE;
+
+bool leftclear = FALSE;
+bool rightclear = FALSE;
+
+
 
 bool coins_set = false;
 bool played = false;
