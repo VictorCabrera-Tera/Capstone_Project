@@ -188,8 +188,8 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		InvalidateRect(window, NULL, TRUE);
 		// unit / second * second/ frame = unit / frame
 
-		if (is_down(BUTTON_LEFT)) {
-			if (clear == true) {
+		if (leftclear == true) {
+			if (is_down(BUTTON_LEFT)) {
 				//player_posX -= speed * dt;
 				xvelocity = -50;
 
@@ -210,8 +210,8 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 
 		}
 
-		if (is_down(BUTTON_RIGHT)) {
-			if (clear == true) {
+		if (rightclear == true) {
+			if (is_down(BUTTON_RIGHT)) {
 				//player_posX += speed * dt;
 				xvelocity = 50;
 				/*
@@ -238,9 +238,6 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 			//player_posY += speed * dt;
 			yvelocity -= 4000 * dt;
 		}
-		//if (released(BUTTON_SPACEBAR)) {
-			//VEL_Y = accel;
-		//}
 
 
 
