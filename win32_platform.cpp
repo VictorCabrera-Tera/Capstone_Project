@@ -4,7 +4,7 @@
 #include "math.h"
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include <string>
+#pragma comment(lib,"winmm.lib")
 
 
 global_variable bool running = true;
