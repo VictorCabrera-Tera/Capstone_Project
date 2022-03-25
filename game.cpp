@@ -120,6 +120,7 @@ internal void
 Level1Coins(Coin_State* coins) {
 	int collected_coins = 0;
 	static int cc = 0;
+	mciSendString(L"open ..\\sound\\coin.wav type waveaudio alias coin", NULL, 0, 0);
 
 	if (coin(0, collected) == false) {
 		draw_coin(-10, -10, 6, 6, coins->coin[0].color);
@@ -151,7 +152,7 @@ Level1Coins(Coin_State* coins) {
 
 	//beeps once when coin is collected
 	if (collected_coins != cc) {
-		Beep(440, 100);
+		mciSendString(L"play coin from 1", NULL, 0, 0);
 		cc = collected_coins;
 	}
 
@@ -272,6 +273,8 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 
 	}
 	else if (options == MAINMENU) {
+		mciSendString(L"open ..\\sound\\Satorl_Marsh2.wav type waveaudio alias bgm", NULL, 0, 0);
+		mciSendString(L"play bgm", NULL, 0, 0);
 
 		draw_rect(0, 0, 90, 45, BLUE);
 		printPhrase("Main Menu", -43, 25, 13, true, ticket, GREEN);

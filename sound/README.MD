@@ -1,0 +1,1 @@
+put sound folder outside of Capstone_Project folder
