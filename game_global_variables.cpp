@@ -46,7 +46,10 @@ bool top = TRUE;
 bool leftclear = FALSE;
 bool rightclear = FALSE;
 
-
-
 bool coins_set = false;
 bool played = false;
+
+//pause button variables
+bool pause = false; 
+int pause_count = 0;
+
