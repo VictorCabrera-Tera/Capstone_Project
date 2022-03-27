@@ -6,10 +6,8 @@
 #include <cmath>
 #pragma comment(lib,"winmm.lib")
 
-
 global_variable bool running = true;
 global_variable bool paused = false;
-
 
 struct Render_State
 {
@@ -21,9 +19,6 @@ struct Render_State
 };
 
 global_variable Render_State render_state;
-
-
-
 
 #include "renderer.cpp"
 #include "movement.cpp"
@@ -174,10 +169,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
   
 
   Coin_State coins = {};
-
-  
-
-
 
   //Game Loop to keep window open
   while (running)

@@ -67,7 +67,7 @@ collision(Coin_State* coins, float dt) {
 	}
 	*/
 
-	draw_rect(player_posX, player_posY, 4, 4, 0x00ff22, vacancy, bottom, left, right, top, coins);
+	draw_rect(player_posX, player_posY, 4, 4, GREEN, vacancy, bottom, left, right, top, coins);
 	if (!vacancy) {
 		//restart_pos();;
 		clear = false;
@@ -94,7 +94,7 @@ collision(Coin_State* coins, float dt) {
 		player_posX2 = old_X2;
 		player_posY = old_Y;
 		player_posY2 = old_Y2;
-		draw_rect(player_posX, player_posY, 4, 4, 0x00ff22);
+		draw_rect(player_posX, player_posY, 4, 4, GREEN);
 	}
 	else {
 		clear = true;
@@ -184,13 +184,41 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		setCoins(coins, 0xFFD800, 0xFFD900, 0xFFDA00);
 	}
 	if (options == LEVEL1) {
+		//start of pause stuff
+		if (pause_count == 2 && pause == true)
+		{
+			pause = false;
+			pause_count = pause_count - 2;
+		}
+		if (pause == true)
+			printPhrase("Pause", -43, 25, 13, false, ticket, BLUE);
 
+		//if (pressed(BUTTON_ESCAPE) && pause == true)
+		//	pause = false;
+
+		if (pressed(BUTTON_ESCAPE))
+		{
+			pause_count++;
+			if (pause == false)
+			{
+				pause = true;
+			}	
+		}
+		if (pause == true)
+		{
+			mciSendString(L"pause bgm", NULL, 0, 0);
+		}
+		if (pause == false)
+		{
+			mciSendString(L"resume bgm", NULL, 0, 0);
+		}
+		//end of pause stuff
 
 		InvalidateRect(window, NULL, TRUE);
 		// unit / second * second/ frame = unit / frame
 
 		if (leftclear == true) {
-			if (is_down(BUTTON_LEFT)) {
+			if (is_down(BUTTON_LEFT) && pause == false) {
 				//player_posX -= speed * dt;
 				xvelocity = -50;
 
@@ -212,7 +240,7 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		}
 
 		if (rightclear == true) {
-			if (is_down(BUTTON_RIGHT)) {
+			if (is_down(BUTTON_RIGHT) && pause == false) {
 				//player_posX += speed * dt;
 				xvelocity = 50;
 				/*
@@ -233,20 +261,22 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 
 		}
 
-
-
-		if (pressed(BUTTON_SPACEBAR)) {
+		if (pressed(BUTTON_SPACEBAR) && pause == false) 
+		{
 			//player_posY += speed * dt;
 			yvelocity -= 4000 * dt;
+			
 		}
-
-
-
+		
 		old_Y = player_posY;
 		old_X = player_posX;
-		player_posY -= yvelocity * dt;
-		player_posX += xvelocity * dt;
-		yvelocity += accel * dt;
+		
+		if (pause == false)
+		{
+			player_posY -= yvelocity * dt;
+			player_posX += xvelocity * dt;
+			yvelocity += accel * dt;
+		}
 
 
 		//old_Y = player_posY;
@@ -255,16 +285,18 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 
 		//draw_enemy(266, 615, 386, player_posY2, 0x00ff22);
 
+		if (pause == false) {
+			run_loop(&delta, &count, max, min);
+			run_loop(&delta2, &count2, max2, min2);
 
-		run_loop(&delta, &count, max, min);
-		run_loop(&delta2, &count2, max2, min2);
+			//move_sideways(&enemy_x, delta, dt, 20);
+			//move_vertical(&enemy_y, delta, dt, 20);
+			move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);
+			move_vertical(&enemy_x2, delta2, dt, 20);
+			
+		}
 
-		//move_sideways(&enemy_x, delta, dt, 20);
-		//move_vertical(&enemy_y, delta, dt, 20);
-		move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);
-		move_vertical(&enemy_x2, delta2, dt, 20);
-
-		draw_rect(30, 10, 10, 10, RED);
+		//draw_rect(30, 10, 10, 10, RED);
 		draw_tri(enemy_x, enemy_y, 10, 10, RED);
 		draw_tri(enemy_x2, enemy_y2, 10, 10, RED);
 		//draw_coin(-85, 49, 3, 1, YELLOW);
@@ -273,8 +305,13 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 
 	}
 	else if (options == MAINMENU) {
-		mciSendString(L"open ..\\sound\\Satorl_Marsh2.wav type waveaudio alias bgm", NULL, 0, 0);
-		mciSendString(L"play bgm", NULL, 0, 0);
+		
+		if (pause == false) 
+		{
+			mciSendString(L"open ..\\sound\\Satorl_Marsh2.wav type waveaudio alias bgm", NULL, 0, 0);
+			mciSendString(L"play bgm", NULL, 0, 0);
+		}	
+		
 
 		draw_rect(0, 0, 90, 45, BLUE);
 		printPhrase("Main Menu", -43, 25, 13, true, ticket, GREEN);
