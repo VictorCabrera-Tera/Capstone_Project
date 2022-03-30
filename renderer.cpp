@@ -622,7 +622,7 @@ draw_circle(int centerX, int centerY, int radius, u32 color) {
 
 }
 internal void
-draw_heart_in_pixels(int x0, int y0, int x1, int y1, int w, int h, int n, u32 color) {
+draw_heart_in_pixels(int x0, int y0, int x1, int y1, int start_x, int start_y, float n, u32 color) {
 
 	x0 = clamp(0, render_state.width, x0);
 	y0 = clamp(0, render_state.height, y0);
@@ -633,9 +633,7 @@ draw_heart_in_pixels(int x0, int y0, int x1, int y1, int w, int h, int n, u32 co
 		u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
 		for (int x = x0; x < x1; x++) {
 
-			//if (abs(int((int)sqrt((pow(x - centerX, 2) + pow(y - centerY, 2))))) < radius) {
-			//if (y <= int(y1)) {
-			if (y > (n * acos(1 - abs(x / n - w)) + h - n * M_PI) && y < (n * sqrt(1 - (pow(abs(x / n - w) - 1, 2))) + h)) {
+			if (pow(pow(x + start_x, 2) + pow(y - start_y, 2) - pow(n, 2), 3) <= n * pow(x + start_x, 2) * pow(y - start_y, 3)) {
 				*pixel = color;
 			}
 			pixel++;
@@ -645,29 +643,21 @@ draw_heart_in_pixels(int x0, int y0, int x1, int y1, int w, int h, int n, u32 co
 
 }
 internal void
-draw_heart(int w, int h, int n, u32 color) {
-	w *= render_state.height * render_scale;
-	h *= render_state.height * render_scale;
+draw_heart(int x, int y, float a, u32 color) {
+	x *= render_state.height * render_scale;
+	y *= render_state.height * render_scale;
+	a *= render_state.height * render_scale; //size of the heart
 
-	//half_size_x *= render_state.height * render_scale;
-	//half_size_y *= render_state.height * render_scale;
+	x -= render_state.width / 2.f;
+	y += render_state.height / 2.f;
 
-	//Need to center it, the window's center is at 0,0
+	float x0 = -a * 1.14 - x;
+	float x1 = a * 1.14 - x;
+	float y0 = a * -1 + y;
+	float y1 = a * 1.24 + y;
 
-	//w += render_state.width / 2.f;
-	//h += render_state.height / 2.f;
+	draw_heart_in_pixels(x0, y0, x1, y1, x, y, a, color);
 
-	n *= render_state.height * render_scale;
-	float two = 2 * render_state.height * render_scale;
-	float pi = M_PI * render_state.height * render_scale;
-
-
-	//simple method to get the min and max points
-	float x0 = w - two * n; //n*(w-two); left-most
-	float x1 = w + two * n; //n*(w+two); right-most
-	float y0 = h - n * pi;//h - n*pi;
-	float y1 = h + n;//h + n;
-
-	draw_heart_in_pixels(x0, y0, x1, y1, w, h, n, color);
+}
 }
 
