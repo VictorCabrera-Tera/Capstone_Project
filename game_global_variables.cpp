@@ -1,6 +1,6 @@
 
-float player_posX = 0.f;
-float player_posY = 0.f;
+float player_posX = -82.f;
+float player_posY = -41.f;
 float player_posX2 = 100.f;
 float player_posY2 = 500.f;
 
@@ -19,24 +19,24 @@ u32 color3 = BLACK;
 
 int delta = 1;
 int count = 0;
-int max = 100;
-int min = 0;
+int max = 1000;
+int min = -100;
 
 int delta2 = 1;
 int count2 = 0;
-int max2 = 100;
-int min2 = 0;
+int max2 = 400;
+int min2 = -600;
 
 float yvelocity;
 float xvelocity = 0;
-float accel = 15.0;
-float enemy_x = 10;
-float enemy_y = 10;
+float accel = 125.0;
+float enemy_x = -38;
+float enemy_y = -15;
 
 
-float enemy_x2 = 20;
+float enemy_x2 = 32;
 
-float enemy_y2 = 20;
+float enemy_y2 = 25;
 
 bool bottom = TRUE;
 bool left = TRUE;

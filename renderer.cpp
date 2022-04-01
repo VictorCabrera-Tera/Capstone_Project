@@ -272,7 +272,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 	///////
 
 
-	for (int i = (x0 + 4); i < (x1 - 4); i++) {
+	for (int i = x0; i < x1; i++) {
 		u32* bottom_pixels = (u32*)render_state.memory + i + y0 * render_state.width;
 		if (*bottom_pixels == RED)
 		{
@@ -310,17 +310,16 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 
 	}
 
-	/*
-	for (int i = x0; i < x1; i++) {
-		u32* top_pixels = (u32*)render_state.memory + i + (y1-1) * render_state.width;
-		if ((*top_pixels == 0x00ffff) || (*top_pixels == 0xffff22) || (*top_pixels == RED))
-		{
-			top = TRUE;
-			return;
-		}
-		top_pixels++;
+	for (int i = (x0 + 2); i < (x1 - 2); i++) {
+	  u32* top_pixels = (u32*)render_state.memory + i + y1 * render_state.width;
+	  if ((*top_pixels == RED))
+	  {
+		top = FALSE;
+		break;
+	  }
+	  //*top_pixels = BLUE;
+	  top_pixels++;
 	}
-	*/
 
 	for (int i = y0; i < y1; i++) {
 		u32* lowerL_pixel = (u32*)render_state.memory + x0 + i * render_state.width;
@@ -348,6 +347,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 	}
 	bottom = TRUE;
 	left = TRUE;
+	top = TRUE;
 	right = TRUE;
 	vacant = true;
 	draw_rect_in_pixels(x0, y0, x1, y1, color);
@@ -541,41 +541,7 @@ draw_ticket(int start_x, int start_y, int width, int height, u32 color) {
 	draw_ticket_in_pixels(x0, y0, x1, y1, color);
 }
 
-//Point Algorithm?
-/*
- x0 = clamp(0, render_state.width, x0);
-  y0 = clamp(0, render_state.height, y0);
-  x1 = clamp(0, render_state.width, x1);
-  y1 = clamp(0, render_state.height, y1);
-  int temp1 = x1;
-  int temp0 = x0;
-  int middle = (x1 + x0) / 2;
-  middle = middle - x0;
-  int iterations = y0 + (middle / 2);
-  iterations = clamp(0, render_state.height, iterations);
-  for (int y = y0; y < iterations; y++) {
-	u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
-	for (int x = temp0; x < temp1; x++) {
-	  *pixel = color;
-	  pixel++;
-	}
-	temp1--;
-	temp0++;
-  }
-  temp1 = x1;
-  temp0 = x0;
-  iterations = y0 - (middle / 2);
-  iterations = clamp(0, render_state.height, iterations);
-  for (int y = y0; y > iterations; y--) {
-	u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
-	for (int x = temp0; x < temp1; x++) {
-	  *pixel = color;
-	  pixel++;
-	}
-	temp1--;
-	temp0++;
-  }
-*/
+
 
 internal void
 draw_circle_in_pixels(int x0, int y0, int x1, int y1, int radius, int centerX, int centerY, u32 color) {
@@ -642,22 +608,21 @@ draw_heart_in_pixels(int x0, int y0, int x1, int y1, int start_x, int start_y, f
 	}
 
 }
+
 internal void
 draw_heart(int x, int y, float a, u32 color) {
-	x *= render_state.height * render_scale;
-	y *= render_state.height * render_scale;
-	a *= render_state.height * render_scale; //size of the heart
+  x *= render_state.height * render_scale;
+  y *= render_state.height * render_scale;
+  a *= render_state.height * render_scale; //size of the heart
 
-	x -= render_state.width / 2.f;
-	y += render_state.height / 2.f;
+  x -= render_state.width / 2.f;
+  y += render_state.height / 2.f;
 
-	float x0 = -a * 1.14 - x;
-	float x1 = a * 1.14 - x;
-	float y0 = a * -1 + y;
-	float y1 = a * 1.24 + y;
+  float x0 = -a * 1.14 - x;
+  float x1 = a * 1.14 - x;
+  float y0 = a * -1 + y;
+  float y1 = a * 1.24 + y;
 
-	draw_heart_in_pixels(x0, y0, x1, y1, x, y, a, color);
-
-}
+  draw_heart_in_pixels(x0, y0, x1, y1, x, y, a, color);
 }
 

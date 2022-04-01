@@ -89,6 +89,10 @@ collision(Coin_State* coins, float dt) {
 		else {
 			rightclear = true;
 		}
+
+		if (top == false) {
+		  yvelocity = 0;
+		}
 		//xvelocity = 0;
 		player_posX = old_X;
 		player_posX2 = old_X2;
@@ -121,39 +125,39 @@ Level1Coins(Coin_State* coins) {
 	int collected_coins = 0;
 	static int cc = 0;
 	mciSendString(L"open ..\\sound\\coin.wav type waveaudio alias coin", NULL, 0, 0);
-
+	
 	if (coin(0, collected) == false) {
-		draw_coin(-10, -10, 6, 6, coins->coin[0].color);
-		draw_coin(-85, 49, 3, 1, WHITE);
+	  draw_circle(-39, -36, 3, coins->coin[0].color);
+	  draw_circle(-69, 48, 2, WHITE);
 	}
 	else if (coin(0, collected) == true) {
-		draw_coin(-85, 49, 3, 1, coins->coin[0].color);
-		collected_coins++;
+	  draw_circle(-69, 48, 2, coins->coin[0].color);
+	  collected_coins++;
 	}
 
 
 	if (coin(1, collected) == false) {
-		draw_coin(10, 10, 6, 6, coins->coin[1].color);
-		draw_coin(-80, 49, 3, 1, WHITE);
+	  draw_circle(-76, -12, 3, coins->coin[1].color);
+	  draw_circle(-65, 48, 2, WHITE);
 	}
 	else if (coin(1, collected) == true) {
-		draw_coin(-80, 49, 3, 1, coins->coin[1].color);
-		collected_coins++;
+	  draw_circle(-65, 48, 2, coins->coin[1].color);
+	  collected_coins++;
 	}
 
 	if (coin(2, collected) == false) {
-		draw_coin(30, 30, 6, 6, coins->coin[2].color);
-		draw_coin(-75, 49, 3, 1, WHITE);
+	  draw_circle(30, 30, 3, coins->coin[2].color);
+	  draw_circle(-61, 48, 2, WHITE);
 	}
 	else if (coin(2, collected) == true) {
-		draw_coin(-75, 49, 3, 1, coins->coin[2].color);
-		collected_coins++;
+	  draw_circle(-61, 48, 2, coins->coin[2].color);
+	  collected_coins++;
 	}
 
 	//beeps once when coin is collected
 	if (collected_coins != cc) {
-		mciSendString(L"play coin from 1", NULL, 0, 0);
-		cc = collected_coins;
+	  mciSendString(L"play coin from 1", NULL, 0, 0);
+	  cc = collected_coins;
 	}
 
 }
@@ -184,6 +188,10 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		setCoins(coins, 0xFFD800, 0xFFD900, 0xFFDA00);
 	}
 	if (options == LEVEL1) {
+
+		printLevelText("Level 1", -10, 49, WHITE);
+		printLevelText("Lives ", 50, 49, WHITE);
+		printLevelText("Coins ", -90, 49, WHITE);
 		//start of pause stuff
 		if (pause_count == 2 && pause == true)
 		{
@@ -191,7 +199,8 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 			pause_count = pause_count - 2;
 		}
 		if (pause == true)
-			printPhrase("Pause", -43, 25, 13, false, ticket, BLUE);
+			printMenuPhrase("Pause", -43, 25, 13, false, ticket, BLUE);
+
 
 		//if (pressed(BUTTON_ESCAPE) && pause == true)
 		//	pause = false;
@@ -214,7 +223,6 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		}
 		//end of pause stuff
 
-		InvalidateRect(window, NULL, TRUE);
 		// unit / second * second/ frame = unit / frame
 
 		if (leftclear == true) {
@@ -264,7 +272,7 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		if (pressed(BUTTON_SPACEBAR) && pause == false) 
 		{
 			//player_posY += speed * dt;
-			yvelocity -= 4000 * dt;
+			yvelocity -= 15000 * dt;
 			
 		}
 		
@@ -279,27 +287,55 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		}
 
 
-		//old_Y = player_posY;
-
-		//draw_rect(0,0, 5, 5, 0x00ff22);
-
-		//draw_enemy(266, 615, 386, player_posY2, 0x00ff22);
 
 		if (pause == false) {
 			run_loop(&delta, &count, max, min);
+			move_vertical(&enemy_y, delta, dt, 8);
+			
 			run_loop(&delta2, &count2, max2, min2);
-
+			move_sideways(&enemy_x2, delta2, dt, 20);
 			//move_sideways(&enemy_x, delta, dt, 20);
 			//move_vertical(&enemy_y, delta, dt, 20);
-			move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);
-			move_vertical(&enemy_x2, delta2, dt, 20);
-			
+			//move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);	
 		}
 
-		//draw_rect(30, 10, 10, 10, RED);
-		draw_tri(enemy_x, enemy_y, 10, 10, RED);
-		draw_tri(enemy_x2, enemy_y2, 10, 10, RED);
-		//draw_coin(-85, 49, 3, 1, YELLOW);
+		draw_rect(82, -38, 8, 8, RED); //fills in lower right corner
+
+		draw_rect(-69, -44, 5, 1, RED); //bump1
+
+		draw_rect(-40, -41, 15, 1, RED); //plat1
+
+		draw_right_tri(2.2, -44.9, 2.8, RED); //little ledge next to stairs
+		draw_rect(45, -42, 40, 3, RED); //stairs
+		draw_rect(55, -37, 20, 2, RED);
+		draw_rect(65, -33, 20, 2, RED);
+		draw_rect(75, -29, 20, 2, RED);
+
+		draw_rect(19, -28, 8, 0.5, RED); //plat2
+
+
+
+		draw_rect(-44, -20, 35, 0.8, RED); //plat3
+		draw_rect(-1, -22, 5, 0.5, RED);
+
+		draw_rect(-76, -17, 3, 2.3, RED); //bump2
+
+
+		draw_rect(-53, -9, 11, 0.2, RED); //platform 4
+		draw_rect(-51, -8.3, 9, 0.5, RED);
+		draw_right_tri(-51, -8.1, 9, RED);
+
+		draw_rect(-38, 35, 4, 10, RED); //wall
+		draw_rect(-38, 2, 4, 8, RED); //wall
+
+		draw_diamond(enemy_x, enemy_y, 3, 3, BLUE); //enemy 1
+
+		draw_rect(30, 12, 50, 1, RED); //last platform
+		draw_coin(30, 32, 30, 20, RED); //the red hexagon platform
+
+		draw_coin(enemy_x2, enemy_y2, 5, 5, BLUE); //enemy 2
+
+
 		Level1Coins(coins);
 		collision(coins, dt);
 
@@ -314,7 +350,7 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		
 
 		draw_rect(0, 0, 90, 45, BLUE);
-		printPhrase("Main Menu", -43, 25, 13, true, ticket, GREEN);
+		printMenuPhrase("Main Menu", -43, 25, 13, true, ticket, GREEN);
 		u32 temp;
 		//draw_rect()
 		if (pressed(BUTTON_LEFT)) {
@@ -342,14 +378,14 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 			}
 		}
 		if (color1 == RED) {
-		  printPhrase("Start-Level", -50, -20, 6, false, square, RED);
+		  printMenuPhrase("Start-Level", -50, -20, 6, false, square, RED);
 		}
 		draw_rect(-20, 0, 1, 10, color1); //left side
 		draw_rect(-20, -10, 10, 1, color1);
 		draw_rect(-24, 10, 5, 1, color1);
 
 		if (color2 == RED) {
-		  printPhrase("Level-Select", -50, -20, 6, false, square, RED);
+		  printMenuPhrase("Level-Select", -50, -20, 6, false, square, RED);
 		}
 
 		draw_rect(10, 10, 1, 3, color2); //Right side
@@ -375,7 +411,7 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 	}
 	else if (options == LEVELSELECT) {
 
-		printPhrase("Pick-A-Level", -48, 40, 6, false, square, RED);
+		printMenuPhrase("Pick-A-Level", -48, 40, 6, false, square, RED);
 
 		if (pressed(BUTTON_DOWN)) {
 			selected++;
@@ -430,9 +466,15 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		}
 	}
 	else if (options == LEVEL2) {
-		draw_rect(0, 0, 80, 20, RED);
+	  printLevelText("Level 2", -10, 49, WHITE);
+	  printLevelText("Lives ", 50, 49, WHITE);
+	  printLevelText("Coins ", -90, 49, WHITE);
+	  draw_rect(0, 0, 80, 20, RED);
 	}
 	else if (options == LEVEL3) {
-		draw_rect(0, 0, 80, 20, BLUE);
+	  printLevelText("Level 3", -10, 49, WHITE);
+	  printLevelText("Lives ", 50, 49, WHITE);
+	  printLevelText("Coins ", -90, 49, WHITE);
+	  draw_rect(0, 0, 80, 20, BLUE);
 	}
 }
