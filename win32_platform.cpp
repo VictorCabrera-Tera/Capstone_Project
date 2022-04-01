@@ -7,8 +7,9 @@
 #pragma comment(lib,"winmm.lib")
 
 global_variable bool running = true;
-global_variable bool paused = false;
 
+bool pause = false;
+int pause_count = 0;
 struct Render_State
 {
   void* memory;
@@ -93,7 +94,7 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	//Otherwise, do the default behavior for the message
 
 	case(WM_MOVE): {
-	  paused = true;
+	  pause = true;
 	}break;
 	//Includes moving the window, minimizing, reshaping
 	default:
@@ -229,8 +230,16 @@ input.buttons[b].is_down = is_down;\
 	  simulate_game(&input, delta_time, &coins, window);
 	}
 	*/
+	if (input.buttons[BUTTON_ESCAPE].changed && input.buttons[BUTTON_ESCAPE].is_down) {
+	  pause = !pause;
+	}
 
-	simulate_game(&input, delta_time, &coins, window);
+
+	if (pause == false) {
+	  simulate_game(&input, delta_time, &coins, window);
+
+
+	}
 	
 	
 	//Render
@@ -244,14 +253,14 @@ input.buttons[b].is_down = is_down;\
 	LARGE_INTEGER frame_end_time;
 	//time for when the frame ends
 	QueryPerformanceCounter(&frame_end_time);
-	 
+
 	/*
 	(frame_end_time.QuadPart - frame_begin_time.QuadPart) will give cycles / frame
 	performance_frequency is cycles / sec
 	diving gives you sec / frame, which is needed for the speed of the game
 	*/
 
-	delta_time = (float)(frame_end_time.QuadPart - frame_begin_time.QuadPart) / performance_frequency;
+	//delta_time = (float)(frame_end_time.QuadPart - frame_begin_time.QuadPart) / performance_frequency;
 
 	frame_begin_time = frame_end_time;
 	

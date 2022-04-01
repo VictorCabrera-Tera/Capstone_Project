@@ -3,6 +3,8 @@ global_variable float render_scale = 0.01f;
 
 #define internal static
 
+
+
 internal void
 clear_screen(u32 color) {
 	u32* pixel = (u32*)render_state.memory;
@@ -241,7 +243,7 @@ draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 */
 
 internal void
-draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, bool& vacant, bool& bottom, bool& left, bool& right, bool& top, Coin_State* coins) {
+draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, bool& vacant, bool& bottom, bool& left, bool& right, bool& top, bool & enemy_touched, Coin_State* coins) {
 	//Change to pixels
 	//get the percentage of the screen relative to the current dimensions
 
@@ -279,8 +281,6 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 			bottom = FALSE;
 			break;
 		}
-		*bottom_pixels = BLUE;
-
 		bottom_pixels++;
 
 
@@ -336,11 +336,14 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 			}
 			if (*lowerL_pixel == coins->coin[1].color)
 			{
-				coins->coin[1].collected = true;
+				coins->coin[1].collected = true; 
 			}
 			if (*lowerL_pixel == coins->coin[2].color)
 			{
 				coins->coin[2].collected = true;
+			}
+			if ((*lowerL_pixel == BLUE)) {
+			  enemy_touched = true;
 			}
 			lowerL_pixel++;
 		}
