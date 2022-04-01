@@ -67,38 +67,45 @@ collision(Coin_State* coins, float dt) {
 	}
 	*/
 
-	draw_rect(player_posX, player_posY, 4, 4, GREEN, vacancy, bottom, left, right, top, coins);
+	draw_rect(player_posX, player_posY, 2, 2, GREEN, vacancy, bottom, left, right, top, enemy_touched, coins);
 	if (!vacancy) {
-		//restart_pos();;
-		clear = false;
-
-		if (bottom == false) {
-			yvelocity = 0;
+		if (enemy_touched){
+		  enemy_touched = false;
+		  restart_pos();
 		}
-		if (left == false) {
+		else {
+
+
+		  clear = false;
+
+		  if (bottom == false) {
+			yvelocity = 0;
+		  }
+		  if (left == false) {
 			leftclear = false;
 			xvelocity = 0;
-		}
-		else {
+		  }
+		  else {
 			leftclear = true;
-		}
-		if (right == false) {
+		  }
+		  if (right == false) {
 			rightclear = false;
 			xvelocity = 0;
-		}
-		else {
+		  }
+		  else {
 			rightclear = true;
-		}
+		  }
 
-		if (top == false) {
-		  yvelocity = 0;
+		  if (top == false) {
+			yvelocity = 0;
+		  }
+		  //xvelocity = 0;
+		  player_posX = old_X;
+		  player_posX2 = old_X2;
+		  player_posY = old_Y;
+		  player_posY2 = old_Y2;
+		  draw_rect(player_posX, player_posY, 2, 2, GREEN);
 		}
-		//xvelocity = 0;
-		player_posX = old_X;
-		player_posX2 = old_X2;
-		player_posY = old_Y;
-		player_posY2 = old_Y2;
-		draw_rect(player_posX, player_posY, 4, 4, GREEN);
 	}
 	else {
 		clear = true;
@@ -178,7 +185,7 @@ float speed = 50.f; //unit per second
 
 
 internal void
-simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
+simulate_game(Input* input, float &dt, Coin_State* coins, HWND window) {
 
 	clear_screen(RED);
 	draw_rect(0, 0, 90, 45, WHITE);
@@ -197,14 +204,18 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		{
 			pause = false;
 			pause_count = pause_count - 2;
+			
 		}
-		if (pause == true)
-			printMenuPhrase("Pause", -43, 25, 13, false, ticket, BLUE);
-
+		if (pause == true) {
+		  printMenuPhrase("Pause", -43, 25, 13, false, ticket, BLUE);
+		  temp += 1;
+		  temp2 = temp * dt;
+		}
+			
 
 		//if (pressed(BUTTON_ESCAPE) && pause == true)
 		//	pause = false;
-
+		/*
 		if (pressed(BUTTON_ESCAPE))
 		{
 			pause_count++;
@@ -212,7 +223,7 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 			{
 				pause = true;
 			}	
-		}
+		}*/
 		if (pause == true)
 		{
 			mciSendString(L"pause bgm", NULL, 0, 0);
@@ -228,7 +239,7 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		if (leftclear == true) {
 			if (is_down(BUTTON_LEFT) && pause == false) {
 				//player_posX -= speed * dt;
-				xvelocity = -50;
+				xvelocity = -20;
 
 				/*
 				if (xvelocity > 0) {
@@ -248,9 +259,9 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		}
 
 		if (rightclear == true) {
-			if (is_down(BUTTON_RIGHT) && pause == false) {
+			if (is_down(BUTTON_RIGHT) && pause == false) { // 
 				//player_posX += speed * dt;
-				xvelocity = 50;
+				xvelocity = 20;
 				/*
 				if (xvelocity < 0) {
 					xvelocity += 200 * dt;
@@ -272,7 +283,7 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 		if (pressed(BUTTON_SPACEBAR) && pause == false) 
 		{
 			//player_posY += speed * dt;
-			yvelocity -= 15000 * dt;
+			yvelocity -= 3000 * dt;
 			
 		}
 		
@@ -289,6 +300,7 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 
 
 		if (pause == false) {
+			
 			run_loop(&delta, &count, max, min);
 			move_vertical(&enemy_y, delta, dt, 8);
 			
@@ -335,6 +347,7 @@ simulate_game(Input* input, float dt, Coin_State* coins, HWND window) {
 
 		draw_coin(enemy_x2, enemy_y2, 5, 5, BLUE); //enemy 2
 
+		//draw_heart(6, 6, 1, GREEN);
 
 		Level1Coins(coins);
 		collision(coins, dt);

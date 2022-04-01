@@ -29,7 +29,7 @@ int min2 = -600;
 
 float yvelocity;
 float xvelocity = 0;
-float accel = 125.0;
+float accel = 50.0;
 float enemy_x = -38;
 float enemy_y = -15;
 
@@ -50,6 +50,9 @@ bool coins_set = false;
 bool played = false;
 
 //pause button variables
-bool pause = false; 
-int pause_count = 0;
 
+
+bool enemy_touched = false;
+
+float temp = 0;
+float temp2 = 0;
