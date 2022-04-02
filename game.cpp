@@ -8,15 +8,29 @@
 
 
 internal void
-restart_pos() {
+restart_pos(GAMEMODE Level) {
 	//draw_rect(0, 0, 1, 1, 0x00ff22);
-	player_posX = 0;
-	player_posY = 0;
+  switch (Level) {
+	case(LEVEL1): {
+	  player_posX = game_info.getLevel1Spawn().x;
+	  player_posY = game_info.getLevel1Spawn().y;
+	}break;
+	case(LEVEL2): {
+	  player_posX = game_info.getLevel2Spawn().x;
+	  player_posY = game_info.getLevel2Spawn().y;
+	}break;
+	case(LEVEL3):
+	{
+	  player_posX = game_info.getLevel3Spawn().x;
+	  player_posY = game_info.getLevel3Spawn().y;
+	}break;
+  }
+
 }
 
 
 internal void
-collision(Coin_State* coins, float dt) {
+collision(Coin_State* coins, float dt, GAMEMODE Level) {
 	/*
 	draw_rect(player_posX, player_posY, 4, 4, 0x00ff22, vacancy,bottom,left,right,top, coins);
 
@@ -71,7 +85,7 @@ collision(Coin_State* coins, float dt) {
 	if (!vacancy) {
 		if (enemy_touched){
 		  enemy_touched = false;
-		  restart_pos();
+		  restart_pos(Level);
 		}
 		else {
 
@@ -116,16 +130,6 @@ collision(Coin_State* coins, float dt) {
 
 
 
-internal void
-setCoins(Coin_State* coins, u32 coin1, u32 coin2, u32 coin3) {
-	for (int i = 0; i < AMOUNT; i++) {
-		coins->coin[i].collected = false;
-	}
-	coins->coin[0].color = coin1;
-	coins->coin[1].color = coin2;
-	coins->coin[2].color = coin3;
-	coins_set = true;
-}
 
 internal void
 Level1Coins(Coin_State* coins) {
@@ -169,13 +173,7 @@ Level1Coins(Coin_State* coins) {
 
 }
 
-enum GAMEMODE {
-	MAINMENU,
-	LEVELSELECT,
-	LEVEL1,
-	LEVEL2,
-	LEVEL3,
-};
+
 
 GAMEMODE options = MAINMENU;
 int selected = 1;
@@ -185,59 +183,36 @@ float speed = 50.f; //unit per second
 
 
 internal void
-simulate_game(Input* input, float &dt, Coin_State* coins, HWND window) {
+simulate_game(Input* input, float &dt, Coin_State* coins) {
 
 	clear_screen(RED);
 	draw_rect(0, 0, 90, 45, WHITE);
 
+	
+	if (game_info.set == false) {
+		game_info.setCoins(coins, 0xFFD800, 0xFFD900, 0xFFDA00);
+		game_info.setLevel1Spawn(-82, -41);
+		game_info.setLevel2Spawn(0, 0);
+		game_info.setLevel3Spawn(20, 40);
 
-	if (coins_set == false) {
-		setCoins(coins, 0xFFD800, 0xFFD900, 0xFFDA00);
+		game_info.set = true;
 	}
 	if (options == LEVEL1) {
 
 		printLevelText("Level 1", -10, 49, WHITE);
 		printLevelText("Lives ", 50, 49, WHITE);
 		printLevelText("Coins ", -90, 49, WHITE);
-		//start of pause stuff
-		if (pause_count == 2 && pause == true)
-		{
-			pause = false;
-			pause_count = pause_count - 2;
-			
-		}
-		if (pause == true) {
-		  printMenuPhrase("Pause", -43, 25, 13, false, ticket, BLUE);
-		  temp += 1;
-		  temp2 = temp * dt;
-		}
-			
 
-		//if (pressed(BUTTON_ESCAPE) && pause == true)
-		//	pause = false;
-		/*
-		if (pressed(BUTTON_ESCAPE))
-		{
-			pause_count++;
-			if (pause == false)
-			{
-				pause = true;
-			}	
-		}*/
-		if (pause == true)
-		{
-			mciSendString(L"pause bgm", NULL, 0, 0);
+		if (!set_spawnpoint) {
+		  player_posX = game_info.getLevel1Spawn().x;
+		  player_posY = game_info.getLevel1Spawn().y;
+		  set_spawnpoint = true;
 		}
-		if (pause == false)
-		{
-			mciSendString(L"resume bgm", NULL, 0, 0);
-		}
-		//end of pause stuff
 
 		// unit / second * second/ frame = unit / frame
 
 		if (leftclear == true) {
-			if (is_down(BUTTON_LEFT) && pause == false) {
+			if (is_down(BUTTON_LEFT)) {
 				//player_posX -= speed * dt;
 				xvelocity = -20;
 
@@ -259,7 +234,7 @@ simulate_game(Input* input, float &dt, Coin_State* coins, HWND window) {
 		}
 
 		if (rightclear == true) {
-			if (is_down(BUTTON_RIGHT) && pause == false) { // 
+			if (is_down(BUTTON_RIGHT)) { // 
 				//player_posX += speed * dt;
 				xvelocity = 20;
 				/*
@@ -280,7 +255,7 @@ simulate_game(Input* input, float &dt, Coin_State* coins, HWND window) {
 
 		}
 
-		if (pressed(BUTTON_SPACEBAR) && pause == false) 
+		if (pressed(BUTTON_SPACEBAR)) 
 		{
 			//player_posY += speed * dt;
 			yvelocity -= 3000 * dt;
@@ -290,26 +265,24 @@ simulate_game(Input* input, float &dt, Coin_State* coins, HWND window) {
 		old_Y = player_posY;
 		old_X = player_posX;
 		
-		if (pause == false)
-		{
-			player_posY -= yvelocity * dt;
-			player_posX += xvelocity * dt;
-			yvelocity += accel * dt;
-		}
+
+		player_posY -= yvelocity * dt;
+		player_posX += xvelocity * dt;
+		yvelocity += accel * dt;
+		
 
 
 
-		if (pause == false) {
+
+		run_loop(&delta, &count, max, min);
+		move_vertical(&enemy_y, delta, dt, 8);
 			
-			run_loop(&delta, &count, max, min);
-			move_vertical(&enemy_y, delta, dt, 8);
-			
-			run_loop(&delta2, &count2, max2, min2);
-			move_sideways(&enemy_x2, delta2, dt, 20);
-			//move_sideways(&enemy_x, delta, dt, 20);
-			//move_vertical(&enemy_y, delta, dt, 20);
-			//move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);	
-		}
+		run_loop(&delta2, &count2, max2, min2);
+		move_sideways(&enemy_x2, delta2, dt, 20);
+		//move_sideways(&enemy_x, delta, dt, 20);
+		//move_vertical(&enemy_y, delta, dt, 20);
+		//move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);	
+		
 
 		draw_rect(82, -38, 8, 8, RED); //fills in lower right corner
 
@@ -350,7 +323,7 @@ simulate_game(Input* input, float &dt, Coin_State* coins, HWND window) {
 		//draw_heart(6, 6, 1, GREEN);
 
 		Level1Coins(coins);
-		collision(coins, dt);
+		collision(coins, dt, options);
 
 	}
 	else if (options == MAINMENU) {
@@ -381,7 +354,7 @@ simulate_game(Input* input, float &dt, Coin_State* coins, HWND window) {
 		if (pressed(BUTTON_ENTER)) {
 			if (color1 == RED) {
 				options = LEVEL1;
-
+				game_info.started_level = true;
 			}
 			else {
 				options = LEVELSELECT;
@@ -469,12 +442,17 @@ simulate_game(Input* input, float &dt, Coin_State* coins, HWND window) {
 		if (pressed(BUTTON_ENTER)) {
 			if (selected == 1) {
 				options = LEVEL1;
+				game_info.started_level = true;
 			}
 			else  if (selected == 2) {
 				options = LEVEL2;
+				game_info.started_level = true;
+
 			}
 			else {
 				options = LEVEL3;
+				game_info.started_level = true;
+
 			}
 		}
 	}
@@ -488,6 +466,15 @@ simulate_game(Input* input, float &dt, Coin_State* coins, HWND window) {
 	  printLevelText("Level 3", -10, 49, WHITE);
 	  printLevelText("Lives ", 50, 49, WHITE);
 	  printLevelText("Coins ", -90, 49, WHITE);
+
+
+	  if (!set_spawnpoint) {
+		player_posX  = game_info.getLevel3Spawn().x;
+		player_posY = game_info.getLevel3Spawn().y;
+		set_spawnpoint = true;
+	  }
+
 	  draw_rect(0, 0, 80, 20, BLUE);
+	  collision(coins, dt, options);
 	}
 }

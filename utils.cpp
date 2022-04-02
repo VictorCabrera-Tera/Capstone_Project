@@ -23,3 +23,4 @@ clamp(int min, int max, int value) {
   if (value > max) return max;
   return value;
 }
+

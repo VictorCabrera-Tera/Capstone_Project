@@ -46,7 +46,7 @@ bool top = TRUE;
 bool leftclear = FALSE;
 bool rightclear = FALSE;
 
-bool coins_set = false;
+bool set_spawnpoint = false;
 bool played = false;
 
 //pause button variables
@@ -54,5 +54,3 @@ bool played = false;
 
 bool enemy_touched = false;
 
-float temp = 0;
-float temp2 = 0;
