@@ -1,6 +1,6 @@
 
-float player_posX = -82.f;
-float player_posY = -41.f;
+float player_posX = 0.f;
+float player_posY = 0.f;
 float player_posX2 = 100.f;
 float player_posY2 = 500.f;
 
@@ -46,7 +46,7 @@ bool top = TRUE;
 bool leftclear = FALSE;
 bool rightclear = FALSE;
 
-bool set_spawnpoint = false;
+bool levelInfoSet = false;
 bool played = false;
 
 //pause button variables

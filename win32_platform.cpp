@@ -20,6 +20,7 @@ struct Render_State
 };
 
 global_variable Render_State render_state;
+
 global_variable gameUtilities game_info;
 
 #include "renderer.cpp"
@@ -27,6 +28,12 @@ global_variable gameUtilities game_info;
 #include "text.cpp"
 
 #include "game.cpp"
+#include "level1.cpp"
+#include "levelSelect.cpp"
+#include "level2.cpp"
+#include "level3.cpp"
+#include "mainMenu.cpp"
+
 
 
 
@@ -171,7 +178,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
 
 
-  Coin_State coins = {};
   game_info.pause = false;
   game_info.started_level = false;
   game_info.set = false;
@@ -234,7 +240,7 @@ input.buttons[b].is_down = is_down;\
 
 
 	if (game_info.pause == false) {
-	  simulate_game(&input, delta_time, &coins);
+	  simulate_game(&input, delta_time);
 	  mciSendString(L"resume bgm", NULL, 0, 0);
 	}
 	else {
