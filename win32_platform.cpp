@@ -20,6 +20,7 @@ struct Render_State
 };
 
 global_variable Render_State render_state;
+global_variable gameUtilities game_info;
 
 #include "renderer.cpp"
 #include "movement.cpp"
@@ -94,7 +95,10 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	//Otherwise, do the default behavior for the message
 
 	case(WM_MOVE): {
-	  pause = true;
+	  if (game_info.started_level)
+	  {
+		game_info.pause = true;
+	  }
 	}break;
 	//Includes moving the window, minimizing, reshaping
 	default:
@@ -165,11 +169,12 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	performance_frequency = (float)perf.QuadPart;
   }
 
-  //PlaySound(L"C:\\Users\\steve\\Desktop\\My_First_Cpp_Game\\My_First_Cpp_Game\\Satorl_Marsh2.wav", 0, SND_FILENAME | SND_ASYNC | SND_NODEFAULT);
-  //C:\Users\steve\Desktop\My_First_Cpp_Game\My_First_Cpp_Game\\Satorl_Marsh_Night.wav
-  
+
 
   Coin_State coins = {};
+  game_info.pause = false;
+  game_info.started_level = false;
+  game_info.set = false;
 
   //Game Loop to keep window open
   while (running)
@@ -220,25 +225,21 @@ input.buttons[b].is_down = is_down;\
   
 	}
 
-	//Simulate
-	/*
+
 	if (input.buttons[BUTTON_ESCAPE].changed && input.buttons[BUTTON_ESCAPE].is_down) {
-	  paused = !paused;
-	}
-	//draw_rect(0,0,20,20,0x00ff22);//x,y,halfx,halfy and color
-	if (paused == false) {
-	  simulate_game(&input, delta_time, &coins, window);
-	}
-	*/
-	if (input.buttons[BUTTON_ESCAPE].changed && input.buttons[BUTTON_ESCAPE].is_down) {
-	  pause = !pause;
+	  if (game_info.started_level) {
+		game_info.pause = !game_info.pause;
+	  }
 	}
 
 
-	if (pause == false) {
-	  simulate_game(&input, delta_time, &coins, window);
-
-
+	if (game_info.pause == false) {
+	  simulate_game(&input, delta_time, &coins);
+	  mciSendString(L"resume bgm", NULL, 0, 0);
+	}
+	else {
+	  printMenuPhrase("Pause", -43, 25, 13, false, ticket, BLUE);
+	  mciSendString(L"pause bgm", NULL, 0, 0);
 	}
 	
 	
