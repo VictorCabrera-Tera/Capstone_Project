@@ -85,7 +85,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 	}
 	*/
 
-	draw_rect(player_posX, player_posY, 2, 2, GREEN, vacancy, bottom, left, right, top, enemy_touched, coins);
+	draw_rect(player_posX, player_posY, player_sizex, player_sizey, GREEN, vacancy, bottom, left, right, top, enemy_touched, coins);
 	if (!vacancy) {
 		if (enemy_touched){
 		  enemy_touched = false;
@@ -122,7 +122,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 		  player_posX2 = old_X2;
 		  player_posY = old_Y;
 		  player_posY2 = old_Y2;
-		  draw_rect(player_posX, player_posY, 2, 2, GREEN);
+		  draw_rect(player_posX, player_posY, player_sizex, player_sizey, GREEN);
 		}
 	}
 	else {
@@ -156,7 +156,7 @@ drawLevelCoins() {
 	  draw_circle(-65, 48, 2, WHITE);
 	}
 	else if (game_info.getCoinCollected(1) == true) {
-	  draw_circle(-65, 48, 2, game_info.getCoinColor(0));
+	  draw_circle(-65, 48, 2, game_info.getCoinColor(1));
 	  collected_coins++;
 	}
 
@@ -165,7 +165,7 @@ drawLevelCoins() {
 	  draw_circle(-61, 48, 2, WHITE);
 	}
 	else if (game_info.getCoinCollected(2) == true) {
-	  draw_circle(-61, 48, 2, game_info.getCoinColor(0));
+	  draw_circle(-61, 48, 2, game_info.getCoinColor(2));
 	  collected_coins++;
 	}
 
@@ -177,7 +177,28 @@ drawLevelCoins() {
 
 }
 
+internal void
+drawLevelPowerUps() {
+ 
 
+  if (game_info.getPowerUpCollected(PHASE_THROUGH) == false && game_info.getPowerUpInLevel(PHASE_THROUGH)) {
+	draw_ticket(game_info.getPowerUpPos(PHASE_THROUGH).x, game_info.getPowerUpPos(PHASE_THROUGH).y, 3, 3,game_info.getPowerUpColor(PHASE_THROUGH));
+  }
+
+  if (game_info.getPowerUpCollected(IMMUNITY) == false && game_info.getPowerUpInLevel(IMMUNITY)) {
+	draw_ticket(game_info.getPowerUpPos(IMMUNITY).x, game_info.getPowerUpPos(IMMUNITY).y, 3, 3, game_info.getPowerUpColor(IMMUNITY));
+  }
+
+  if (game_info.getPowerUpCollected(SHRINK) == false && game_info.getPowerUpInLevel(SHRINK)) {
+	draw_ticket(game_info.getPowerUpPos(SHRINK).x, game_info.getPowerUpPos(SHRINK).y, 3, 3, game_info.getPowerUpColor(SHRINK));
+  }
+
+
+
+
+
+
+}
 
 GAMEMODE options = MAINMENU;
 int selected = 1;
@@ -198,6 +219,7 @@ simulate_game(Input* input, float &dt) {
 		game_info.setLevel1Spawn(-82, -41);
 		game_info.setLevel2Spawn(0, 0);
 		game_info.setLevel3Spawn(20, 40);
+		
 		game_info.set = true;
 	}
 	if (options == LEVEL1) {

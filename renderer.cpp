@@ -325,7 +325,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 		u32* lowerL_pixel = (u32*)render_state.memory + x0 + i * render_state.width;
 
 		for (int x = x0; x < x1; x++) {
-			if ((*lowerL_pixel == 0x00ffff) || (*lowerL_pixel == 0xffff22) || (*lowerL_pixel == RED))
+			if ((*lowerL_pixel == RED))
 			{
 				vacant = false;
 				return;
@@ -344,6 +344,9 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 			}
 			if ((*lowerL_pixel == BLUE)) {
 			  enemy_touched = true;
+			}
+			if (*lowerL_pixel == game_info.getPowerUpColor(SHRINK)) {
+			  game_info.setPowerUpCollected(SHRINK, true);
 			}
 			lowerL_pixel++;
 		}
@@ -629,3 +632,76 @@ draw_heart(int x, int y, float a, u32 color) {
   draw_heart_in_pixels(x0, y0, x1, y1, x, y, a, color);
 }
 
+
+//type = 1 facing left
+//type = 2 facing right
+//type = 3 facing down
+//type = 4 facing up
+//type = 5 full diamond
+
+internal void
+draw_triangles_in_pixels(int x0, int y0, int x1, int y1, u32 color, int type) {
+  x0 = clamp(0, render_state.width, x0);
+  y0 = clamp(0, render_state.height, y0);
+  x1 = clamp(0, render_state.width, x1);
+  y1 = clamp(0, render_state.height, y1);
+
+  int temp1 = x1;
+  int temp0 = x0;
+
+  //normal equilateral triangle
+  if (type != 3) {
+	for (int y = y0; y < y1; y = y++) {
+	  u32* pixel = (u32*)render_state.memory + temp0 + y * render_state.width;
+	  for (int x = temp0; x < temp1; x = x + 1)
+	  {
+		*pixel = color;
+		pixel++;
+	  }
+	  if (type == 2 || type == 4 || type == 5)
+		temp1 = temp1 - 1; // higher decrements make asharper triangle but is scuffed
+
+	  if (type == 1 || type == 4 || type == 5)
+		temp0++;
+	}
+  }
+  //inverted equilateral triangle
+  if (type != 4) {
+	for (int y = y0; y * y1 > y1; y--) {
+	  u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
+	  //iterations--;
+	  for (int x = x0; x < x1; x = x + 1) {
+		*pixel = color;
+		pixel++;
+	  }
+	  if (type == 2 || type == 3 || type == 5)
+		x1 = x1 - 1; // -2 for sharper triangle
+
+
+	  if (type == 1 || type == 3 || type == 5)
+		x0++;
+	  //if (temp0 > temp1) break;
+	}
+  }
+}
+
+internal void
+draw_triangles(float start_x, float start_y, float width, float height, u32 color, int type)
+{
+  start_x *= render_state.height * render_scale;
+  start_y *= render_state.height * render_scale;
+
+  width *= render_state.height * render_scale;
+  height *= render_state.height * render_scale;
+  //Need to center it, the window's center is at 0,0
+
+  start_x += render_state.width / 2.f;
+  start_y += render_state.height / 2.f;
+
+  int x0 = start_x - width;   //left triangle
+  int x1 = start_x + width;  //right of the triangle
+  int y0 = start_y - height;
+  int y1 = start_y + height;
+
+  draw_triangles_in_pixels(x0, y0, x1, y1, color, type);
+}

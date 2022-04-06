@@ -19,55 +19,55 @@ run_loop(int* delta, int* count, int max, int min) {
 // dt =dt , just write dt 
 // speed can be any number, represents how fast you want it to move
 internal void
-move_sideways(float* enemy1_posX, int delta, float dt, int speed) {
+move_sideways(float* enemy1_posX, int delta, float dt, float speed) {
   if (delta == 1) {
-	*enemy1_posX += speed * dt;
+	*enemy1_posX += speed * 0.01666;
   }
   if (delta == -1) {
-	*enemy1_posX -= speed * dt;
+	*enemy1_posX -= speed * 0.01666;
   }
 }
 
 internal void
-move_vertical(float* enemy1_posY, int delta, float dt, int speed) {
+move_vertical(float* enemy1_posY, int delta, float dt, float speed) {
   if (delta == 1) {
-	*enemy1_posY += speed * dt;
+	*enemy1_posY += speed * 0.01666;
   }
   if (delta == -1) {
-	*enemy1_posY -= speed * dt;
+	*enemy1_posY -= speed * 0.01666;
   }
 }
 
 internal void
-move_diagonal_br(float* enemy1_posX, float* enemy1_posY, int delta, float dt, int speed) {
+move_diagonal_br(float* enemy1_posX, float* enemy1_posY, int delta, float dt, float speed) {
   if (delta == 1) {
-	*enemy1_posX += speed * dt;
-	*enemy1_posY -= speed * dt;
+	*enemy1_posX += speed * 0.01666;
+	*enemy1_posY -= speed * 0.01666;
   }
   if (delta == -1) {
-	*enemy1_posX -= speed * dt;
-	*enemy1_posY += speed * dt;
+	*enemy1_posX -= speed * 0.01666;
+	*enemy1_posY += speed * 0.01666;
   }
 }
 internal void
-move_diagonal_bl(float* enemy1_posX, float* enemy1_posY, int delta, float dt, int speed) {
+move_diagonal_bl(float* enemy1_posX, float* enemy1_posY, int delta, float dt, float speed) {
   if (delta == 1) {
-	*enemy1_posX -= speed * dt;
-	*enemy1_posY -= speed * dt;
+	*enemy1_posX -= speed * 0.01666;
+	*enemy1_posY -= speed * 0.01666;
   }
   if (delta == -1) {
-	*enemy1_posX += speed * dt;
-	*enemy1_posY += speed * dt;
+	*enemy1_posX += speed * 0.01666;
+	*enemy1_posY += speed * 0.01666;
   }
 }
 internal void
-move_diagonal_tl(float* enemy1_posX, float* enemy1_posY, int delta, float dt, int speed) {
+move_diagonal_tl(float* enemy1_posX, float* enemy1_posY, int delta, float dt, float speed) {
   if (delta == 1) {
-	*enemy1_posX -= speed * dt;
-	*enemy1_posY += speed * dt;
+	*enemy1_posX -= speed * 0.01666;
+	*enemy1_posY += speed * 0.01666;
   }
   if (delta == -1) {
-	*enemy1_posX += speed * dt;
-	*enemy1_posY -= speed * dt;
+	*enemy1_posX += speed * 0.01666;
+	*enemy1_posY -= speed * 0.01666;
   }
 }
