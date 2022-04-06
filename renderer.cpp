@@ -210,17 +210,14 @@ draw_diamond(float start_x, float start_y, float width, float height, u32 color)
 
 /*internal void
 draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
-
 	x0 = clamp(0, render_state.width, x0);
 	y0 = clamp(0, render_state.height, y0);
 	x1 = clamp(0, render_state.width, x1);
 	y1 = clamp(0, render_state.height, y1);
-
 	int temp = (x1 - x0);
 	int left = (int)(temp / 4);
 	int right = left + left + left;
 	int ys = (int)(y0 + y1) / 2;
-
 	for (int y = y0; y < y1; y++) {
 		u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
 		for (int x = x0; x < x1; x++) {
@@ -238,12 +235,11 @@ draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 			pixel++;
 		}
 	}
-
-} 
+}
 */
 
 internal void
-draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, bool& vacant, bool& bottom, bool& left, bool& right, bool& top, bool & enemy_touched, Coin_State* coins) {
+draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, bool& vacant, bool& bottom, bool& left, bool& right, bool& top, bool& enemy_touched, Coin_State* coins) {
 	//Change to pixels
 	//get the percentage of the screen relative to the current dimensions
 
@@ -279,7 +275,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 		if (*bottom_pixels == RED)
 		{
 			bottom = FALSE;
-			break;
+			
 		}
 		bottom_pixels++;
 
@@ -311,21 +307,21 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 	}
 
 	for (int i = (x0 + 2); i < (x1 - 2); i++) {
-	  u32* top_pixels = (u32*)render_state.memory + i + y1 * render_state.width;
-	  if ((*top_pixels == RED))
-	  {
-		top = FALSE;
-		break;
-	  }
-	  //*top_pixels = BLUE;
-	  top_pixels++;
+		u32* top_pixels = (u32*)render_state.memory + i + y1 * render_state.width;
+		if ((*top_pixels == RED))
+		{
+			top = FALSE;
+			break;
+		}
+		//*top_pixels = BLUE;
+		top_pixels++;
 	}
 
 	for (int i = y0; i < y1; i++) {
 		u32* lowerL_pixel = (u32*)render_state.memory + x0 + i * render_state.width;
 
 		for (int x = x0; x < x1; x++) {
-			if ((*lowerL_pixel == RED))
+			if ((*lowerL_pixel == 0x00ffff) || (*lowerL_pixel == 0xffff22) || (*lowerL_pixel == RED))
 			{
 				vacant = false;
 				return;
@@ -336,17 +332,14 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 			}
 			if (*lowerL_pixel == coins->coin[1].color)
 			{
-				coins->coin[1].collected = true; 
+				coins->coin[1].collected = true;
 			}
 			if (*lowerL_pixel == coins->coin[2].color)
 			{
 				coins->coin[2].collected = true;
 			}
 			if ((*lowerL_pixel == BLUE)) {
-			  enemy_touched = true;
-			}
-			if (*lowerL_pixel == game_info.getPowerUpColor(SHRINK)) {
-			  game_info.setPowerUpCollected(SHRINK, true);
+				enemy_touched = true;
 			}
 			lowerL_pixel++;
 		}
@@ -617,91 +610,17 @@ draw_heart_in_pixels(int x0, int y0, int x1, int y1, int start_x, int start_y, f
 
 internal void
 draw_heart(int x, int y, float a, u32 color) {
-  x *= render_state.height * render_scale;
-  y *= render_state.height * render_scale;
-  a *= render_state.height * render_scale; //size of the heart
+	x *= render_state.height * render_scale;
+	y *= render_state.height * render_scale;
+	a *= render_state.height * render_scale; //size of the heart
 
-  x -= render_state.width / 2.f;
-  y += render_state.height / 2.f;
+	x -= render_state.width / 2.f;
+	y += render_state.height / 2.f;
 
-  float x0 = -a * 1.14 - x;
-  float x1 = a * 1.14 - x;
-  float y0 = a * -1 + y;
-  float y1 = a * 1.24 + y;
+	float x0 = -a * 1.14 - x;
+	float x1 = a * 1.14 - x;
+	float y0 = a * -1 + y;
+	float y1 = a * 1.24 + y;
 
-  draw_heart_in_pixels(x0, y0, x1, y1, x, y, a, color);
-}
-
-
-//type = 1 facing left
-//type = 2 facing right
-//type = 3 facing down
-//type = 4 facing up
-//type = 5 full diamond
-
-internal void
-draw_triangles_in_pixels(int x0, int y0, int x1, int y1, u32 color, int type) {
-  x0 = clamp(0, render_state.width, x0);
-  y0 = clamp(0, render_state.height, y0);
-  x1 = clamp(0, render_state.width, x1);
-  y1 = clamp(0, render_state.height, y1);
-
-  int temp1 = x1;
-  int temp0 = x0;
-
-  //normal equilateral triangle
-  if (type != 3) {
-	for (int y = y0; y < y1; y = y++) {
-	  u32* pixel = (u32*)render_state.memory + temp0 + y * render_state.width;
-	  for (int x = temp0; x < temp1; x = x + 1)
-	  {
-		*pixel = color;
-		pixel++;
-	  }
-	  if (type == 2 || type == 4 || type == 5)
-		temp1 = temp1 - 1; // higher decrements make asharper triangle but is scuffed
-
-	  if (type == 1 || type == 4 || type == 5)
-		temp0++;
-	}
-  }
-  //inverted equilateral triangle
-  if (type != 4) {
-	for (int y = y0; y * y1 > y1; y--) {
-	  u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
-	  //iterations--;
-	  for (int x = x0; x < x1; x = x + 1) {
-		*pixel = color;
-		pixel++;
-	  }
-	  if (type == 2 || type == 3 || type == 5)
-		x1 = x1 - 1; // -2 for sharper triangle
-
-
-	  if (type == 1 || type == 3 || type == 5)
-		x0++;
-	  //if (temp0 > temp1) break;
-	}
-  }
-}
-
-internal void
-draw_triangles(float start_x, float start_y, float width, float height, u32 color, int type)
-{
-  start_x *= render_state.height * render_scale;
-  start_y *= render_state.height * render_scale;
-
-  width *= render_state.height * render_scale;
-  height *= render_state.height * render_scale;
-  //Need to center it, the window's center is at 0,0
-
-  start_x += render_state.width / 2.f;
-  start_y += render_state.height / 2.f;
-
-  int x0 = start_x - width;   //left triangle
-  int x1 = start_x + width;  //right of the triangle
-  int y0 = start_y - height;
-  int y1 = start_y + height;
-
-  draw_triangles_in_pixels(x0, y0, x1, y1, color, type);
+	draw_heart_in_pixels(x0, y0, x1, y1, x, y, a, color);
 }

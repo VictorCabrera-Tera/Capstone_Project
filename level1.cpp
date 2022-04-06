@@ -27,7 +27,7 @@ internal void simulateLevel1(Input* input, float& dt) {
   if (leftclear == true) {
 	if (is_down(BUTTON_LEFT)) {
 	  //player_posX -= speed * dt;
-	  xvelocity = -20;
+	  xvelocity = -50;
 
 	  /*
 	  if (xvelocity > 0) {
@@ -49,7 +49,7 @@ internal void simulateLevel1(Input* input, float& dt) {
   if (rightclear == true) {
 	if (is_down(BUTTON_RIGHT)) { // 
 		//player_posX += speed * dt;
-	  xvelocity = 20;
+	  xvelocity = 50;
 	  /*
 	  if (xvelocity < 0) {
 		  xvelocity += 200 * dt;
@@ -68,84 +68,100 @@ internal void simulateLevel1(Input* input, float& dt) {
 
   }
 
+
   if (pressed(BUTTON_SPACEBAR))
   {
-	//player_posY += speed * dt;
-	yvelocity -= 3000 * 0.0166;
+	  
+		  //player_posY += speed * dt;
+		  yvelocity += 50;
+	 
 
   }
+/*
+    if (is_down(BUTTON_SPACEBAR)) {
+	  if (isjumping == false) {
+		  jumptime = 0;
+		  isjumping = true;
+	  }
+	  else {
+		  //stop jump 
+		  if (yvelocity ==  0.0f && ) {
+			  yvelocity = 0;
+			  isjumping = false;
+		  }
 
+	  }
+  }
+  */
   old_Y = player_posY;
   old_X = player_posX;
 
-
-  player_posY -= yvelocity * dt;
   player_posX += xvelocity * dt;
-  yvelocity += accel * dt;
+
+  player_posY += (yvelocity * dt) + (accel * dt * dt * 0.5);
+  yvelocity += accel * 0.01666;
+
+ // player_posY = player_posY + (player_posY + ((accel * accel) * dt) * dt);
 
 
 
 
-
-  run_loop(&delta, &count, max, min);
-  move_vertical(&enemy_y, delta, dt, 4);
-
-  run_loop(&delta2, &count2, max2, min2);
-  move_sideways(&enemy_x2, delta2, dt, 10);
   //move_sideways(&enemy_x, delta, dt, 20);
   //move_vertical(&enemy_y, delta, dt, 20);
   //move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);	
 
-  {
-	draw_rect(82, -38, 8, 8, RED); //fills in lower right corner
+  
+  draw_rect(82, -38, 8, 8, RED); //fills in lower right corner
 
-	draw_rect(-69, -44, 5, 1, RED); //bump1
+  draw_rect(-69, -44, 5, 1, RED); //bump1
 
-	draw_rect(-40, -41, 15, 1, RED); //plat1
+  draw_rect(-40, -41, 15, 1, RED); //plat1
 
-	draw_right_tri(2.2, -44.9, 2.8, RED); //little ledge next to stairs
-	draw_rect(45, -42, 40, 3, RED); //stairs
-	draw_rect(55, -37, 20, 2, RED);
-	draw_rect(65, -33, 20, 2, RED);
-	draw_rect(75, -29, 20, 2, RED);
+  draw_right_tri(2.2, -44.9, 2.8, RED); //little ledge next to stairs
+  draw_rect(45, -42, 40, 3, RED); //stairs
+  draw_rect(55, -37, 20, 2, RED);
+  draw_rect(65, -33, 20, 2, RED);
+  draw_rect(75, -29, 20, 2, RED);
 
-	draw_rect(19, -28, 8, 0.5, RED); //plat2
-
-
-
-	draw_rect(-44, -20, 35, 0.8, RED); //plat3
-	draw_rect(-1, -22, 5, 0.5, RED);
-
-	draw_rect(-76, -17, 3, 2.3, RED); //bump2
+  draw_rect(19, -28, 8, 0.5, RED); //plat2
 
 
-	draw_rect(-53, -9, 11, 0.2, RED); //platform 4
-	draw_rect(-51, -8.3, 9, 0.5, RED);
-	draw_right_tri(-51, -8.1, 9, RED);
 
-	draw_rect(-38, 35, 4, 10, RED); //wall
-	draw_rect(-38, 2, 4, 8, RED); //wall
+  draw_rect(-44, -20, 35, 0.8, RED); //plat3
+  draw_rect(-1, -22, 5, 0.5, RED);
 
-	draw_diamond(enemy_x, enemy_y, 3, 3, BLUE); //enemy 1
+  draw_rect(-76, -17, 3, 2.3, RED); //bump2
 
-	draw_rect(30, 12, 50, 1, RED); //last platform
-	draw_coin(30, 32, 30, 20, RED); //the red hexagon platform
 
-	draw_coin(enemy_x2, enemy_y2, 5, 5, BLUE); //enemy 2
-  }
+  draw_rect(-53, -9, 11, 0.2, RED); //platform 4
+  draw_rect(-51, -8.3, 9, 0.5, RED);
+  draw_right_tri(-51, -8.1, 9, RED);
+
+  draw_rect(-38, 35, 4, 10, RED); //wall
+  draw_rect(-38, 2, 4, 8, RED); //wall
+
+  draw_diamond(enemy_x, enemy_y, 3, 3, BLUE); //enemy 1
+
+  draw_rect(30, 12, 50, 1, RED); //last platform
+  draw_coin(30, 32, 30, 20, RED); //the red hexagon platform
+
+  draw_coin(enemy_x2, enemy_y2, 5, 5, BLUE); //enemy 2
+  
   //draw_heart(6, 6, 1, GREEN);
- 
+
+  //move_vertical(&enemy_y, &delta1, dt, 20 , -25,25);
+  //move_sideways(&enemy_x2, &delta, dt, 20, -75, 75);
+  //move_diagonal_tl(&enemy_x, &enemy_y, &delta1, dt,20, -25, 25);
+  //move_diagonal_bl(&enemy_x, &enemy_y, &delta1, dt, 20, -50, -25);
+
+
+
+
   drawLevelCoins();
   collision(&game_info.coins, dt, options);
 
   if (game_info.getCoinCollected(0) && game_info.getCoinCollected(1) && game_info.getCoinCollected(2)) {
 	//set the goal to a color when interacted, will make options to level2, thus going to next level
 	//options = LEVEL2;
-	draw_triangles(69, 25, 1.6, 1.6, YELLOW, 1);
-	draw_rect(71, 20, 0.5, 7, YELLOW);
-	if ((player_posX >= 70 && player_posX <=72) && (player_posY >= 14 && player_posY <= 16)) {
-	  options = LEVEL2;
-	  levelInfoSet = false;
-	}
   }
 }
