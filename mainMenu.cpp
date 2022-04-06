@@ -1,7 +1,7 @@
 void simulateMainMenu(Input* input, float& dt) {
 
-  mciSendString(L"open ..\\sound\\Satorl_Marsh2.wav type waveaudio alias bgm", NULL, 0, 0);
-  mciSendString(L"play bgm", NULL, 0, 0);
+  //mciSendString(L"open ..\\sound\\Satorl_Marsh2.wav type waveaudio alias bgm", NULL, 0, 0);
+  //mciSendString(L"play bgm", NULL, 0, 0);
   
 
 
@@ -20,7 +20,7 @@ void simulateMainMenu(Input* input, float& dt) {
   }
   if (pressed(BUTTON_ENTER)) {
 	if (color1 == RED) {
-	  options = LEVEL2;
+	  options = LEVEL1;
 	  game_info.started_level = true;
 	}
 	else {
@@ -30,9 +30,7 @@ void simulateMainMenu(Input* input, float& dt) {
 	  color2 = BLACK;
 	}
   }
-  if pressed(BUTTON_SPACEBAR) {
-	freemode = true;
-  }
+
   if (color1 == RED) {
 	printMenuPhrase("Start-Level", -50, -20, 6, false, square, RED);
   }
