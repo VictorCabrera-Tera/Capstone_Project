@@ -25,6 +25,10 @@ enum COLORS {
   WHITE = 0xFFFFFF,
   YELLOW = 0xFFFF00,
   GOLD = 0xFFD700,
+  PURPLE = 0x800080,
+  GRAY = 0x808080,
+  TEAL = 0x008080,
+  NAVY = 0x000080,
 };
 
 struct Input {
