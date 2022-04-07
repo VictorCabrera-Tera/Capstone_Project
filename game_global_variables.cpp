@@ -1,3 +1,6 @@
+#define is_down(b) input->buttons[b].is_down
+#define pressed(b) (input->buttons[b].is_down && input->buttons[b].changed)
+#define released(b) (!(input->buttons[b].is_down) && input->buttons[b].changed)
 
 float player_posX = 0.f;
 float player_posY = 0.f;
@@ -52,8 +55,12 @@ bool levelInfoSet = false;
 bool freemode = false;
 bool played = false;
 
-//pause button variables
-
+//pause variables
+int pause_selected = 1;
+//bool first_pause = true;
+u32 P_color = RED;
+u32 P_color1 = YELLOW;
+u32 P_color2 = YELLOW;
 
 bool enemy_touched = false;
 

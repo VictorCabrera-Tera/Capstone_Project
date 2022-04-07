@@ -3,8 +3,6 @@ void simulateMainMenu(Input* input, float& dt) {
   mciSendString(L"open ..\\sound\\Satorl_Marsh2.wav type waveaudio alias bgm", NULL, 0, 0);
   mciSendString(L"play bgm", NULL, 0, 0);
   
-
-
   draw_rect(0, 0, 90, 45, BLUE);
   printMenuPhrase("Main Menu", -43, 25, 13, true, ticket, GREEN);
   u32 temp;
