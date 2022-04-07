@@ -1,6 +1,7 @@
 //@Param input so I can use the macros for the keys instead of doing it the long way
 //press escape or enter on resume to unpause
-//press enter on resume to quit to desktop
+//press enter on main to go back to mainmenu
+//press enter on quit to quit to desktop
 internal void
 pauseMenu(Input* input)
 {
