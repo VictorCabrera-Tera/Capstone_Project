@@ -616,8 +616,8 @@ draw_heart_in_pixels(int x0, int y0, int x1, int y1, int start_x, int start_y, f
 }
 
 internal void
-draw_heart(int x, int y, float a, u32 color) {
-  x *= render_state.height * render_scale;
+draw_heart(float x, float y, float a, u32 color) {
+  x *= -render_state.height * render_scale;
   y *= render_state.height * render_scale;
   a *= render_state.height * render_scale; //size of the heart
 
