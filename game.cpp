@@ -32,6 +32,22 @@ restart_pos(GAMEMODE Level) {
 
 }
 
+internal void
+hearts() {
+	game_info.setHeart(GREEN, RED, 3);
+	Point heart1Pos(74, 47.5);
+	Point heart2Pos(78.5, 47.5);
+	Point heart3Pos(83, 47.5);
+	game_info.setHeartPosition(heart1Pos, heart2Pos, heart3Pos);
+}
+
+internal void
+draw_hearts() {
+	for (int i = 0; i < 3; i++) {
+		draw_heart(game_info.getHeartPos(i).x, game_info.getHeartPos(i).y, 2, game_info.getHeartColor(i));
+	}
+}
+
 
 internal void
 collision(Coin_State* coins, float dt, GAMEMODE Level) {
@@ -90,6 +106,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 		if (enemy_touched){
 		  enemy_touched = false;
 		  restart_pos(Level);
+		  game_info.setHeart(GREEN, BLUE, game_info.getLivesLeft() - 1);
 		}
 		else {
 
