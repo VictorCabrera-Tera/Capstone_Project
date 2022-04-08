@@ -4,6 +4,7 @@
 
 
 internal void simulateLevel1(Input* input, float& dt) {
+  mciSendString(L"stop bgm", NULL, 0, 0);
   printLevelText("Level 1", -10, 49, WHITE);
   printLevelText("Lives ", 50, 49, WHITE);
   printLevelText("Coins ", -90, 49, WHITE);
@@ -17,11 +18,13 @@ internal void simulateLevel1(Input* input, float& dt) {
 
 	player_posX = game_info.getLevel1Spawn().x; //get the spawnpoint
 	player_posY = game_info.getLevel1Spawn().y;
+	mciSendString(L"play lvl1 from 0", NULL, 0, 0);
+	musc = 0;
 
 	hearts();
 	levelInfoSet = true;
   }
-
+  
   // unit / second * second/ frame = unit / frame
 
   if (leftclear == true) {

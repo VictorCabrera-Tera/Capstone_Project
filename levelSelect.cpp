@@ -1,5 +1,4 @@
 void simulateLevelSelect(Input* input, float& dt) {
-  
   draw_rect(0, 0, 90, 45, BLUE);
 
   printMenuPhrase("Pick-A-Level", -48, 40, 6, false, square, RED);
@@ -9,6 +8,7 @@ void simulateLevelSelect(Input* input, float& dt) {
 	if (selected > 3) {
 	  selected = 1;
 	}
+	mciSendString(L"play button from 0", NULL, 0, 0);
   }
 
   if (pressed(BUTTON_UP)) {
@@ -16,6 +16,7 @@ void simulateLevelSelect(Input* input, float& dt) {
 	if (selected < 1) {
 	  selected = 3;
 	}
+	mciSendString(L"play button from 0", NULL, 0, 0);
   }
   switch (selected) {
   case(1):

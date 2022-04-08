@@ -34,7 +34,7 @@ restart_pos(GAMEMODE Level) {
 
 internal void
 hearts() {
-  game_info.setHeart(GREEN, RED, 3);
+  game_info.setHeart(WHITE, BLACK, 3);
   Point heart1Pos(74, 47.5);
   Point heart2Pos(78.5, 47.5);
   Point heart3Pos(83, 47.5);
@@ -106,7 +106,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 		if (enemy_touched){
 		  enemy_touched = false;
 		  restart_pos(Level);
-		  game_info.setHeart(GREEN, BLUE, game_info.getLivesLeft() - 1);
+		  game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft() - 1);
 		}
 		else {
 
@@ -226,7 +226,6 @@ float speed = 50.f; //unit per second
 
 internal void
 simulate_game(Input* input, float &dt) {
-
 	clear_screen(RED);
 	draw_rect(0, 0, 90, 45, LIGHTPINK);
 
