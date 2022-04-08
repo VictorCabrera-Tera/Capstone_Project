@@ -343,10 +343,23 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 				coins->coin[2].collected = true;
 			}
 			if ((*lowerL_pixel == BLUE)) {
-			  enemy_touched = true;
+			  if (!game_info.getPowerUpInLevel(IMMUNITY)) {
+				enemy_touched = true;
+			  }
+			  else {
+				if (!game_info.getPowerUpCollected(IMMUNITY)) {
+				  enemy_touched = true;
+				}
+			  }
 			}
 			if (*lowerL_pixel == game_info.getPowerUpColor(SHRINK)) {
 			  game_info.setPowerUpCollected(SHRINK, true);
+			}
+			if (*lowerL_pixel == game_info.getPowerUpColor(PHASE_THROUGH)) {
+			  game_info.setPowerUpCollected(PHASE_THROUGH, true);
+			}
+			if (*lowerL_pixel == game_info.getPowerUpColor(IMMUNITY)) {
+			  game_info.setPowerUpCollected(IMMUNITY, true);
 			}
 			lowerL_pixel++;
 		}
@@ -616,8 +629,8 @@ draw_heart_in_pixels(int x0, int y0, int x1, int y1, int start_x, int start_y, f
 }
 
 internal void
-draw_heart(int x, int y, float a, u32 color) {
-  x *= render_state.height * render_scale;
+draw_heart(float x, float y, float a, u32 color) {
+  x *= -render_state.height * render_scale;
   y *= render_state.height * render_scale;
   a *= render_state.height * render_scale; //size of the heart
 

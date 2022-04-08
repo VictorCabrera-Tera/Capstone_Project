@@ -33,6 +33,7 @@ global_variable gameUtilities game_info;
 #include "level2.cpp"
 #include "level3.cpp"
 #include "mainMenu.cpp"
+#include "pauseMenu.cpp"
 
 
 
@@ -235,6 +236,7 @@ input.buttons[b].is_down = is_down;\
 	if (input.buttons[BUTTON_ESCAPE].changed && input.buttons[BUTTON_ESCAPE].is_down) {
 	  if (game_info.started_level) {
 		game_info.pause = !game_info.pause;
+		pause_selected = 1; //for resume to be the first to be highlighted red
 	  }
 	}
 
@@ -244,7 +246,7 @@ input.buttons[b].is_down = is_down;\
 	  mciSendString(L"resume bgm", NULL, 0, 0);
 	}
 	else {
-	  printMenuPhrase("Pause", -43, 25, 13, false, ticket, BLUE);
+	  pauseMenu(&input);
 	  mciSendString(L"pause bgm", NULL, 0, 0);
 	}
 	

@@ -3,8 +3,6 @@ void simulateMainMenu(Input* input, float& dt) {
   mciSendString(L"open ..\\sound\\Satorl_Marsh2.wav type waveaudio alias bgm", NULL, 0, 0);
   mciSendString(L"play bgm", NULL, 0, 0);
   
-
-
   draw_rect(0, 0, 90, 45, BLUE);
   printMenuPhrase("Main Menu", -43, 25, 13, true, ticket, GREEN);
   u32 temp;
@@ -20,7 +18,7 @@ void simulateMainMenu(Input* input, float& dt) {
   }
   if (pressed(BUTTON_ENTER)) {
 	if (color1 == RED) {
-	  options = LEVEL2;
+	  options = LEVEL1;
 	  game_info.started_level = true;
 	}
 	else {

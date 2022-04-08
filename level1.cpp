@@ -18,7 +18,7 @@ internal void simulateLevel1(Input* input, float& dt) {
 	player_posX = game_info.getLevel1Spawn().x; //get the spawnpoint
 	player_posY = game_info.getLevel1Spawn().y;
 
-
+	hearts();
 	levelInfoSet = true;
   }
 
@@ -137,6 +137,7 @@ internal void simulateLevel1(Input* input, float& dt) {
  
   drawLevelCoins();
   collision(&game_info.coins, dt, options);
+  draw_hearts();
 
   if (game_info.getCoinCollected(0) && game_info.getCoinCollected(1) && game_info.getCoinCollected(2)) {
 	//set the goal to a color when interacted, will make options to level2, thus going to next level

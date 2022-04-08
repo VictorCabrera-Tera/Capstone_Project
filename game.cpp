@@ -1,6 +1,6 @@
-#define is_down(b) input->buttons[b].is_down
-#define pressed(b) (input->buttons[b].is_down && input->buttons[b].changed)
-#define released(b) (!(input->buttons[b].is_down) && input->buttons[b].changed)
+//#define is_down(b) input->buttons[b].is_down
+//#define pressed(b) (input->buttons[b].is_down && input->buttons[b].changed)
+//#define released(b) (!(input->buttons[b].is_down) && input->buttons[b].changed)
 
 
 #include "game_global_variables.cpp"
@@ -30,6 +30,22 @@ restart_pos(GAMEMODE Level) {
 	}break;
   }
 
+}
+
+internal void
+hearts() {
+  game_info.setHeart(GREEN, RED, 3);
+  Point heart1Pos(74, 47.5);
+  Point heart2Pos(78.5, 47.5);
+  Point heart3Pos(83, 47.5);
+  game_info.setHeartPosition(heart1Pos, heart2Pos, heart3Pos);
+}
+
+internal void
+draw_hearts() {
+  for (int i = 0; i < 3; i++) {
+	draw_heart(game_info.getHeartPos(i).x, game_info.getHeartPos(i).y, 2, game_info.getHeartColor(i));
+  }
 }
 
 
@@ -90,6 +106,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 		if (enemy_touched){
 		  enemy_touched = false;
 		  restart_pos(Level);
+		  game_info.setHeart(GREEN, BLUE, game_info.getLivesLeft() - 1);
 		}
 		else {
 
@@ -211,13 +228,13 @@ internal void
 simulate_game(Input* input, float &dt) {
 
 	clear_screen(RED);
-	draw_rect(0, 0, 90, 45, WHITE);
+	draw_rect(0, 0, 90, 45, LIGHTPINK);
 
 	
 	if (game_info.set == false) {
 		game_info.setCoinsColor(0xFFD800, 0xFFD900, 0xFFDA00);
 		game_info.setLevel1Spawn(-82, -41);
-		game_info.setLevel2Spawn(0, 0);
+		game_info.setLevel2Spawn(0, -40);
 		game_info.setLevel3Spawn(20, 40);
 		
 		game_info.set = true;
