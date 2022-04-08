@@ -18,7 +18,7 @@ void simulateMainMenu(Input* input, float& dt) {
   }
   if (pressed(BUTTON_ENTER)) {
 	if (color1 == RED) {
-	  options = LEVEL2;
+	  options = LEVEL1;
 	  game_info.started_level = true;
 	}
 	else {

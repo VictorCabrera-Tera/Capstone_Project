@@ -1,5 +1,6 @@
 void simulateLevelSelect(Input* input, float& dt) {
   
+  draw_rect(0, 0, 90, 45, BLUE);
 
   printMenuPhrase("Pick-A-Level", -48, 40, 6, false, square, RED);
 
@@ -51,12 +52,16 @@ void simulateLevelSelect(Input* input, float& dt) {
 	else  if (selected == 2) {
 	  options = LEVEL2;
 	  game_info.started_level = true;
-
+	  color1 = RED;
+	  color2 = BLACK;
+	  color3 = BLACK;
 	}
 	else {
 	  options = LEVEL3;
 	  game_info.started_level = true;
-
+	  color1 = RED;
+	  color2 = BLACK;
+	  color3 = BLACK;
 	}
   }
   
