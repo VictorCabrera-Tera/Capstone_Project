@@ -2,11 +2,12 @@
 #define pressed(b) (input->buttons[b].is_down && input->buttons[b].changed)
 #define released(b) (!(input->buttons[b].is_down) && input->buttons[b].changed)
 
+
 internal void simulateLevel1(Input* input, float& dt) {
   printLevelText("Level 1", -10, 49, WHITE);
   printLevelText("Lives ", 50, 49, WHITE);
   printLevelText("Coins ", -90, 49, WHITE);
-  //hearts();
+
   if (!levelInfoSet) {
 	game_info.resetCoinsCollected(); //makes all coins' collected variable to false
 	Point coin1Pos(-39, -36);
@@ -16,7 +17,6 @@ internal void simulateLevel1(Input* input, float& dt) {
 
 	player_posX = game_info.getLevel1Spawn().x; //get the spawnpoint
 	player_posY = game_info.getLevel1Spawn().y;
-	
 
 	hearts();
 	levelInfoSet = true;
@@ -136,9 +136,9 @@ internal void simulateLevel1(Input* input, float& dt) {
   //draw_heart(6, 6, 1, GREEN);
  
   drawLevelCoins();
-  
   collision(&game_info.coins, dt, options);
   draw_hearts();
+
   if (game_info.getCoinCollected(0) && game_info.getCoinCollected(1) && game_info.getCoinCollected(2)) {
 	//set the goal to a color when interacted, will make options to level2, thus going to next level
 	//options = LEVEL2;

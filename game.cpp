@@ -34,18 +34,18 @@ restart_pos(GAMEMODE Level) {
 
 internal void
 hearts() {
-	game_info.setHeart(GREEN, RED, 3);
-	Point heart1Pos(74, 47.5);
-	Point heart2Pos(78.5, 47.5);
-	Point heart3Pos(83, 47.5);
-	game_info.setHeartPosition(heart1Pos, heart2Pos, heart3Pos);
+  game_info.setHeart(GREEN, RED, 3);
+  Point heart1Pos(74, 47.5);
+  Point heart2Pos(78.5, 47.5);
+  Point heart3Pos(83, 47.5);
+  game_info.setHeartPosition(heart1Pos, heart2Pos, heart3Pos);
 }
 
 internal void
 draw_hearts() {
-	for (int i = 0; i < 3; i++) {
-		draw_heart(game_info.getHeartPos(i).x, game_info.getHeartPos(i).y, 2, game_info.getHeartColor(i));
-	}
+  for (int i = 0; i < 3; i++) {
+	draw_heart(game_info.getHeartPos(i).x, game_info.getHeartPos(i).y, 2, game_info.getHeartColor(i));
+  }
 }
 
 
@@ -228,13 +228,13 @@ internal void
 simulate_game(Input* input, float &dt) {
 
 	clear_screen(RED);
-	draw_rect(0, 0, 90, 45, WHITE);
+	draw_rect(0, 0, 90, 45, LIGHTPINK);
 
 	
 	if (game_info.set == false) {
 		game_info.setCoinsColor(0xFFD800, 0xFFD900, 0xFFDA00);
 		game_info.setLevel1Spawn(-82, -41);
-		game_info.setLevel2Spawn(0, 0);
+		game_info.setLevel2Spawn(0, -40);
 		game_info.setLevel3Spawn(20, 40);
 		
 		game_info.set = true;

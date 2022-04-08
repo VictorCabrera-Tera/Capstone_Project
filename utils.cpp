@@ -51,16 +51,16 @@ enum GAMEMODE {
 };
 
 struct Hearts {
-	int lives_left;
-	u32 heart_color;
+  int lives_left;
+  u32 heart_color;
 };
 
 enum lives {
-	heart1, heart2, heart3, LIVES
+  heart1, heart2, heart3, LIVES
 };
 
 struct Lives {
-	Hearts heart[LIVES];
+  Hearts heart[LIVES];
 };
 
 class Point {
@@ -103,7 +103,7 @@ public:
   u32 getPowerUpColor(Abilities ability_name);
   bool getPowerUpCollected(Abilities ability_name);
   bool getPowerUpInLevel(Abilities ability_name);
-  
+
   Lives life = {};
   void setHeart(u32 alive, u32 dead, int life_left);
   void setHeartPosition(Point heart1, Point heart2, Point heart3);
@@ -187,6 +187,7 @@ void gameUtilities::resetPowerUpInfo() {
   }
 }
 
+
 void gameUtilities::setPowerUpColor(Abilities ability_name, u32 color) {
   PowerUps.ability[ability_name].color = color;
 }
@@ -218,27 +219,27 @@ bool gameUtilities::getPowerUpInLevel(Abilities ability_name) {
 }
 
 void gameUtilities::setHeart(u32 alive, u32 dead, int life_left) {
-	for (int i = 0; i < LIVES; i++) {
-		life.heart[i].lives_left = life_left;
-		if (i < life_left) life.heart[i].heart_color = alive;
-		else life.heart[i].heart_color = dead;
-	}
+  for (int i = 0; i < LIVES; i++) {
+	life.heart[i].lives_left = life_left;
+	if (i < life_left) life.heart[i].heart_color = alive;
+	else life.heart[i].heart_color = dead;
+  }
 }
 
 void gameUtilities::setHeartPosition(Point heart1, Point heart2, Point heart3) {
-	heart[0] = heart1;
-	heart[1] = heart2;
-	heart[2] = heart3;
+  heart[0] = heart1;
+  heart[1] = heart2;
+  heart[2] = heart3;
 }
 
 Point gameUtilities::getHeartPos(int heart_index) {
-	return heart[heart_index];
+  return heart[heart_index];
 }
 
 u32 gameUtilities::getHeartColor(int heart_index) {
-	return life.heart[heart_index].heart_color;
+  return life.heart[heart_index].heart_color;
 }
 
 int gameUtilities::getLivesLeft() {
-	return life.heart[0].lives_left;
+  return life.heart[0].lives_left;
 }

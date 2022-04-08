@@ -63,4 +63,4 @@ u32 P_color1 = YELLOW;
 u32 P_color2 = YELLOW;
 
 bool enemy_touched = false;
-
+u32 fakeWall = RED;
