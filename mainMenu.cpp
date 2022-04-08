@@ -1,7 +1,18 @@
 void simulateMainMenu(Input* input, float& dt) {
-
-  mciSendString(L"open ..\\sound\\Satorl_Marsh2.wav type waveaudio alias bgm", NULL, 0, 0);
-  mciSendString(L"play bgm", NULL, 0, 0);
+  mciSendString(L"open ..\\sound\\MainMenu.wav type waveaudio alias bgm", NULL, 0, 0);
+  mciSendString(L"open ..\\sound\\Level1.wav type waveaudio alias lvl1", NULL, 0, 0);
+  mciSendString(L"open ..\\sound\\Level2.wav type waveaudio alias lvl2", NULL, 0, 0);
+  mciSendString(L"open ..\\sound\\Level3.wav type waveaudio alias lvl3", NULL, 0, 0);
+  mciSendString(L"stop lvl1", NULL, 0, 0);
+  mciSendString(L"stop lvl2", NULL, 0, 0);
+  mciSendString(L"stop lvl3", NULL, 0, 0);
+  waveOutSetVolume(0, 0xFFFF/6); //lower volume by 1/8
+  mciSendString(L"open ..\\sound\\MenuButtonSound.wav type waveaudio alias button", NULL, 0, 0);
+  
+  if (musc == 0) {
+	mciSendString(L"play bgm from 0", NULL, 0, 0);
+	musc = 1;
+  }
   
   draw_rect(0, 0, 90, 45, BLUE);
   printMenuPhrase("Main Menu", -43, 25, 13, true, ticket, GREEN);
@@ -10,11 +21,13 @@ void simulateMainMenu(Input* input, float& dt) {
 	temp = color1;
 	color1 = RED;
 	color2 = BLACK;
+	mciSendString(L"play button from 0", NULL, 0, 0);
   }
   if (pressed(BUTTON_RIGHT)) {
 	temp = color1;
 	color1 = BLACK;
 	color2 = RED;
+	mciSendString(L"play button from 0", NULL, 0, 0);
   }
   if (pressed(BUTTON_ENTER)) {
 	if (color1 == RED) {
@@ -27,6 +40,7 @@ void simulateMainMenu(Input* input, float& dt) {
 	  color1 = RED;
 	  color2 = BLACK;
 	}
+	
   }
   if pressed(BUTTON_SPACEBAR) {
 	freemode = true;

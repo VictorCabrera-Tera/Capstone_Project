@@ -1,4 +1,7 @@
 void simulateLevel2(Input* input, float& dt) {
+  mciSendString(L"stop bgm", NULL, 0, 0);
+  mciSendString(L"stop lvl1", NULL, 0, 0);
+  mciSendString(L"stop coin", NULL, 0, 0);
   printLevelText("Level 2", -10, 49, WHITE);
   printLevelText("Lives ", 50, 49, WHITE);
   printLevelText("Coins ", -90, 49, WHITE);
@@ -25,11 +28,12 @@ void simulateLevel2(Input* input, float& dt) {
 	game_info.setPowerUpPosition(IMMUNITY, immunityPos);
 
 
-
 	player_posX = game_info.getLevel2Spawn().x; //get the spawnpoint
 	player_posY = game_info.getLevel2Spawn().y;
-
+	mciSendString(L"play lvl2 from 0", NULL, 0, 0);
+	musc = 0;
 	levelInfoSet = true;
+	//hearts();
   }
   if (!freemode) {
 	if (leftclear == true) {
@@ -144,6 +148,6 @@ void simulateLevel2(Input* input, float& dt) {
   
   drawLevelCoins();
   drawLevelPowerUps();
-
+  draw_hearts();
   collision(&game_info.coins, dt, options);
 }

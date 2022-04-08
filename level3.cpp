@@ -1,4 +1,6 @@
 void simulateLevel3(Input* input, float& dt) {
+  mciSendString(L"stop bgm", NULL, 0, 0);
+  mciSendString(L"stop lvl2", NULL, 0, 0);
   printLevelText("Level 3", -10, 49, WHITE);
   printLevelText("Lives ", 50, 49, WHITE);
   printLevelText("Coins ", -90, 49, WHITE);
@@ -14,9 +16,13 @@ void simulateLevel3(Input* input, float& dt) {
 	player_posX = game_info.getLevel3Spawn().x;
 	player_posY = game_info.getLevel3Spawn().y;
 	levelInfoSet = true;
+	mciSendString(L"play lvl3 from 0", NULL, 0, 0);
+	//hearts();
+	musc = 0;
   }
 
   draw_rect(0, 0, 80, 20, BLUE);
   drawLevelCoins();
+  draw_hearts();
   collision(&game_info.coins, dt, options);
 }

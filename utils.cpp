@@ -4,7 +4,7 @@ typedef unsigned int u32;
 #define internal static
 #define M_PI   3.14159265358979323846
 
-
+int musc = 0;
 inline int 
 clamp(int min, int max, int value) {
   if (value < min) return min;
