@@ -28,7 +28,6 @@ void simulateLevel2(Input* input, float& dt) {
 	game_info.setPowerUpPosition(IMMUNITY, immunityPos);
 
 
-
 	player_posX = game_info.getLevel2Spawn().x; //get the spawnpoint
 	player_posY = game_info.getLevel2Spawn().y;
 	mciSendString(L"play lvl2 from 0", NULL, 0, 0);

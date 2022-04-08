@@ -34,6 +34,7 @@ restart_pos(GAMEMODE Level) {
 
 internal void
 hearts() {
+
   game_info.setHeart(WHITE, BLACK, 3);
   Point heart1Pos(74, 47.5);
   Point heart2Pos(78.5, 47.5);
@@ -106,6 +107,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 		if (enemy_touched){
 		  enemy_touched = false;
 		  restart_pos(Level);
+
 		  game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft() - 1);
 		}
 		else {
