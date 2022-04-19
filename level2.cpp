@@ -21,6 +21,9 @@ void simulateLevel2(Input* input, float& dt) {
 	Point phaseThroughPos(-37, 37);
 	game_info.setPowerUpPosition(PHASE_THROUGH, phaseThroughPos);
 
+	game_info.setCollectableHeart();
+	Point chPos1(-25, 10);
+	game_info.setCHpos(chPos1, NULL);
 
 
 
@@ -261,8 +264,9 @@ void simulateLevel2(Input* input, float& dt) {
 
   }
   
-
+  
   drawLevelCoins();
+  drawColletableHearts();
   drawLevelPowerUps();
   draw_hearts();
   collision(&game_info.coins, dt, options);

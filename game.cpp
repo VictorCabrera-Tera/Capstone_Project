@@ -33,6 +33,38 @@ restart_pos(GAMEMODE Level) {
 }
 
 internal void
+drawColletableHearts() {
+	int collected_coins = 0;
+	static int cc = 0;
+	mciSendString(L"open ..\\sound\\coin.wav type waveaudio alias coin", NULL, 0, 0);
+
+	if (game_info.isHeartCollected(0) == false) {
+		draw_heart(game_info.getCHpos(0).x, game_info.getCHpos(0).y, 2, game_info.getCHcolor(0));
+	}
+	else if (game_info.isHeartCollected(0) == true) {
+		collected_coins++;
+	}
+
+	if (game_info.isHeartCollected(1) == false) {
+		draw_heart(game_info.getCHpos(1).x, game_info.getCHpos(1).y, 2, game_info.getCHcolor(1));
+	}
+	else if (game_info.isHeartCollected(1) == true) {
+		collected_coins++;
+	}
+
+	//beeps once when coin is collected
+	if (collected_coins != cc) {
+		mciSendString(L"play coin from 1", NULL, 0, 0);
+		if (game_info.getLivesLeft() < 3) {
+			game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft() + 1);
+		}
+		cc = collected_coins;
+	}
+
+}
+
+
+internal void
 hearts() {
   game_info.setHeart(WHITE, BLACK, 3);
   Point heart1Pos(74, 47.5);
@@ -101,7 +133,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 	}
 	*/
 
-	draw_rect(player_posX, player_posY, player_sizex, player_sizey, GREEN, vacancy, bottom, left, right, top, enemy_touched, coins);
+	draw_rect(player_posX, player_posY, player_sizex, player_sizey, GREEN, vacancy, bottom, left, right, top, enemy_touched, coins, &game_info.hearts);
 	if (!vacancy) {
 		if (enemy_touched){
 		  enemy_touched = false;
@@ -231,6 +263,7 @@ simulate_game(Input* input, float &dt) {
 
 	
 	if (game_info.set == false) {
+		game_info.setCHcolor(0xDA189C, 0xDA189D);
 		game_info.setCoinsColor(0xFFD800, 0xFFD900, 0xFFDA00);
 		game_info.setLevel1Spawn(-82, -41);
 		game_info.setLevel2Spawn(0, 41);
