@@ -43,6 +43,9 @@ pauseMenu(Input* input)
 	  options = MAINMENU;
 	  levelInfoSet = false; //so u don't start at the same spot u we're on the level 
 	  game_info.started_level = false;  //so u can't pause on the main menu
+	  player_sizex = 2;
+	  player_sizey = 2;
+	  accel = 50;
 	}
 	else {
 	  running = false; //closes the windows interface
