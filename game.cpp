@@ -48,37 +48,6 @@ draw_hearts() {
   }
 }
 
-internal void
-drawColletableHearts() {
-	int collected_coins = 0;
-	static int cc = 0;
-	mciSendString(L"open ..\\sound\\coin.wav type waveaudio alias coin", NULL, 0, 0);
-
-	if (game_info.isHeartCollected(0) == false) {
-		draw_heart(game_info.getCHpos(0).x, game_info.getCHpos(0).y, 2, game_info.getCHcolor(0));
-	}
-	else if (game_info.getCoinCollected(0) == true) {
-		collected_coins++;
-	}
-
-	if (game_info.isHeartCollected(1) == false) {
-		draw_heart(game_info.getCHpos(1).x, game_info.getCHpos(1).y, 2, game_info.getCHcolor(1));
-	}
-	else if (game_info.getCoinCollected(1) == true) {
-		collected_coins++;
-	}
-
-	//beeps once when coin is collected
-	if (collected_coins != cc) {
-		mciSendString(L"play coin from 1", NULL, 0, 0);
-		if (game_info.getLivesLeft() < 3) {
-			game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft() + 1);
-		}
-		cc = collected_coins;
-	}
-
-}
-
 
 internal void
 collision(Coin_State* coins, float dt, GAMEMODE Level) {
@@ -132,7 +101,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 	}
 	*/
 
-	draw_rect(player_posX, player_posY, player_sizex, player_sizey, GREEN, vacancy, bottom, left, right, top, enemy_touched, coins, &game_info.hearts);
+	draw_rect(player_posX, player_posY, player_sizex, player_sizey, GREEN, vacancy, bottom, left, right, top, enemy_touched, coins);
 	if (!vacancy) {
 		if (enemy_touched){
 		  enemy_touched = false;
@@ -241,6 +210,11 @@ drawLevelPowerUps() {
 	draw_ticket(game_info.getPowerUpPos(SHRINK).x, game_info.getPowerUpPos(SHRINK).y, 3, 3, game_info.getPowerUpColor(SHRINK));
   }
 
+
+
+
+
+
 }
 
 GAMEMODE options = MAINMENU;
@@ -253,17 +227,15 @@ float speed = 50.f; //unit per second
 internal void
 simulate_game(Input* input, float &dt) {
 	clear_screen(RED);
-	u32 bgColor = LIGHTPINK;
-	draw_rect(0, 0, 90, 45, bgColor);
+	draw_rect(0, 0, 90, 45, LIGHTPINK);
 
 	
 	if (game_info.set == false) {
 		game_info.setCoinsColor(0xFFD800, 0xFFD900, 0xFFDA00);
-		game_info.setCHcolor(0xDA189C, 0xDA189D);
 		game_info.setLevel1Spawn(-82, -41);
-		game_info.setLevel2Spawn(0, -40);
+		game_info.setLevel2Spawn(0, 41);
 		game_info.setLevel3Spawn(20, 40);
-		
+		game_info.shrunk = false;
 		game_info.set = true;
 	}
 	if (options == LEVEL1) {
