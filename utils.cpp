@@ -25,9 +25,16 @@ enum Coins {
   AMOUNT,
 };
 
-
 struct Coin_State {
   Collectables coin[AMOUNT];
+};
+
+enum Collectable_Heart {
+	heart1,heart2, HEART
+};
+
+struct HeartInc {
+	Collectables heart[HEART];
 };
 
 enum Abilities {
@@ -56,11 +63,11 @@ struct Hearts {
 };
 
 enum lives {
-  heart1, heart2, heart3, LIVES
+  life1, life2, life3, LIVES
 };
 
 struct Lives {
-  Hearts heart[LIVES];
+  Hearts life[LIVES];
 };
 
 class Point {
@@ -74,25 +81,33 @@ public:
 };
 class gameUtilities {
 public:
-  bool started_level;
-  bool pause;
-  bool set;
-  Point getLevel1Spawn();
-  Point getLevel2Spawn();
-  Point getLevel3Spawn();
+	bool started_level;
+	bool pause;
+	bool set;
+	Point getLevel1Spawn();
+	Point getLevel2Spawn();
+	Point getLevel3Spawn();
 
-  void setLevel1Spawn(float x, float y);
-  void setLevel2Spawn(float x, float y);
-  void setLevel3Spawn(float x, float y);
+	void setLevel1Spawn(float x, float y);
+	void setLevel2Spawn(float x, float y);
+	void setLevel3Spawn(float x, float y);
 
-  void setCoinsColor(u32 coin1color, u32 coin2color, u32 coin3color);
-  void resetCoinsCollected();
-  void setCoinsPositions(Point coin1Pos, Point coin2Pois, Point coin3Pos);
+	void setCoinsColor(u32 coin1color, u32 coin2color, u32 coin3color);
+	void resetCoinsCollected();
+	void setCoinsPositions(Point coin1Pos, Point coin2Pois, Point coin3Pos);
 
-  Point getCoinPos(int coinNumber);
-  u32 getCoinColor(int coinNumber);
-  bool getCoinCollected(int coinNumber);
-  Coin_State coins = {};
+	Point getCoinPos(int coinNumber);
+	u32 getCoinColor(int coinNumber);
+	bool getCoinCollected(int coinNumber);
+	Coin_State coins = {};
+
+	void setCollectableHeart();
+	void heartIsCollected(int heart_index);
+	void setCHpos(Point heart1, Point heart2);
+	void setCHcolor(u32 collected, u32 notCollected);
+	u32 getCHcolor(int heart_index);
+	Point getCHpos(int heart_index);
+	HeartInc hearts = {};
 
   void setPowerUpColor(Abilities ability_name, u32 color);
   void resetPowerUpInfo();
@@ -104,13 +119,13 @@ public:
   bool getPowerUpCollected(Abilities ability_name);
   bool getPowerUpInLevel(Abilities ability_name);
 
-  Lives life = {};
+  Lives hp = {};
   void setHeart(u32 alive, u32 dead, int life_left);
   void setHeartPosition(Point heart1, Point heart2, Point heart3);
   Point getHeartPos(int heart_index);
   u32 getHeartColor(int heart_index);
   int getLivesLeft();
-
+  bool isHeartCollected(int heart_index);
 
 
 private:
@@ -118,7 +133,9 @@ private:
   Point coin_pos[3];
   Point ability_pos[3];
   Ability_State PowerUps = {};
-  Point heart[3];
+  Point lives[3];
+  Point heart_pos[2];
+
 };
 
 
@@ -146,6 +163,36 @@ void gameUtilities::setLevel2Spawn(float x, float y) {
 void gameUtilities::setLevel3Spawn(float x, float y) {
   spawn_pos[4] = x;
   spawn_pos[5] = y;
+}
+
+void gameUtilities::setCollectableHeart() {
+	for (int i = 0; i < HEART; i++) {
+		hearts.heart[i].collected = false;
+	}
+}
+
+void gameUtilities::heartIsCollected(int heart_index) {
+	hearts.heart[heart_index].collected = true;
+}
+
+void gameUtilities::setCHpos(Point heart1, Point heart2) {
+	heart_pos[0] = heart1;
+	heart_pos[1] = heart2;
+}
+
+Point gameUtilities::getCHpos(int heart_index) {
+	return heart_pos[heart_index];
+}
+void gameUtilities::setCHcolor(u32 ch1, u32 ch2){ 
+	hearts.heart[0].color = ch1;
+	hearts.heart[1].color = ch2;
+}
+u32 gameUtilities::getCHcolor(int heart_index) {
+	return hearts.heart[heart_index].color;
+}
+
+bool gameUtilities::isHeartCollected(int heart_index) {
+	return  hearts.heart[heart_index].collected;
 }
 
 void gameUtilities::resetCoinsCollected() {
@@ -220,26 +267,26 @@ bool gameUtilities::getPowerUpInLevel(Abilities ability_name) {
 
 void gameUtilities::setHeart(u32 alive, u32 dead, int life_left) {
   for (int i = 0; i < LIVES; i++) {
-	life.heart[i].lives_left = life_left;
-	if (i < life_left) life.heart[i].heart_color = alive;
-	else life.heart[i].heart_color = dead;
+	hp.life[i].lives_left = life_left;
+	if (i < life_left) hp.life[i].heart_color = alive;
+	else hp.life[i].heart_color = dead;
   }
 }
 
 void gameUtilities::setHeartPosition(Point heart1, Point heart2, Point heart3) {
-  heart[0] = heart1;
-  heart[1] = heart2;
-  heart[2] = heart3;
+  lives[0] = heart1;
+  lives[1] = heart2;
+  lives[2] = heart3;
 }
 
 Point gameUtilities::getHeartPos(int heart_index) {
-  return heart[heart_index];
+  return lives[heart_index];
 }
 
 u32 gameUtilities::getHeartColor(int heart_index) {
-  return life.heart[heart_index].heart_color;
+  return hp.life[heart_index].heart_color;
 }
 
 int gameUtilities::getLivesLeft() {
-  return life.heart[0].lives_left;
+  return hp.life[0].lives_left;
 }

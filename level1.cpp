@@ -16,6 +16,9 @@ internal void simulateLevel1(Input* input, float& dt) {
 	Point coin3Pos(30, 30);
 	game_info.setCoinsPositions(coin1Pos, coin2Pos, coin3Pos); //stores the position of the coins
 
+	game_info.setCollectableHeart();
+	Point chPos1(-25, 10);
+	game_info.setCHpos(chPos1, NULL);
 	player_posX = game_info.getLevel1Spawn().x; //get the spawnpoint
 	player_posY = game_info.getLevel1Spawn().y;
 	mciSendString(L"play lvl1 from 0", NULL, 0, 0);
@@ -139,6 +142,7 @@ internal void simulateLevel1(Input* input, float& dt) {
   //draw_heart(6, 6, 1, GREEN);
  
   drawLevelCoins();
+  drawColletableHearts();
   collision(&game_info.coins, dt, options);
   draw_hearts();
 

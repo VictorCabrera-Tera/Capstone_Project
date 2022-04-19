@@ -243,7 +243,7 @@ draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 */
 
 internal void
-draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, bool& vacant, bool& bottom, bool& left, bool& right, bool& top, bool & enemy_touched, Coin_State* coins) {
+draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, bool& vacant, bool& bottom, bool& left, bool& right, bool& top, bool & enemy_touched, Coin_State* coins, HeartInc* hearts) {
 	//Change to pixels
 	//get the percentage of the screen relative to the current dimensions
 
@@ -352,6 +352,15 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 				}
 			  }
 			}
+
+			if ((*lowerL_pixel == hearts->heart[0].color)) {
+				hearts->heart[0].collected = true;
+			}
+
+			if ((*lowerL_pixel == hearts->heart[1].color)) {
+				hearts->heart[1].collected = true;
+			}
+
 			if (*lowerL_pixel == game_info.getPowerUpColor(SHRINK)) {
 			  game_info.setPowerUpCollected(SHRINK, true);
 			}
@@ -362,6 +371,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 			  game_info.setPowerUpCollected(IMMUNITY, true);
 			}
 			lowerL_pixel++;
+
 		}
 	}
 	bottom = TRUE;
