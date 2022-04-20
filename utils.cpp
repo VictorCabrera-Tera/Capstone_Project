@@ -78,6 +78,7 @@ public:
 	Point::x = x;
 	Point::y = y;
   }
+
   float x;
   float y;
 };
@@ -130,7 +131,7 @@ public:
   bool isHeartCollected(int heart_index);
   HeartInc hearts = {};
 
-
+  Point enemy_pos[10];
 private:
   float spawn_pos[6];
   Point coin_pos[3];

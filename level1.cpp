@@ -16,12 +16,21 @@ internal void simulateLevel1(Input* input, float& dt) {
 	Point coin3Pos(30, 30);
 	game_info.setCoinsPositions(coin1Pos, coin2Pos, coin3Pos); //stores the position of the coins
 
+	game_info.setCollectableHeart();
+	Point chPos1(-25, 10);
+	game_info.setCHpos(chPos1, NULL);
+
 	player_posX = game_info.getLevel1Spawn().x; //get the spawnpoint
 	player_posY = game_info.getLevel1Spawn().y;
 	mciSendString(L"play lvl1 from 0", NULL, 0, 0);
 	musc = 0;
 
 	hearts();
+	Point enemy1Pos(-38, 20), enemy2Pos(32, 22);
+	game_info.enemy_pos[0] = enemy1Pos; 
+	game_info.enemy_pos[1] = enemy2Pos;
+
+
 	levelInfoSet = true;
   }
   
@@ -90,11 +99,9 @@ internal void simulateLevel1(Input* input, float& dt) {
 
 
 
-  run_loop(&delta, &count, max, min);
-  move_vertical(&enemy_y, delta, dt, 4);
+  move_vertical(&game_info.enemy_pos[0].y, &delta, dt, 3, -15, 26);
 
-  run_loop(&delta2, &count2, max2, min2);
-  move_sideways(&enemy_x2, delta2, dt, 10);
+  move_sideways(&game_info.enemy_pos[1].x, &delta1, dt, 10, -65, 71);
   //move_sideways(&enemy_x, delta, dt, 20);
   //move_vertical(&enemy_y, delta, dt, 20);
   //move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);	
@@ -129,16 +136,17 @@ internal void simulateLevel1(Input* input, float& dt) {
 	draw_rect(-38, 35, 4, 10, RED); //wall
 	draw_rect(-38, 2, 4, 8, RED); //wall
 
-	draw_diamond(enemy_x, enemy_y, 3, 3, BLUE); //enemy 1
+	draw_diamond(game_info.enemy_pos[0].x, game_info.enemy_pos[0].y, 3, 3, BLUE); //enemy 1
 
 	draw_rect(30, 12, 50, 1, RED); //last platform
 	draw_coin(30, 32, 30, 20, RED); //the red hexagon platform
 
-	draw_coin(enemy_x2, enemy_y2, 5, 5, BLUE); //enemy 2
+	draw_coin(game_info.enemy_pos[1].x, game_info.enemy_pos[1].y, 5, 5, BLUE); //enemy 2
   }
   //draw_heart(6, 6, 1, GREEN);
  
   drawLevelCoins();
+  drawColletableHearts();
   collision(&game_info.coins, dt, options);
   draw_hearts();
 
