@@ -22,26 +22,23 @@ u32 color1 = RED;
 u32 color2 = BLACK;
 u32 color3 = BLACK;
 
-int delta = 1;
-int count = 0;
-int max = 630;
-int min = 0;
+int delta = 0;
 
+int delta1 = 1;
 int delta2 = 1;
-int count2 = 0;
-int max2 = 300;
-int min2 = -600;
+int delta3 = 0; 
+int delta4 = 0;
+int delta5 = 1;
+int delta6 = 0;
 
-float yvelocity;
+bool isjumping = false;
+
+float jumptime = 0;
+
+float yvelocity = 0;
 float xvelocity = 0;
 float accel = 50.0;
-float enemy_x = -38;
-float enemy_y = -15;
 
-
-float enemy_x2 = 32;
-
-float enemy_y2 = 22;
 
 bool bottom = TRUE;
 bool left = TRUE;

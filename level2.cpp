@@ -22,8 +22,8 @@ void simulateLevel2(Input* input, float& dt) {
 	game_info.setPowerUpPosition(PHASE_THROUGH, phaseThroughPos);
 
 	game_info.setCollectableHeart();
-	Point chPos1(-25, 10);
-	game_info.setCHpos(chPos1, NULL);
+	Point chPos1(-25, 13), chPos2(42, -42);
+	game_info.setCHpos(chPos1, chPos2);
 
 
 
@@ -32,6 +32,17 @@ void simulateLevel2(Input* input, float& dt) {
 	mciSendString(L"play lvl2 from 0", NULL, 0, 0);
 	musc = 0;
 	hearts();
+
+	Point enemy1Pos(40, 26), enemy2Pos(70, 26), enemy3Pos(56, -19),
+		  enemy4Pos(-75, 40), enemy5Pos(-66,-3), enemy6Pos(-82, -23), 
+		  enemy7Pos(-36, -33);
+	game_info.enemy_pos[0] = enemy1Pos;
+	game_info.enemy_pos[1] = enemy2Pos;
+	game_info.enemy_pos[2] = enemy3Pos;
+	game_info.enemy_pos[3] = enemy4Pos;
+	game_info.enemy_pos[4] = enemy5Pos;
+	game_info.enemy_pos[5] = enemy6Pos;
+	game_info.enemy_pos[6] = enemy7Pos;
 	levelInfoSet = true;
 	//hearts();
   }
@@ -222,7 +233,29 @@ void simulateLevel2(Input* input, float& dt) {
 	draw_rect(-25, -10, 12, 0.5, RED);
 
   }
+  {
+	move_vertical(&game_info.enemy_pos[0].y, &delta, dt, 3, 23, 36);
+	move_vertical(&game_info.enemy_pos[1].y, &delta1, dt, 4, 23, 36);
+	
+	draw_diamond(game_info.enemy_pos[0].x, game_info.enemy_pos[0].y, 3, 3, BLUE); //top right enemy 1
+	draw_diamond(game_info.enemy_pos[1].x, game_info.enemy_pos[1].y, 3, 3, BLUE); //top right enemy 2
 
+	move_sideways(&game_info.enemy_pos[2].x, &delta2, dt, 10, 36, 76);
+	draw_coin(game_info.enemy_pos[2].x, game_info.enemy_pos[2].y, 3, 3, BLUE); //Lower right enemy (enemy 3)
+
+	move_diagonal_bl(&game_info.enemy_pos[3].x, &game_info.enemy_pos[3].y, &delta3, dt, 7, -80,-44);
+	draw_enemy(game_info.enemy_pos[3].x, game_info.enemy_pos[3].y, 4,4,BLUE); //top right enemy (enemy 4)
+
+
+	move_sideways(&game_info.enemy_pos[4].x, &delta4, dt, 10, -85, -46);
+	move_sideways(&game_info.enemy_pos[5].x, &delta5, dt, 10, -85, -26);
+	move_sideways(&game_info.enemy_pos[6].x, &delta6, dt, 8, -50, -26);
+
+	draw_coin(game_info.enemy_pos[4].x, game_info.enemy_pos[4].y, 3, 3, BLUE); //Lower left enemy 1 (enemy 5)
+	draw_coin(game_info.enemy_pos[5].x, game_info.enemy_pos[5].y, 3, 3, BLUE); //Lower left enemy 2 (enemy 6)
+	draw_coin(game_info.enemy_pos[6].x, game_info.enemy_pos[6].y, 3, 3, BLUE); //Lower left enemy 3 (enemy 7)
+
+  }
 
   if (game_info.getPowerUpCollected(SHRINK)) {
 	if (!game_info.shrunk) {
@@ -258,7 +291,10 @@ void simulateLevel2(Input* input, float& dt) {
 	draw_rect(-66.5, -33, 3, 0.5, fakeWall);
 	draw_rect(-36.5, -33, 5, 0.5, fakeWall);
 	draw_rect(-42.5, -4.8,0.5, 4.1, fakeWall);
+
 	draw_rect(-61, -9.5, 4.2, 0.5, fakeWall);
+	draw_rect(-61, -10.5, 4.2, 0.5, RED);
+
 
 
 

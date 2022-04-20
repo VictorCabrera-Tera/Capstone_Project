@@ -384,7 +384,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 }
 
 internal void
-draw_enemy(int x0, int y0, int x1, int y1, u32 color) {
+draw_enemy_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
 	x0 = clamp(0, render_state.width, x0);
 	y0 = clamp(0, render_state.height, y0);
@@ -419,6 +419,32 @@ draw_enemy(int x0, int y0, int x1, int y1, u32 color) {
 		x1--;
 		x0++;
 	}
+}
+
+
+internal void
+draw_enemy(int start_x, int start_y, int width, int height, u32 color) //  Coin_State* Coins, int counter 
+{
+
+  start_x *= render_state.height * render_scale;
+  start_y *= render_state.height * render_scale;
+
+  width *= render_state.height * render_scale;
+  height *= render_state.height * render_scale;
+  //Need to center it, the window's center is at 0,0
+
+  start_x += render_state.width / 2.f;
+  //x1 += render_state.width / 2.f;
+  start_y += render_state.height / 2.f;
+  //y1 += render_state.height / 2.f;
+
+  int x0 = start_x - width;
+  int x1 = start_x + width;
+  int y0 = start_y - height;
+  int y1 = start_y + height;
+
+  draw_enemy_in_pixels(x0, y0, x1, y1, color);
+
 }
 
 
