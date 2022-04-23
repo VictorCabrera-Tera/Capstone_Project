@@ -41,6 +41,7 @@ pauseMenu(Input* input)
 	else  if (pause_selected == 2) {
 	  game_info.pause = !game_info.pause;
 	  options = MAINMENU;
+	  health_points = 3;
 	  levelInfoSet = false; //so u don't start at the same spot u we're on the level 
 	  game_info.started_level = false;  //so u can't pause on the main menu
 	  player_sizex = 2;

@@ -5,6 +5,7 @@ typedef unsigned int u32;
 #define M_PI   3.14159265358979323846
 
 int musc = 0;
+static int health_points = 3;
 inline int 
 clamp(int min, int max, int value) {
   if (value < min) return min;
@@ -118,6 +119,7 @@ public:
   Lives hp = {};
   void setHeart(u32 alive, u32 dead, int life_left);
   void setHeartPosition(Point heart1, Point heart2, Point heart3);
+  void setLivesLeft(int life_left);
   Point getHeartPos(int heart_index);
   u32 getHeartColor(int heart_index);
   int getLivesLeft();
@@ -276,6 +278,11 @@ void gameUtilities::setHeart(u32 alive, u32 dead, int life_left) {
   }
 }
 
+void gameUtilities::setLivesLeft(int life_left) {
+	for (int i = 0; i < LIVES; i++) {
+		hp.life[i].lives_left = life_left;
+	}
+}
 void gameUtilities::setHeartPosition(Point heart1, Point heart2, Point heart3) {
 	lives[0] = heart1;
 	lives[1] = heart2;

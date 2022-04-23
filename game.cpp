@@ -66,7 +66,8 @@ drawColletableHearts() {
 
 internal void
 hearts() {
-  game_info.setHeart(WHITE, BLACK, 3);
+  game_info.setLivesLeft(health_points);
+  game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft());
   Point heart1Pos(74, 47.5);
   Point heart2Pos(78.5, 47.5);
   Point heart3Pos(83, 47.5);
@@ -138,7 +139,8 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 		if (enemy_touched){
 		  enemy_touched = false;
 		  restart_pos(Level);
-		  game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft() - 1);
+		  health_points--;
+		  game_info.setHeart(WHITE, BLACK, health_points);
 		}
 		else {
 
