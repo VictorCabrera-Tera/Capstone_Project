@@ -6,6 +6,8 @@ void simulateLevel2(Input* input, float& dt) {
   printLevelText("Lives ", 50, 49, WHITE);
   printLevelText("Coins ", -90, 49, WHITE);
   
+  
+  
   if (!levelInfoSet) {
 	game_info.resetCoinsCollected();
 	game_info.resetPowerUpInfo();
@@ -295,17 +297,14 @@ void simulateLevel2(Input* input, float& dt) {
 	draw_rect(-61, -9.5, 4.2, 0.5, fakeWall);
 	draw_rect(-61, -10.5, 4.2, 0.5, RED);
 
-
-
-
   }
   
   
   drawLevelCoins();
   drawColletableHearts();
   drawLevelPowerUps();
-  draw_hearts();
   collision(&game_info.coins, dt, options);
+  draw_hearts();
 
   if (game_info.getCoinCollected(0) && game_info.getCoinCollected(1) && game_info.getCoinCollected(2)) {
 	//set the goal to a color when interacted, will make options to level2, thus going to next level
@@ -317,7 +316,11 @@ void simulateLevel2(Input* input, float& dt) {
 	  player_sizey = 2;
 	  accel = 50;
 	  levelInfoSet = false;
-
+	  if (heart_collected) {
+		  health_points--;
+		  heart_collected = false;
+	  }
+	  
 	}
   }
 }

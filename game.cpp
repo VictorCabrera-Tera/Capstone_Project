@@ -37,6 +37,7 @@ drawColletableHearts() {
 	int collected_coins = 0;
 	static int cc = 0;
 	mciSendString(L"open ..\\sound\\coin.wav type waveaudio alias coin", NULL, 0, 0);
+	
 
 	if (game_info.isHeartCollected(0) == false) {
 		draw_heart(game_info.getCHpos(0).x, game_info.getCHpos(0).y, 2, game_info.getCHcolor(0));
@@ -53,19 +54,27 @@ drawColletableHearts() {
 	}
 
 	//beeps once when coin is collected
-	if (collected_coins != cc) {
+	if (collected_coins != cc ) {
 		mciSendString(L"play coin from 1", NULL, 0, 0);
-		if (game_info.getLivesLeft() < 3) {
+		
+		if (game_info.getLivesLeft() < 3 ) {
 			game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft() + 1);
+			//health_points--;
+			health_points++;
+			
+
 		}
 		cc = collected_coins;
 	}
-
+	if (game_info.isHeartCollected(1) || game_info.isHeartCollected(0))
+	{
+		heart_collected = true;
+	}
 }
-
 
 internal void
 hearts() {
+  //game_info.setHeart(WHITE, BLACK, 3);
   game_info.setLivesLeft(health_points);
   game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft());
   Point heart1Pos(74, 47.5);
@@ -141,6 +150,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 		  restart_pos(Level);
 		  health_points--;
 		  game_info.setHeart(WHITE, BLACK, health_points);
+		  //health_points--;
 		}
 		else {
 
@@ -243,10 +253,6 @@ drawLevelPowerUps() {
   if (game_info.getPowerUpCollected(SHRINK) == false && game_info.getPowerUpInLevel(SHRINK)) {
 	draw_ticket(game_info.getPowerUpPos(SHRINK).x, game_info.getPowerUpPos(SHRINK).y, 3, 3, game_info.getPowerUpColor(SHRINK));
   }
-
-
-
-
 
 
 }
