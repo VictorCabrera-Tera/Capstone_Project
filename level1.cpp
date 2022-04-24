@@ -158,6 +158,12 @@ internal void simulateLevel1(Input* input, float& dt) {
 	if ((player_posX >= 70 && player_posX <=72) && (player_posY >= 14 && player_posY <= 16)) {
 	  options = LEVEL2;
 	  levelInfoSet = false;
+	  if (heart_collected) {
+	      health_points--;
+		  heart_collected = false;
+
+	  }
+  
 	}
   }
 }

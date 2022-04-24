@@ -234,22 +234,37 @@ input.buttons[b].is_down = is_down;\
 
 
 	if (input.buttons[BUTTON_ESCAPE].changed && input.buttons[BUTTON_ESCAPE].is_down) {
-	  if (game_info.started_level) {
+	  if (game_info.started_level && game_over == false) {
 		game_info.pause = !game_info.pause;
 		pause_selected = 1; //for resume to be the first to be highlighted red
 	  }
 	}
+	if (health_points < 1 && levelInfoSet)
+	{
+		game_over = true;	
+	}
 
-
-	if (game_info.pause == false) {
+	if (game_info.pause == false && game_over == false) {
 	  simulate_game(&input, delta_time);
-	  mciSendString(L"resume bgm", NULL, 0, 0);
+	  //mciSendString(L"resume bgm", NULL, 0, 0);
+	  mciSendString(L"resume lvl1", NULL, 0, 0);
+	  mciSendString(L"resume lvl2", NULL, 0, 0);
+	  mciSendString(L"resume lvl3", NULL, 0, 0);
 	}
-	else {
+	else if(game_over)
+	{
+	  game_over_menu(&input);
+	  mciSendString(L"stop lvl2", NULL, 0, 0);
+	  mciSendString(L"stop lvl3", NULL, 0, 0);
+	  //mciSendString(L"play gameover from 0", NULL, 0, 0);
+	}
+	else if(game_info.pause) 
+	{
 	  pauseMenu(&input);
-	  mciSendString(L"pause bgm", NULL, 0, 0);
+	  mciSendString(L"pause lvl1", NULL, 0, 0);
+	  mciSendString(L"pause lvl2", NULL, 0, 0);
+	  mciSendString(L"pause lvl3", NULL, 0, 0);
 	}
-	
 	
 	//Render
 
