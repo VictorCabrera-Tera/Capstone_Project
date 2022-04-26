@@ -36,7 +36,7 @@ internal void
 drawColletableHearts() {
 	int collected_coins = 0;
 	static int cc = 0;
-	mciSendString(L"open ..\\sound\\coin.wav type waveaudio alias coin", NULL, 0, 0);
+	mciSendString(L"open coin.wav type waveaudio alias coin", NULL, 0, 0);
 	
 
 	if (game_info.isHeartCollected(0) == false) {
