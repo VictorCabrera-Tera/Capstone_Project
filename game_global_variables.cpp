@@ -37,7 +37,7 @@ float jumptime = 0;
 
 float yvelocity = 0;
 float xvelocity = 0;
-float accel = 50.0;
+float accel = 140.0;
 
 
 bool bottom = TRUE;
@@ -54,10 +54,18 @@ bool played = false;
 
 //pause variables
 int pause_selected = 1;
-//bool first_pause = true;
 u32 P_color = RED;
 u32 P_color1 = YELLOW;
 u32 P_color2 = YELLOW;
+
+//game_over varaibles
+int over_selected = 1;
+bool game_over = false;
+bool heart_collected = false; 
+u32 G_color = WHITE;
+u32 G_color1 = BLUE;
+u32 G_color2 = BLUE;
+
 
 bool enemy_touched = false;
 u32 fakeWall = RED;

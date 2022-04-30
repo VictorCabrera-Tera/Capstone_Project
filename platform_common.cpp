@@ -47,6 +47,7 @@ enum charType {
   alpha,
   symbol,
   integer,
+  space,
   neither,
 };
 
@@ -405,7 +406,7 @@ const char* symbols[15][7] = {
   "*      ",
 };
 
-const char* numbers[8][5] = {
+const char* numbers[10][5] = {
   "****",
   "*  *",
   "*  *",
@@ -451,6 +452,18 @@ const char* numbers[8][5] = {
   "****",
   "   *",
   "   *",
+  "   *",
+  "   *",
+
+  "****",
+  "*  *",
+  "****",
+  "*  *",
+  "****",
+
+  "****",
+  "*  *",
+  "****",
   "   *",
   "   *",
 };

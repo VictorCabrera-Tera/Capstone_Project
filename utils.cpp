@@ -5,6 +5,7 @@ typedef unsigned int u32;
 #define M_PI   3.14159265358979323846
 
 int musc = 0;
+static int health_points = 3;
 inline int 
 clamp(int min, int max, int value) {
   if (value < min) return min;
@@ -57,6 +58,7 @@ enum GAMEMODE {
   LEVEL1,
   LEVEL2,
   LEVEL3,
+  FINALSCREEN,
 };
 
 struct Hearts {
@@ -82,8 +84,109 @@ public:
   float x;
   float y;
 };
+class Score {
+public:
+  Score() {
+
+	Py_SetProgramName(L"utils");
+
+	Py_Initialize();
+
+	// Load python file
+	HANDLE pyFile = CreateFileW(
+	  L".\\PyScript.py",
+	  GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL
+	);
+
+
+	DWORD pyFileSize = GetFileSize(pyFile, NULL); //returns in bytes
+	DWORD memorySize = pyFileSize + 1;
+	char* fileStored = new char[memorySize];
+
+	bool fileRead = ReadFile(pyFile, fileStored, pyFileSize, NULL, NULL);
+	fileStored[pyFileSize] = '\0'; //adds the null terminator character to the end of the file 
+
+	PyObject* pycompiledCode = nullptr;
+
+	if (fileRead) {
+
+	  pycompiledCode = Py_CompileString(fileStored, "PythonScript.py", Py_file_input); //compiles the python code
+	}
+	delete[] fileStored;
+	CloseHandle(pyFile);
+
+	//......................................................................................................
+
+	pModule = PyImport_ExecCodeModule("PythonScript.py", pycompiledCode);
+	pCurrentTime = PyObject_GetAttrString(pModule, "currentTime");
+	score = 0;
+  }
+
+  void addScore(int amount);
+  void resetScore();
+  int getScore();
+  PyObject* getCurrentTime();
+  PyObject* addTimePaused(PyObject* startTime, PyObject* pausedTime);
+  int secondsSpent(PyObject* start, PyObject* finish);
+  PyObject* pModule;
+  PyObject* pCurrentTime;
+  PyObject* pStartTime;
+  PyObject* pFinishTime;
+  PyObject* pPausedTime;
+
+private:
+  int score;
+ 
+
+};
+void Score::addScore(int amount) {
+  score += amount;
+}
+int Score::getScore() {
+  return score;
+}
+void Score::resetScore() {
+  score = 0;
+}
+PyObject* Score::getCurrentTime() {
+  return PyObject_CallObject(pCurrentTime, NULL);
+}
+PyObject* Score::addTimePaused(PyObject* startTime, PyObject* pausedTime) {
+
+
+  PyObject* paddPausedTimeName = PyUnicode_FromString("addTimePaused");
+  //PyObject* temp =(pStartTime);
+  return PyObject_CallMethodObjArgs(pModule, paddPausedTimeName, startTime, pausedTime, NULL);
+  //Py_DECREF(temp);
+
+}
+int Score::secondsSpent(PyObject* start, PyObject* finish) {
+  PyObject* psecondSpentName = PyUnicode_FromString("secondspent");
+  PyObject* ptrResult = PyObject_CallMethodObjArgs(pModule, psecondSpentName, start, finish, NULL);
+
+  int time = _PyLong_AsInt(ptrResult);
+  Py_DECREF(ptrResult);
+  Py_DECREF(psecondSpentName);
+  return time;
+}
 class gameUtilities {
 public:
+  ~gameUtilities() {
+	
+	Py_DECREF(playerScore.pCurrentTime);
+	Py_DECREF(playerScore.pModule);
+	if (playerScore.pStartTime) {
+	  Py_DECREF(playerScore.pStartTime);
+	}
+	if (playerScore.pFinishTime) {
+	  Py_DECREF(playerScore.pFinishTime);
+	}
+	if (playerScore.pPausedTime) {
+	  Py_DECREF(playerScore.pPausedTime);
+	}
+	Py_Finalize();
+	
+  }
   bool started_level;
   bool pause;
   bool set;
@@ -118,6 +221,7 @@ public:
   Lives hp = {};
   void setHeart(u32 alive, u32 dead, int life_left);
   void setHeartPosition(Point heart1, Point heart2, Point heart3);
+  void setLivesLeft(int life_left);
   Point getHeartPos(int heart_index);
   u32 getHeartColor(int heart_index);
   int getLivesLeft();
@@ -132,6 +236,8 @@ public:
   HeartInc hearts = {};
 
   Point enemy_pos[10];
+
+  Score playerScore = {};
 private:
   float spawn_pos[6];
   Point coin_pos[3];
@@ -276,6 +382,11 @@ void gameUtilities::setHeart(u32 alive, u32 dead, int life_left) {
   }
 }
 
+void gameUtilities::setLivesLeft(int life_left) {
+	for (int i = 0; i < LIVES; i++) {
+		hp.life[i].lives_left = life_left;
+	}
+}
 void gameUtilities::setHeartPosition(Point heart1, Point heart2, Point heart3) {
 	lives[0] = heart1;
 	lives[1] = heart2;

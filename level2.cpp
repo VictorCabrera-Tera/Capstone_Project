@@ -5,6 +5,10 @@ void simulateLevel2(Input* input, float& dt) {
   printLevelText("Level 2", -10, 49, WHITE);
   printLevelText("Lives ", 50, 49, WHITE);
   printLevelText("Coins ", -90, 49, WHITE);
+  printLevelText("Score ", -90, -46, WHITE);
+  printLevelText(std::to_string(game_info.playerScore.getScore()).c_str(), -65, -46, WHITE);
+
+  
   
   if (!levelInfoSet) {
 	game_info.resetCoinsCollected();
@@ -21,6 +25,7 @@ void simulateLevel2(Input* input, float& dt) {
 	Point phaseThroughPos(-37, 37);
 	game_info.setPowerUpPosition(PHASE_THROUGH, phaseThroughPos);
 
+	game_info.setCHcolor(0xDA189C, 0xDA189D);
 	game_info.setCollectableHeart();
 	Point chPos1(-25, 13), chPos2(42, -42);
 	game_info.setCHpos(chPos1, chPos2);
@@ -43,6 +48,9 @@ void simulateLevel2(Input* input, float& dt) {
 	game_info.enemy_pos[4] = enemy5Pos;
 	game_info.enemy_pos[5] = enemy6Pos;
 	game_info.enemy_pos[6] = enemy7Pos;
+
+	game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
+
 	levelInfoSet = true;
 	//hearts();
   }
@@ -50,7 +58,7 @@ void simulateLevel2(Input* input, float& dt) {
 	if (leftclear == true) {
 	  if (is_down(BUTTON_LEFT)) {
 		//player_posX -= speed * dt;
-		xvelocity = -20;
+		xvelocity = -50;
 
 		/*
 		if (xvelocity > 0) {
@@ -72,7 +80,7 @@ void simulateLevel2(Input* input, float& dt) {
 	if (rightclear == true) {
 	  if (is_down(BUTTON_RIGHT)) { // 
 		  //player_posX += speed * dt;
-		xvelocity = 20;
+		xvelocity = 50;
 		/*
 		if (xvelocity < 0) {
 			xvelocity += 200 * dt;
@@ -94,7 +102,7 @@ void simulateLevel2(Input* input, float& dt) {
 	if (pressed(BUTTON_SPACEBAR))
 	{
 	  //player_posY += speed * dt;
-	  yvelocity -= 3000 * 0.0166;
+	  yvelocity -= 4900 * 0.016666f;
 
 	}
 	old_Y = player_posY;
@@ -201,7 +209,7 @@ void simulateLevel2(Input* input, float& dt) {
 	draw_rect(31, -40, 8, .5, RED); //lower right platforms
 	draw_rect(78, -38, 8, .5, RED);
 
-	draw_rect(56, -28, 5.5, .5, RED); //(mess with this)
+	draw_rect(56, -28, 8, .5, RED); //(mess with this)
 	draw_rect(31, -31, 5, .5, RED);
 	draw_rect(78, -18, 5, .5, RED);
 
@@ -234,22 +242,22 @@ void simulateLevel2(Input* input, float& dt) {
 
   }
   {
-	move_vertical(&game_info.enemy_pos[0].y, &delta, dt, 3, 23, 36);
-	move_vertical(&game_info.enemy_pos[1].y, &delta1, dt, 4, 23, 36);
+	move_vertical(&game_info.enemy_pos[0].y, &delta, dt, 6, 23, 36);
+	move_vertical(&game_info.enemy_pos[1].y, &delta1, dt, 8, 23, 36);
 	
 	draw_diamond(game_info.enemy_pos[0].x, game_info.enemy_pos[0].y, 3, 3, BLUE); //top right enemy 1
 	draw_diamond(game_info.enemy_pos[1].x, game_info.enemy_pos[1].y, 3, 3, BLUE); //top right enemy 2
 
-	move_sideways(&game_info.enemy_pos[2].x, &delta2, dt, 10, 36, 76);
+	move_sideways(&game_info.enemy_pos[2].x, &delta2, dt, 20, 36, 76);
 	draw_coin(game_info.enemy_pos[2].x, game_info.enemy_pos[2].y, 3, 3, BLUE); //Lower right enemy (enemy 3)
 
-	move_diagonal_bl(&game_info.enemy_pos[3].x, &game_info.enemy_pos[3].y, &delta3, dt, 7, -80,-44);
+	move_diagonal_bl(&game_info.enemy_pos[3].x, &game_info.enemy_pos[3].y, &delta3, dt, 15, -80,-44);
 	draw_enemy(game_info.enemy_pos[3].x, game_info.enemy_pos[3].y, 4,4,BLUE); //top right enemy (enemy 4)
 
 
-	move_sideways(&game_info.enemy_pos[4].x, &delta4, dt, 10, -85, -46);
-	move_sideways(&game_info.enemy_pos[5].x, &delta5, dt, 10, -85, -26);
-	move_sideways(&game_info.enemy_pos[6].x, &delta6, dt, 8, -50, -26);
+	move_sideways(&game_info.enemy_pos[4].x, &delta4, dt, 20, -85, -46);
+	move_sideways(&game_info.enemy_pos[5].x, &delta5, dt, 20, -85, -26);
+	move_sideways(&game_info.enemy_pos[6].x, &delta6, dt, 16, -50, -26);
 
 	draw_coin(game_info.enemy_pos[4].x, game_info.enemy_pos[4].y, 3, 3, BLUE); //Lower left enemy 1 (enemy 5)
 	draw_coin(game_info.enemy_pos[5].x, game_info.enemy_pos[5].y, 3, 3, BLUE); //Lower left enemy 2 (enemy 6)
@@ -261,7 +269,7 @@ void simulateLevel2(Input* input, float& dt) {
 	if (!game_info.shrunk) {
 	  player_sizex = 1;
 	  player_sizey = 1;
-	  accel = 100.0;
+	  accel = 220.0;
 
 	  Point shrinkPos(-3, -4);
 	  game_info.setPowerUpPosition(SHRINK, shrinkPos);
@@ -271,7 +279,7 @@ void simulateLevel2(Input* input, float& dt) {
 	else {
 	  player_sizex = 2;
 	  player_sizey = 2;
-	  accel = 50.0;
+	  accel = 140.0;
 	  if (!game_info.getCoinCollected(2)) {
 		Point shrinkPos(-10, -42);
 		game_info.setPowerUpPosition(SHRINK, shrinkPos);
@@ -295,29 +303,35 @@ void simulateLevel2(Input* input, float& dt) {
 	draw_rect(-61, -9.5, 4.2, 0.5, fakeWall);
 	draw_rect(-61, -10.5, 4.2, 0.5, RED);
 
-
-
-
   }
   
   
   drawLevelCoins();
   drawColletableHearts();
   drawLevelPowerUps();
-  draw_hearts();
   collision(&game_info.coins, dt, options);
+  draw_hearts();
 
   if (game_info.getCoinCollected(0) && game_info.getCoinCollected(1) && game_info.getCoinCollected(2)) {
 	//set the goal to a color when interacted, will make options to level2, thus going to next level
 	draw_triangles(-7, -33.5, 1.6, 1.6, YELLOW, 1);
 	draw_rect(-5, -38, 0.5, 7, YELLOW);
 	if ((player_posX >= -6 && player_posX <= -4) && (player_posY >= -45.5 && player_posY <= -37.5)) {
-	  options = LEVEL3;
+	  game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
+	  int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
+
+	  game_info.playerScore.addScore(1000 * ((float)50 / (float)time));
+	  
+	  options = FINALSCREEN;
 	  player_sizex = 2;
 	  player_sizey = 2;
-	  accel = 50;
+	  accel = 140.0;
 	  levelInfoSet = false;
-
+	  if (heart_collected) {
+		  health_points--;
+		  heart_collected = false;
+	  }
+	  
 	}
   }
 }

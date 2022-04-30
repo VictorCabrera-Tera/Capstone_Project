@@ -5,6 +5,9 @@ void simulateLevel3(Input* input, float& dt) {
   printLevelText("Lives ", 50, 49, WHITE);
   printLevelText("Coins ", -90, 49, WHITE);
 
+  printLevelText("Score ", -90, -46, WHITE);
+  printLevelText(std::to_string(game_info.playerScore.getScore()).c_str(), -65, -46, WHITE);
+
 
   if (!levelInfoSet) {
 	game_info.resetCoinsCollected();

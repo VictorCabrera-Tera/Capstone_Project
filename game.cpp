@@ -10,7 +10,7 @@ void simulateMainMenu(Input* input, float& dt);
 void simulateLevel2(Input* input,float& dt);
 void simulateLevel3(Input* input, float& dt);
 void simulateLevelSelect(Input* input, float& dt);
-
+void simulateFinalScreen(Input* input, float& dt);
 
 internal void
 restart_pos(GAMEMODE Level) {
@@ -37,6 +37,7 @@ drawColletableHearts() {
 	int collected_coins = 0;
 	static int cc = 0;
 	mciSendString(L"open ..\\sound\\coin.wav type waveaudio alias coin", NULL, 0, 0);
+	
 
 	if (game_info.isHeartCollected(0) == false) {
 		draw_heart(game_info.getCHpos(0).x, game_info.getCHpos(0).y, 2, game_info.getCHcolor(0));
@@ -53,20 +54,29 @@ drawColletableHearts() {
 	}
 
 	//beeps once when coin is collected
-	if (collected_coins != cc) {
+	if (collected_coins != cc ) {
 		mciSendString(L"play coin from 1", NULL, 0, 0);
-		if (game_info.getLivesLeft() < 3) {
+		
+		if (game_info.getLivesLeft() < 3 ) {
 			game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft() + 1);
+			//health_points--;
+			health_points++;
+			
+
 		}
 		cc = collected_coins;
 	}
-
+	if (game_info.isHeartCollected(1) || game_info.isHeartCollected(0))
+	{
+		heart_collected = true;
+	}
 }
-
 
 internal void
 hearts() {
-  game_info.setHeart(WHITE, BLACK, 3);
+  //game_info.setHeart(WHITE, BLACK, 3);
+  game_info.setLivesLeft(health_points);
+  game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft());
   Point heart1Pos(74, 47.5);
   Point heart2Pos(78.5, 47.5);
   Point heart3Pos(83, 47.5);
@@ -138,7 +148,9 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 		if (enemy_touched){
 		  enemy_touched = false;
 		  restart_pos(Level);
-		  game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft() - 1);
+		  health_points--;
+		  game_info.setHeart(WHITE, BLACK, health_points);
+		  //health_points--;
 		}
 		else {
 
@@ -243,10 +255,6 @@ drawLevelPowerUps() {
   }
 
 
-
-
-
-
 }
 
 GAMEMODE options = MAINMENU;
@@ -263,7 +271,6 @@ simulate_game(Input* input, float &dt) {
 
 	
 	if (game_info.set == false) {
-		game_info.setCHcolor(0xDA189C, 0xDA189D);
 		game_info.setCoinsColor(0xFFD800, 0xFFD900, 0xFFDA00);
 		game_info.setLevel1Spawn(-82, -41);
 		game_info.setLevel2Spawn(0, 41);
@@ -285,5 +292,8 @@ simulate_game(Input* input, float &dt) {
 	}
 	else if (options == LEVEL3) {
 	  simulateLevel3(input, dt);
+	}
+	else if (options == FINALSCREEN) {
+	  simulateFinalScreen(input, dt);
 	}
 }

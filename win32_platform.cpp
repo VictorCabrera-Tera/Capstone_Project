@@ -1,11 +1,12 @@
-#include "utils.cpp"
+#include <Python.h>
 #include <windows.h>
+#include "utils.cpp"
 #include "platform_common.cpp"
 #include "math.h"
 #define _USE_MATH_DEFINES
 #include <cmath>
 #pragma comment(lib,"winmm.lib")
-
+#include <string>
 global_variable bool running = true;
 
 bool pause = false;
@@ -33,7 +34,9 @@ global_variable gameUtilities game_info;
 #include "level2.cpp"
 #include "level3.cpp"
 #include "mainMenu.cpp"
+#include "FinalScreen.cpp"
 #include "pauseMenu.cpp"
+
 
 
 
@@ -106,6 +109,7 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	  if (game_info.started_level)
 	  {
 		game_info.pause = true;
+		game_info.playerScore.pPausedTime = game_info.playerScore.getCurrentTime();
 	  }
 	}break;
 	//Includes moving the window, minimizing, reshaping
@@ -118,6 +122,9 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
+
+  //Py_Initialize();
+  //Py_Finalize();
   //Create a window class
   WNDCLASS window_class = {};
 
@@ -234,22 +241,48 @@ input.buttons[b].is_down = is_down;\
 
 
 	if (input.buttons[BUTTON_ESCAPE].changed && input.buttons[BUTTON_ESCAPE].is_down) {
-	  if (game_info.started_level) {
+	  if (game_info.started_level && game_over == false) {
 		game_info.pause = !game_info.pause;
 		pause_selected = 1; //for resume to be the first to be highlighted red
+		if (!game_info.pause) {
+		 // game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
+		 //int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
+		 game_info.playerScore.pStartTime= game_info.playerScore.addTimePaused(game_info.playerScore.pStartTime, game_info.playerScore.pPausedTime);
+		 //time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
+		 //int x = time;
+		}
+		else {
+		  game_info.playerScore.pPausedTime = game_info.playerScore.getCurrentTime();
+
+		}
 	  }
 	}
+	if (health_points < 1 && levelInfoSet)
+	{
+		game_over = true;	
+	}
 
-
-	if (game_info.pause == false) {
+	if (game_info.pause == false && game_over == false) {
 	  simulate_game(&input, delta_time);
-	  mciSendString(L"resume bgm", NULL, 0, 0);
+	  //mciSendString(L"resume bgm", NULL, 0, 0);
+	  mciSendString(L"resume lvl1", NULL, 0, 0);
+	  mciSendString(L"resume lvl2", NULL, 0, 0);
+	  mciSendString(L"resume lvl3", NULL, 0, 0);
 	}
-	else {
+	else if(game_over)
+	{
+	  game_over_menu(&input);
+	  mciSendString(L"stop lvl2", NULL, 0, 0);
+	  mciSendString(L"stop lvl3", NULL, 0, 0);
+	  //mciSendString(L"play gameover from 0", NULL, 0, 0);
+	}
+	else if(game_info.pause) 
+	{
 	  pauseMenu(&input);
-	  mciSendString(L"pause bgm", NULL, 0, 0);
+	  mciSendString(L"pause lvl1", NULL, 0, 0);
+	  mciSendString(L"pause lvl2", NULL, 0, 0);
+	  mciSendString(L"pause lvl3", NULL, 0, 0);
 	}
-	
 	
 	//Render
 
@@ -269,7 +302,7 @@ input.buttons[b].is_down = is_down;\
 	diving gives you sec / frame, which is needed for the speed of the game
 	*/
 
-	//delta_time = (float)(frame_end_time.QuadPart - frame_begin_time.QuadPart) / performance_frequency;
+	delta_time = (float)(frame_end_time.QuadPart - frame_begin_time.QuadPart) / performance_frequency;
 
 	frame_begin_time = frame_end_time;
 	

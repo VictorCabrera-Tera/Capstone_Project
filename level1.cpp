@@ -9,6 +9,9 @@ internal void simulateLevel1(Input* input, float& dt) {
   printLevelText("Lives ", 50, 49, WHITE);
   printLevelText("Coins ", -90, 49, WHITE);
 
+  printLevelText("Score ", -90, -46, WHITE);
+  printLevelText(std::to_string(game_info.playerScore.getScore()).c_str(), -65, -46, WHITE);
+
   if (!levelInfoSet) {
 	game_info.resetCoinsCollected(); //makes all coins' collected variable to false
 	Point coin1Pos(-39, -36);
@@ -16,9 +19,11 @@ internal void simulateLevel1(Input* input, float& dt) {
 	Point coin3Pos(30, 30);
 	game_info.setCoinsPositions(coin1Pos, coin2Pos, coin3Pos); //stores the position of the coins
 
+	game_info.setCHcolor(0xDA189C, RED);
 	game_info.setCollectableHeart();
-	Point chPos1(-25, 10);
-	game_info.setCHpos(chPos1, NULL);
+	Point chPos1(74, -25);
+	Point chPos2(74, -40);
+	game_info.setCHpos(chPos1, chPos2);
 
 	player_posX = game_info.getLevel1Spawn().x; //get the spawnpoint
 	player_posY = game_info.getLevel1Spawn().y;
@@ -30,7 +35,9 @@ internal void simulateLevel1(Input* input, float& dt) {
 	game_info.enemy_pos[0] = enemy1Pos; 
 	game_info.enemy_pos[1] = enemy2Pos;
 
+	game_info.playerScore.resetScore();
 
+	game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
 	levelInfoSet = true;
   }
   
@@ -39,7 +46,7 @@ internal void simulateLevel1(Input* input, float& dt) {
   if (leftclear == true) {
 	if (is_down(BUTTON_LEFT)) {
 	  //player_posX -= speed * dt;
-	  xvelocity = -20;
+	  xvelocity = -50;
 
 	  /*
 	  if (xvelocity > 0) {
@@ -61,7 +68,7 @@ internal void simulateLevel1(Input* input, float& dt) {
   if (rightclear == true) {
 	if (is_down(BUTTON_RIGHT)) { // 
 		//player_posX += speed * dt;
-	  xvelocity = 20;
+	  xvelocity = 50;
 	  /*
 	  if (xvelocity < 0) {
 		  xvelocity += 200 * dt;
@@ -83,7 +90,7 @@ internal void simulateLevel1(Input* input, float& dt) {
   if (pressed(BUTTON_SPACEBAR))
   {
 	//player_posY += speed * dt;
-	yvelocity -= 3000 * 0.0166;
+	yvelocity -= 4900 * 0.016666f;
 
   }
 
@@ -99,9 +106,9 @@ internal void simulateLevel1(Input* input, float& dt) {
 
 
 
-  move_vertical(&game_info.enemy_pos[0].y, &delta, dt, 3, -15, 26);
+  move_vertical(&game_info.enemy_pos[0].y, &delta, dt, 10, -15, 26);
 
-  move_sideways(&game_info.enemy_pos[1].x, &delta1, dt, 10, -65, 71);
+  move_sideways(&game_info.enemy_pos[1].x, &delta1, dt, 20, -65, 71);
   //move_sideways(&enemy_x, delta, dt, 20);
   //move_vertical(&enemy_y, delta, dt, 20);
   //move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);	
@@ -156,8 +163,20 @@ internal void simulateLevel1(Input* input, float& dt) {
 	draw_triangles(69, 25, 1.6, 1.6, YELLOW, 1);
 	draw_rect(71, 20, 0.5, 7, YELLOW);
 	if ((player_posX >= 70 && player_posX <=72) && (player_posY >= 14 && player_posY <= 16)) {
+	  game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
+	  int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
+	
+	  game_info.playerScore.addScore(500 * ((float)20 / (float)time));	
 	  options = LEVEL2;
 	  levelInfoSet = false;
+	  if (heart_collected) {
+		health_points--;
+		heart_collected = false;
+
+	  }
+	  
+
+  
 	}
   }
 }

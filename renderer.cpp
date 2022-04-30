@@ -330,16 +330,19 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 				vacant = false;
 				return;
 			}
-			if (*lowerL_pixel == coins->coin[0].color)
+			if (*lowerL_pixel == coins->coin[0].color && coins->coin[0].collected == false)
 			{
+				game_info.playerScore.addScore(100);
 				coins->coin[0].collected = true;
 			}
-			if (*lowerL_pixel == coins->coin[1].color)
+			if (*lowerL_pixel == coins->coin[1].color && coins->coin[1].collected == false)
 			{
+				game_info.playerScore.addScore(100);
 				coins->coin[1].collected = true; 
 			}
-			if (*lowerL_pixel == coins->coin[2].color)
+			if (*lowerL_pixel == coins->coin[2].color && coins->coin[2].collected == false)
 			{
+				game_info.playerScore.addScore(100);
 				coins->coin[2].collected = true;
 			}
 

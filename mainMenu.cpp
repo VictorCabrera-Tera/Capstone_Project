@@ -16,6 +16,7 @@ void simulateMainMenu(Input* input, float& dt) {
   
   draw_rect(0, 0, 90, 45, BLUE);
   printMenuPhrase("Main Menu", -43, 25, 13, true, ticket, GREEN);
+  game_info.playerScore.resetScore();
   u32 temp;
   if (pressed(BUTTON_LEFT)) {
 	temp = color1;

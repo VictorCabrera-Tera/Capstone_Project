@@ -27,6 +27,9 @@ determineCharType(const char* string, charType& type) {
   {
 	type = integer;
   }
+  else if (c == 32) {
+	type = space;
+  }
   else {
 	type = neither; //Neither. The character is not implemented
   }
@@ -288,6 +291,9 @@ printLevelText(const char* phrase, int x, int y, u32 color) {
 	case (integer): {
 	  printLevelNum(string, x_coord, y_coord, color);
 	}break;
+	case (space): {
+	  x_coord += 2;
+	}
 	case(neither):
 	case(symbol): {
 	  x_coord -= 4;
