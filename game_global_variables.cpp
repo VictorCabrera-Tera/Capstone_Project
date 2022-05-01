@@ -26,10 +26,23 @@ int delta = 0;
 
 int delta1 = 1;
 int delta2 = 1;
-int delta3 = 0; 
+int delta3 = 0;
 int delta4 = 0;
 int delta5 = 1;
 int delta6 = 0;
+
+int delta7 = 1;
+int delta8 = 0;
+int delta9 = 0;
+int delta10 = 0;
+int delta11 = 0;
+int delta12 = 1; 
+int delta13 = 0;
+int delta14 = 1;
+int delta15 = 0;
+int delta16 = 0;
+
+
 
 bool isjumping = false;
 
@@ -37,13 +50,15 @@ float jumptime = 0;
 
 float yvelocity = 0;
 float xvelocity = 0;
-float accel = 50.0;
+float accel = -50.0;
 
 
 bool bottom = TRUE;
 bool left = TRUE;
 bool right = TRUE;
 bool top = TRUE;
+bool touched = FALSE;
+
 
 bool leftclear = FALSE;
 bool rightclear = FALSE;
@@ -61,7 +76,7 @@ u32 P_color2 = YELLOW;
 //game_over varaibles
 int over_selected = 1;
 bool game_over = false;
-bool heart_collected = false; 
+bool heart_collected = false;
 u32 G_color = WHITE;
 u32 G_color1 = BLUE;
 u32 G_color2 = BLUE;
