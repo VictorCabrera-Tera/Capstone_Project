@@ -8,7 +8,9 @@ void simulateFinalScreen(Input* input, float& dt) {
 	running = false;
   }
 
-  printLevelText("Score ",-20, -36, WHITE);
-  printLevelText(std::to_string(game_info.playerScore.getScore()).c_str(), 10, -36, WHITE);
+  printLevelText("Score ",-25, -16, WHITE);
+  printLevelText(std::to_string(game_info.playerScore.getScore()).c_str(), 5, -16, WHITE);
 
+
+  printLevelText("Music by TAD and DeltaBreaker", -55, -40, PURPLE);
 }

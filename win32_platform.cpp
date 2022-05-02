@@ -33,6 +33,7 @@ global_variable gameUtilities game_info;
 #include "levelSelect.cpp"
 #include "level2.cpp"
 #include "level3.cpp"
+#include "level4.cpp"
 #include "mainMenu.cpp"
 #include "FinalScreen.cpp"
 #include "pauseMenu.cpp"

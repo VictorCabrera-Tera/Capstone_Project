@@ -1,20 +1,20 @@
 void simulateLevelSelect(Input* input, float& dt) {
   draw_rect(0, 0, 90, 45, BLUE);
 
-  printMenuPhrase("Pick-A-Level", -48, 40, 6, false, square, RED);
+  printMenuPhrase("Pick A Level", -52, 30, 6, false, square, RED);
 
-  if (pressed(BUTTON_DOWN)) {
+  if (pressed(BUTTON_RIGHT)) {
 	selected++;
-	if (selected > 3) {
+	if (selected > 4) {
 	  selected = 1;
 	}
 	mciSendString(L"play button from 0", NULL, 0, 0);
   }
 
-  if (pressed(BUTTON_UP)) {
+  if (pressed(BUTTON_LEFT)) {
 	selected--;
 	if (selected < 1) {
-	  selected = 3;
+	  selected = 4;
 	}
 	mciSendString(L"play button from 0", NULL, 0, 0);
   }
@@ -23,26 +23,42 @@ void simulateLevelSelect(Input* input, float& dt) {
 	color1 = RED;
 	color2 = BLACK;
 	color3 = BLACK;
+	color4 = BLACK;
 	break;
   case(2):
 	color1 = BLACK;
 	color2 = RED;
 	color3 = BLACK;
+	color4 = BLACK;
 	break;
   case(3):
 	color1 = BLACK;
 	color2 = BLACK;
 	color3 = RED;
+	color4 = BLACK;
+	break;
+  case(4):
+	color1 = BLACK;
+	color2 = BLACK;
+	color3 = BLACK;
+	color4 = RED;
 	break;
   }
-  draw_rect(0, 20, 2, 5, color1);
+  printMenuPhrase("1", -50, 0, 16, false, square, color1);
+  
+  printMenuPhrase("2", -20, 0, 16, false, square, color2);
 
-  draw_rect(-10, 0, 2, 5, color2);
-  draw_rect(10, 0, 2, 5, color2);
+ 
+  printMenuPhrase("3", 10, 0, 16, false, square, color3);
+  printMenuPhrase("4", 40, 0, 16, false, square, color4);
 
-  draw_rect(0, -20, 2, 5, color3);
-  draw_rect(20, -20, 2, 5, color3);
-  draw_rect(-20, -20, 2, 5, color3);
+
+  {
+	draw_triangles(-50, -16, 3, 8, GREEN, 1); //ldft arrow
+	draw_rect(-45, -23.7, 5, 2, GREEN);
+	draw_triangles(50, -16, 3, 8, GREEN, 2); //right arrow
+	draw_rect(45, -23.7, 5, 2, GREEN);
+  }
 
 
   if (pressed(BUTTON_ENTER)) {
@@ -56,13 +72,23 @@ void simulateLevelSelect(Input* input, float& dt) {
 	  color1 = RED;
 	  color2 = BLACK;
 	  color3 = BLACK;
+	  color4 = BLACK;
 	}
-	else {
+	else if (selected == 3) {
 	  options = LEVEL3;
 	  game_info.started_level = true;
 	  color1 = RED;
 	  color2 = BLACK;
 	  color3 = BLACK;
+	  color4 = BLACK;
+	}
+	else {
+	  options = LEVEL4;
+	  game_info.started_level = true;
+	  color1 = RED;
+	  color2 = BLACK;
+	  color3 = BLACK;
+	  color4 = BLACK;
 	}
   }
   

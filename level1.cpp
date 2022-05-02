@@ -46,7 +46,7 @@ internal void simulateLevel1(Input* input, float& dt) {
   if (leftclear == true) {
 	if (is_down(BUTTON_LEFT)) {
 	  //player_posX -= speed * dt;
-	  xvelocity = -20; //-50
+	  xvelocity = -40; //-50
 
 	  /*
 	  if (xvelocity > 0) {
@@ -68,7 +68,7 @@ internal void simulateLevel1(Input* input, float& dt) {
   if (rightclear == true) {
 	if (is_down(BUTTON_RIGHT)) { // 
 		//player_posX += speed * dt;
-	  xvelocity = 20; //50
+	  xvelocity = 40; //50
 	  /*
 	  if (xvelocity < 0) {
 		  xvelocity += 200 * dt;
@@ -90,7 +90,7 @@ internal void simulateLevel1(Input* input, float& dt) {
   if (pressed(BUTTON_SPACEBAR))
   {
 	//player_posY += speed * dt;
-	yvelocity += 3000 * 0.0166;
+	yvelocity += 3500 * 0.0166;
 
   }
 

@@ -47,7 +47,7 @@ void simulateMainMenu(Input* input, float& dt) {
 	freemode = true;
   }
   if (color1 == RED) {
-	printMenuPhrase("Start-Level", -50, -20, 6, false, square, RED);
+	printMenuPhrase("Start Level", -50, -20, 6, false, square, RED);
   }
 
   draw_rect(-20, 0, 1, 10, color1); //left side
@@ -55,7 +55,7 @@ void simulateMainMenu(Input* input, float& dt) {
   draw_rect(-24, 10, 5, 1, color1);
 
   if (color2 == RED) {
-	printMenuPhrase("Level-Select", -50, -20, 6, false, square, RED);
+	printMenuPhrase("Level Select", -50, -20, 6, false, square, RED);
   }
 
   draw_rect(10, 10, 1, 3, color2); //Right side

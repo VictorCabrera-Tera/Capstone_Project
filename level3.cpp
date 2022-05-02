@@ -56,6 +56,7 @@ void simulateLevel3(Input* input, float& dt) {
 	game_info.enemy_pos[9] = enemy10Pos;
 
 	game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
+	game_info.setLevel3Spawn(-85, -41);
 
 	levelInfoSet = true;
 	//hearts();
@@ -64,7 +65,7 @@ void simulateLevel3(Input* input, float& dt) {
 
   if (leftclear == true) {
 	if (is_down(BUTTON_LEFT)) {
-	  xvelocity = -20;
+	  xvelocity = -50;
 
 	}
   }
@@ -75,7 +76,7 @@ void simulateLevel3(Input* input, float& dt) {
 
   if (rightclear == true) {
 	if (is_down(BUTTON_RIGHT)) {
-	  xvelocity = 20;
+	  xvelocity = 50;
 	}
   }
   if (released(BUTTON_RIGHT)) {
@@ -85,7 +86,7 @@ void simulateLevel3(Input* input, float& dt) {
 
   if (pressed(BUTTON_SPACEBAR))
   {
-	yvelocity += 3000 * 0.0166;
+	yvelocity += 4200 * 0.0166;
   }
 
   old_Y = player_posY;
@@ -171,7 +172,7 @@ void simulateLevel3(Input* input, float& dt) {
   draw_rect(65, -32, 4, 0.5, RED);
 
   draw_rect(88, -32, 4, 0.5, RED);
-
+    
   draw_rect(15, -17, 4, 0.5, RED);
 
   draw_rect(40, -17, 4, 0.5, RED);
@@ -201,24 +202,24 @@ void simulateLevel3(Input* input, float& dt) {
   move_vertical(&game_info.enemy_pos[0].y, &delta7, dt, 15, -40, 40);
 
   draw_diamond(game_info.enemy_pos[1].x, game_info.enemy_pos[1].y, 3, 3, BLUE);
-  move_sideways(&game_info.enemy_pos[1].x, &delta8, dt, 10, -10, 4);
+  move_sideways(&game_info.enemy_pos[1].x, &delta8, dt, 20, -10, 4);
 
   draw_diamond(game_info.enemy_pos[2].x, game_info.enemy_pos[2].y, 1, 1, BLUE);
-  move_sideways(&game_info.enemy_pos[2].x, &delta9, dt, 30, -30, 80);
+  move_sideways(&game_info.enemy_pos[2].x, &delta9, dt, 50, -30, 80);
 
   draw_diamond(game_info.enemy_pos[3].x, game_info.enemy_pos[3].y, 2, 2, BLUE);
-  move_sideways(&game_info.enemy_pos[3].x, &delta10, dt, 10, 15, 88);
+  move_sideways(&game_info.enemy_pos[3].x, &delta10, dt, 20, 15, 88);
 
   draw_diamond(game_info.enemy_pos[4].x, game_info.enemy_pos[4].y, 2, 2, BLUE);
-  move_sideways(&game_info.enemy_pos[4].x, &delta11, dt, 10, 15, 88);
+  move_sideways(&game_info.enemy_pos[4].x, &delta11, dt, 20, 15, 88);
 
   draw_diamond(game_info.enemy_pos[5].x, game_info.enemy_pos[5].y, 2, 2, BLUE);
-  move_sideways(&game_info.enemy_pos[5].x, &delta12, dt, 10, 15, 88);
+  move_sideways(&game_info.enemy_pos[5].x, &delta12, dt, 20, 15, 88);
 
   draw_diamond(game_info.enemy_pos[6].x, game_info.enemy_pos[6].y, 2, 2, BLUE);
-  move_sideways(&game_info.enemy_pos[6].x, &delta13, dt, 15, -20, 75);
+  move_sideways(&game_info.enemy_pos[6].x, &delta13, dt, 30, -20, 75);
   draw_diamond(game_info.enemy_pos[7].x, game_info.enemy_pos[7].y, 2, 2, BLUE);
-  move_sideways(&game_info.enemy_pos[7].x, &delta14, dt, 10, -20, 75);
+  move_sideways(&game_info.enemy_pos[7].x, &delta14, dt, 15, -20, 75);
   if (game_info.getPowerUpCollected(PHASE_THROUGH)) {
 	fakeWall = game_info.getPowerUpColor(PHASE_THROUGH);
 	draw_rect(-42, 31, 3, 0.5, fakeWall);
@@ -253,7 +254,7 @@ void simulateLevel3(Input* input, float& dt) {
 
 	  game_info.playerScore.addScore(1000 * ((float)50 / (float)time));
 
-	  options = FINALSCREEN;
+	  options = LEVEL4;
 
 	  levelInfoSet = false;
 	  if (heart_collected) {
