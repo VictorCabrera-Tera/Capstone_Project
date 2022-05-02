@@ -9,6 +9,7 @@ void simulateLevel1(Input* input, float& dt);
 void simulateMainMenu(Input* input, float& dt);
 void simulateLevel2(Input* input,float& dt);
 void simulateLevel3(Input* input, float& dt);
+void simulateLevel4(Input* input, float& dt);
 void simulateLevelSelect(Input* input, float& dt);
 void simulateFinalScreen(Input* input, float& dt);
 
@@ -141,7 +142,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
   }
   else {
 	clear = true;
-	accel = -35.0;
+	accel = -70.0;
 	yvelocity += accel * dt;
 
   }
@@ -247,6 +248,9 @@ simulate_game(Input* input, float &dt) {
 	}
 	else if (options == LEVEL3) {
 	  simulateLevel3(input, dt);
+	}
+	else if (options == LEVEL4) {
+	  simulateLevel4(input, dt);
 	}
 	else if (options == FINALSCREEN) {
 	  simulateFinalScreen(input, dt);

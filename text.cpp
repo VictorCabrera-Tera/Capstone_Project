@@ -230,6 +230,64 @@ printMenuSymbol(const char* string, int x_coord, int y_coord, float size, int& s
   spacing = 9 * strlen(segment) / 7;
 }
 
+internal void
+printMenuNumber(const char* string, int x_coord, int y_coord, float size, int& spacing, bool italic, Font font, u32 color) {
+
+  // current_char will provide the index necessary to access the correct element in alphabet
+
+  int current_char = tolower(*string) - 48;
+
+  int starting_x = x_coord; //Needed to reset the position for the next part of the symbol
+
+  int slant = 0; //for italics
+
+  if (italic) {
+	slant++;
+  }
+
+  for (int j = 0; j < 5; j++) {
+
+	//Obtain the part of the character to be drawn
+	//segment points to a string,. Ex: "  *  " (currently only first element)
+	const char* segment = numbers[current_char][j];
+	for (int i = 0; i <= strlen(segment); i++) {
+
+
+	  if (*segment == '*')
+	  {
+		switch (font) { //different drawing function depending on font
+		case(ticket): {
+		  draw_ticket(x_coord, y_coord, size, size, color);
+		}break;
+		case(square): {
+		  draw_rect(x_coord, y_coord, size, size, color);
+		}break;
+		case(circle): {
+		  draw_circle(x_coord, y_coord, size, color);
+		}break;
+		case(triangle): {
+		  draw_tri(x_coord, y_coord, size, size, color);
+		}break;
+		}
+	  }
+
+
+	  x_coord += 3; //incremented so next element of segment is drawn further to the right
+
+	  segment++; //access the next part of the element
+
+	  //segment is getting shorter in strlen(segment) so to make sure it does all of the iterations necerssay
+	  i = 0;
+	}
+	y_coord -= 3; //next part of the symbol will be drawn one lower
+	x_coord = starting_x - slant; //reset the position for the next loop
+
+	if (italic) {
+	  slant++;
+	}
+  }
+}
+
 
 /**
    Will draw the string
@@ -263,6 +321,9 @@ printMenuPhrase(const char* phrase, int x, int y, float size, bool italic, Font 
 	case(symbol): {
 	  printMenuSymbol(string, x_coord, y_coord, sizes, spacing, italic, font, color);
 	}break;
+	case(integer): {
+	  printMenuNumber(string, x_coord, y_coord, sizes, spacing, italic, font, color);
+	}break;
 	case(neither): {
 	  draw_circle(x_coord, y_coord, sizes, color);
 	}break;
@@ -271,8 +332,8 @@ printMenuPhrase(const char* phrase, int x, int y, float size, bool italic, Font 
 	y_coord = y; //reset the y position for the next character
 	x_coord += spacing; // Moves the x coordinate for the next character
 						//Needed so characters aren't overlapping each other
+	
   }
-
 }
 
 internal void

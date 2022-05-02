@@ -21,6 +21,7 @@ bool clear = true;
 u32 color1 = RED;
 u32 color2 = BLACK;
 u32 color3 = BLACK;
+u32 color4 = BLACK;
 
 int delta = 0;
 
@@ -45,7 +46,7 @@ int delta16 = 0;
 bool isjumping = false;
 
 float jumptime = 0;
-
+int jump_height;
 float yvelocity = 0;
 float xvelocity = 0;
 //float accel = 140.0;

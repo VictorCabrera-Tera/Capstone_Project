@@ -50,7 +50,7 @@ void simulateLevel2(Input* input, float& dt) {
 	game_info.enemy_pos[6] = enemy7Pos;
 
 	game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
-
+	jump_height = 3500;
 	levelInfoSet = true;
 	//hearts();
   }
@@ -58,7 +58,7 @@ void simulateLevel2(Input* input, float& dt) {
 	if (leftclear == true) {
 	  if (is_down(BUTTON_LEFT)) {
 		//player_posX -= speed * dt;
-		xvelocity = -20;
+		xvelocity = -40;
 
 		/*
 		if (xvelocity > 0) {
@@ -80,7 +80,7 @@ void simulateLevel2(Input* input, float& dt) {
 	if (rightclear == true) {
 	  if (is_down(BUTTON_RIGHT)) { // 
 		  //player_posX += speed * dt;
-		xvelocity = 20;
+		xvelocity = 40;
 		/*
 		if (xvelocity < 0) {
 			xvelocity += 200 * dt;
@@ -102,7 +102,7 @@ void simulateLevel2(Input* input, float& dt) {
 	if (pressed(BUTTON_SPACEBAR))
 	{
 	  //player_posY += speed * dt;
-	  yvelocity += 3000 * 0.0166;
+	  yvelocity += jump_height * 0.0166;
 
 	}
 	old_Y = player_posY;
@@ -269,7 +269,7 @@ void simulateLevel2(Input* input, float& dt) {
 	if (!game_info.shrunk) {
 	  player_sizex = 1;
 	  player_sizey = 1;
-	  accel = 100.0; //220
+	  jump_height = 2500.0; //220
 
 	  Point shrinkPos(-3, -4);
 	  game_info.setPowerUpPosition(SHRINK, shrinkPos);
@@ -279,7 +279,7 @@ void simulateLevel2(Input* input, float& dt) {
 	else {
 	  player_sizex = 2;
 	  player_sizey = 2;
-	  accel = 50.0; //140
+	  jump_height = 3500.0; //140
 	  if (!game_info.getCoinCollected(2)) {
 		Point shrinkPos(-10, -42);
 		game_info.setPowerUpPosition(SHRINK, shrinkPos);
@@ -321,7 +321,6 @@ void simulateLevel2(Input* input, float& dt) {
 	  int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
 
 	  game_info.playerScore.addScore(1000 * ((float)50 / (float)time));
-	  
 	  options = LEVEL3;
 	  player_sizex = 2;
 	  player_sizey = 2;
