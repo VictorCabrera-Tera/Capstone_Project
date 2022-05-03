@@ -54,7 +54,7 @@ void simulateLevelSelect(Input* input, float& dt) {
 
 
   {
-	draw_triangles(-50, -16, 3, 8, GREEN, 1); //ldft arrow
+	draw_triangles(-50, -16, 3, 8, GREEN, 1); //left arrow
 	draw_rect(-45, -23.7, 5, 2, GREEN);
 	draw_triangles(50, -16, 3, 8, GREEN, 2); //right arrow
 	draw_rect(45, -23.7, 5, 2, GREEN);

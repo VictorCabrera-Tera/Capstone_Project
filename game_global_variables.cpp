@@ -43,6 +43,10 @@ int delta14 = 1;
 int delta15 = 0;
 int delta16 = 0;
 
+int delta17 = 1;
+int delta18 = 1;
+int delta19 = 0;
+
 bool isjumping = false;
 
 float jumptime = 0;

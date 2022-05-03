@@ -29,6 +29,11 @@ restart_pos(GAMEMODE Level) {
 	  player_posX = game_info.getLevel3Spawn().x;
 	  player_posY = game_info.getLevel3Spawn().y;
 	}break;
+	case(LEVEL4):
+	{
+	  player_posX = game_info.getLevel4Spawn().x;
+	  player_posY = game_info.getLevel4Spawn().y;
+	}break;
   }
 
 }
@@ -212,6 +217,11 @@ drawLevelPowerUps() {
 
 }
 
+internal void
+drawJumps() {
+
+}
+
 GAMEMODE options = MAINMENU;
 int selected = 1;
 
@@ -231,6 +241,7 @@ simulate_game(Input* input, float &dt) {
 		game_info.setLevel1Spawn(-82, -41);
 		game_info.setLevel2Spawn(0, 41);
 		game_info.setLevel3Spawn(-85, -41);
+		game_info.setLevel4Spawn(0, 0);
 		game_info.shrunk = false;
 		game_info.set = true;
 	}
