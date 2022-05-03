@@ -65,7 +65,7 @@ void simulateLevel3(Input* input, float& dt) {
 
   if (leftclear == true) {
 	if (is_down(BUTTON_LEFT)) {
-	  xvelocity = -50;
+	  xvelocity = -40;
 
 	}
   }
@@ -76,7 +76,7 @@ void simulateLevel3(Input* input, float& dt) {
 
   if (rightclear == true) {
 	if (is_down(BUTTON_RIGHT)) {
-	  xvelocity = 50;
+	  xvelocity = 40;
 	}
   }
   if (released(BUTTON_RIGHT)) {

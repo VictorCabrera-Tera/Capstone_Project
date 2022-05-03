@@ -152,7 +152,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
   //the A in createWindowA states that the window name will have non-special characters
   //If you remove that then it will decide which to call
   //Creating an object of HWND will allow us to create the window, and also process the messages from that window
-  HWND window = CreateWindow(window_class.lpszClassName, L"My First Game!",
+  HWND window = CreateWindow(window_class.lpszClassName, L"Cube World",
 				WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME| WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, 
 				1280, 720, 0,0,hInstance,0);
 

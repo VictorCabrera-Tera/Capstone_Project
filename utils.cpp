@@ -85,6 +85,26 @@ public:
   float x;
   float y;
 };
+
+class Jump {
+public:
+  void resetJumps();
+  void removeJump();
+  bool getJumpAvailable(int jump);
+
+private:
+  bool available[2];
+};
+
+void Jump::resetJumps() {
+
+}
+void Jump::removeJump() {
+
+}
+bool Jump::getJumpAvailable(int jump) {
+
+}
 class Score {
 public:
   Score() {
@@ -195,10 +215,12 @@ public:
   Point getLevel1Spawn();
   Point getLevel2Spawn();
   Point getLevel3Spawn();
+  Point getLevel4Spawn();
 
   void setLevel1Spawn(float x, float y);
   void setLevel2Spawn(float x, float y);
   void setLevel3Spawn(float x, float y);
+  void setLevel4Spawn(float x, float y);
 
   void setCoinsColor(u32 coin1color, u32 coin2color, u32 coin3color);
   void resetCoinsCollected();
@@ -239,8 +261,9 @@ public:
   Point enemy_pos[10];
 
   Score playerScore = {};
+  Jump jumps = {};
 private:
-  float spawn_pos[6];
+  float spawn_pos[8];
   Point coin_pos[3];
   Point ability_pos[3];
   Ability_State PowerUps = {};
@@ -261,6 +284,10 @@ Point gameUtilities::getLevel3Spawn() {
   Point level3(spawn_pos[4], spawn_pos[5]);
   return level3;
 }
+Point gameUtilities::getLevel4Spawn() {
+  Point level4(spawn_pos[6], spawn_pos[7]);
+  return level4;
+}
 
 void gameUtilities::setLevel1Spawn(float x, float y) {
   spawn_pos[0] = x;
@@ -273,6 +300,10 @@ void gameUtilities::setLevel2Spawn(float x, float y) {
 void gameUtilities::setLevel3Spawn(float x, float y) {
   spawn_pos[4] = x;
   spawn_pos[5] = y;
+}
+void gameUtilities::setLevel4Spawn(float x, float y) {
+  spawn_pos[6] = x;
+  spawn_pos[7] = y;
 }
 
 void gameUtilities::setCollectableHeart() {
