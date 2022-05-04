@@ -90,21 +90,49 @@ class Jump {
 public:
   void resetJumps();
   void removeJump();
-  bool getJumpAvailable(int jump);
+  void addJump();
+  int getJumpAvailable();
 
 private:
   bool available[2];
 };
 
 void Jump::resetJumps() {
-
+	available[0] = true;
+	available[1] = true;
 }
 void Jump::removeJump() {
+	if (available[1] == true) {
+		available[1] = false;
+	}
+	else {
+		available[0] = false;
+	}
 
 }
-bool Jump::getJumpAvailable(int jump) {
+
+void Jump::addJump() {
+	if (available[0] == false) {
+		available[0] = true;
+	}
+	else if(available[1] == false) {
+		available[1] = true;
+	}
 
 }
+int Jump::getJumpAvailable() {
+	if (available[1] == true && available[0] == true) {
+		return 2;
+	}
+	else if (available[1] == false && available[0] == true) {
+		return 1;
+	}
+	else if (available[1] == false && available[0] == false) {
+		return 0;
+	}
+	
+}
+/*
 class Score {
 public:
   Score() {
@@ -190,6 +218,7 @@ int Score::secondsSpent(PyObject* start, PyObject* finish) {
   Py_DECREF(psecondSpentName);
   return time;
 }
+*/
 class gameUtilities {
 public:
   ~gameUtilities() {
@@ -436,3 +465,4 @@ u32 gameUtilities::getHeartColor(int heart_index) {
 int gameUtilities::getLivesLeft() {
   return hp.life[0].lives_left;
 }
+

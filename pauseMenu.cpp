@@ -37,11 +37,6 @@ pauseMenu(Input* input)
   if (pressed(BUTTON_ENTER)) {
 	if (pause_selected == 1) {
 	  game_info.pause = !game_info.pause;
-	  //game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
-	 // int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
-	  game_info.playerScore.pStartTime = game_info.playerScore.addTimePaused(game_info.playerScore.pStartTime, game_info.playerScore.pPausedTime);
-	  //time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
-	  //int x = time;
 	}
 	else  if (pause_selected == 2) {
 	  game_info.pause = !game_info.pause;
@@ -50,9 +45,8 @@ pauseMenu(Input* input)
 	  game_info.started_level = false;  //so u can't pause on the main menu
 	  player_sizex = 2;
 	  player_sizey = 2;
-	  accel = 50; //140
+	  accel = 50;
 	  health_points = 3;
-	  game_info.setCHcolor(0xDA189C, 0xDA189D);
 	}
 	else {
 	  running = false; //closes the windows interface

@@ -23,11 +23,15 @@ u32 color2 = BLACK;
 u32 color3 = BLACK;
 u32 color4 = BLACK;
 
+
+
+
+
 int delta = 0;
 
 int delta1 = 1;
 int delta2 = 1;
-int delta3 = 0; 
+int delta3 = 0;
 int delta4 = 0;
 int delta5 = 1;
 int delta6 = 0;
@@ -48,6 +52,10 @@ int delta18 = 1;
 int delta19 = 0;
 
 bool isjumping = false;
+
+
+float dtadd;
+
 
 float jumptime = 0;
 int jump_height;
@@ -78,7 +86,7 @@ u32 P_color2 = YELLOW;
 //game_over varaibles
 int over_selected = 1;
 bool game_over = false;
-bool heart_collected = false; 
+bool heart_collected = false;
 u32 G_color = WHITE;
 u32 G_color1 = BLUE;
 u32 G_color2 = BLUE;
