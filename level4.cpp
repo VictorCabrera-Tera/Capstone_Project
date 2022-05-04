@@ -6,7 +6,7 @@ void simulateLevel4(Input* input, float& dt) {
   printLevelText("Coins ", -90, 49, WHITE);
 
   printLevelText("Score ", -90, -46, WHITE);
-  printLevelText(std::to_string(game_info.playerScore.getScore()).c_str(), -65, -46, WHITE);
+  //printLevelText(std::to_string(game_info.playerScore.getScore()).c_str(), -65, -46, WHITE);
 
   printLevelText("Jumps ", 50, -46, WHITE);
 
@@ -36,7 +36,7 @@ void simulateLevel4(Input* input, float& dt) {
 	game_info.enemy_pos[2] = enemy3Pos;
 
 
-	game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
+	//game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
 	levelInfoSet = true;
 	
   }
@@ -116,10 +116,10 @@ void simulateLevel4(Input* input, float& dt) {
 	draw_triangles(69, 25, 1.6, 1.6, YELLOW, 1);
 	draw_rect(71, 20, 0.5, 7, YELLOW);
 	if ((player_posX >= 70 && player_posX <= 72) && (player_posY >= 14 && player_posY <= 16)) {
-	  game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
-	  int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
+	  //game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
+	  //int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
 
-	  game_info.playerScore.addScore(500 * ((float)20 / (float)time));
+	  //game_info.playerScore.addScore(500 * ((float)20 / (float)time));
 	  game_info.setCHcolor(0xDA189C, 0xDA189D);
 	  options = FINALSCREEN;
 	  levelInfoSet = false;
