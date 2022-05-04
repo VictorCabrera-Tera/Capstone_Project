@@ -64,10 +64,19 @@ void simulateLevel4(Input* input, float& dt) {
 
   }
 
-  if (pressed(BUTTON_SPACEBAR))
+  if (pressed(BUTTON_SPACEBAR) && game_info.jumps.getJumpAvailable() > 0)
   {
-	yvelocity += 3500 * 0.0166;
+	game_info.jumps.removeJump();
+	yvelocity += 4200 * 0.0166;
+	dtadd = 0;
+  }
 
+  if (game_info.jumps.getJumpAvailable() < 2) {
+	dtadd += dt;
+	if (dtadd > 1) {
+	  game_info.jumps.resetJumps();
+	  dtadd = 0;
+	}
   }
 
   old_Y = player_posY;
@@ -100,11 +109,14 @@ void simulateLevel4(Input* input, float& dt) {
   }
   //arrows
   { 
-	draw_triangles(74, -40, 2.5, 8, WHITE, 4); //left arrow
-	draw_rect(74, -48, 1, 1, WHITE);
-	draw_triangles(79,-40, 2.5, 8, WHITE, 4); //right arrow
-	draw_rect(79, -48, 1, 1, WHITE);
+	//draw_triangles(74, -40, 2.5, 8, WHITE, 4); //left arrow
+	//draw_rect(74, -48, 1, 1, WHITE);
+	//draw_triangles(79,-40, 2.5, 8, WHITE, 4); //right arrow
+	//draw_rect(79, -48, 1, 1, WHITE);
   }
+
+  drawJumps();
+
   drawLevelCoins();
   drawColletableHearts();
   collision(&game_info.coins, dt, options);
