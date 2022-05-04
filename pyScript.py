@@ -7,4 +7,3 @@ def currentTime():
 
 def secondspent(start,finish):
     return (finish-start).total_seconds()
-

@@ -45,10 +45,10 @@ void simulateLevelSelect(Input* input, float& dt) {
 	break;
   }
   printMenuPhrase("1", -50, 0, 16, false, square, color1);
-  
+
   printMenuPhrase("2", -20, 0, 16, false, square, color2);
 
- 
+
   printMenuPhrase("3", 10, 0, 16, false, square, color3);
   printMenuPhrase("4", 40, 0, 16, false, square, color4);
 
@@ -91,5 +91,5 @@ void simulateLevelSelect(Input* input, float& dt) {
 	  color4 = BLACK;
 	}
   }
-  
+
 }
