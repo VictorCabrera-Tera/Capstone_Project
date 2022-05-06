@@ -49,7 +49,9 @@ void simulateLevel2(Input* input, float& dt) {
 		game_info.enemy_pos[5] = enemy6Pos;
 		game_info.enemy_pos[6] = enemy7Pos;
 
-		game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
+		//game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
+		game_info.timer.resetTime();
+
 		jump_height = 3500;
 		levelInfoSet = true;
 		//hearts();
@@ -333,8 +335,9 @@ void simulateLevel2(Input* input, float& dt) {
 		draw_triangles(-7, -33.5, 1.6, 1.6, YELLOW, 1);
 		draw_rect(-5, -38, 0.5, 7, YELLOW);
 		if ((player_posX >= -6 && player_posX <= -4) && (player_posY >= -45.5 && player_posY <= -37.5)) {
-			game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
-			int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
+			//game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
+			//int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
+			float time = game_info.timer.getTime();
 
 			game_info.playerScore.addScore(1000 * ((float)50 / (float)time));
 			options = LEVEL3;
@@ -348,5 +351,8 @@ void simulateLevel2(Input* input, float& dt) {
 			}
 
 		}
+	}
+	else {
+	  game_info.timer.addTime(dt);
 	}
 }

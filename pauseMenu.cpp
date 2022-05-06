@@ -45,7 +45,6 @@ pauseMenu(Input* input)
 	  game_info.started_level = false;  //so u can't pause on the main menu
 	  player_sizex = 2;
 	  player_sizey = 2;
-	  accel = 50;
 	  health_points = 3;
 	}
 	else {

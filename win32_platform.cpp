@@ -110,7 +110,7 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		if (game_info.started_level)
 		{
 			game_info.pause = true;
-			game_info.playerScore.pPausedTime = game_info.playerScore.getCurrentTime();
+			//game_info.playerScore.pPausedTime = game_info.playerScore.getCurrentTime();
 		}
 	}break;
 		//Includes moving the window, minimizing, reshaping
@@ -245,6 +245,7 @@ input.buttons[b].is_down = is_down;\
 			if (game_info.started_level && game_over == false) {
 				game_info.pause = !game_info.pause;
 				pause_selected = 1; //for resume to be the first to be highlighted red
+				/*
 				if (!game_info.pause) {
 					 game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
 					int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
@@ -256,6 +257,7 @@ input.buttons[b].is_down = is_down;\
 					game_info.playerScore.pPausedTime = game_info.playerScore.getCurrentTime();
 
 				}
+				*/
 			}
 		}
 		if (health_points < 1 && levelInfoSet)

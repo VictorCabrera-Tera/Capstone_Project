@@ -85,7 +85,25 @@ public:
   float x;
   float y;
 };
+class Timer {
+public:
+  int getTime();
+  void resetTime();
+  void addTime(float added);
+private:
+  float timeElapsed;
 
+};
+
+int Timer::getTime() {
+  return timeElapsed;
+}
+void Timer::resetTime() {
+  timeElapsed = 0;
+}
+void Timer::addTime(float added) {
+  timeElapsed += added;
+}
 class Jump {
 public:
   void resetJumps();
@@ -136,7 +154,7 @@ int Jump::getJumpAvailable() {
 class Score {
 public:
   Score() {
-
+	/*
 	Py_SetProgramName(L"utils");
 
 	Py_Initialize();
@@ -169,19 +187,20 @@ public:
 	pModule = PyImport_ExecCodeModule("PythonScript.py", pycompiledCode);
 	pCurrentTime = PyObject_GetAttrString(pModule, "currentTime");
 	score = 0;
+	*/
   }
 
   void addScore(int amount);
   void resetScore();
   int getScore();
-  PyObject* getCurrentTime();
-  PyObject* addTimePaused(PyObject* startTime, PyObject* pausedTime);
-  int secondsSpent(PyObject* start, PyObject* finish);
-  PyObject* pModule;
-  PyObject* pCurrentTime;
-  PyObject* pStartTime;
-  PyObject* pFinishTime;
-  PyObject* pPausedTime;
+  //PyObject* getCurrentTime();
+  //PyObject* addTimePaused(PyObject* startTime, PyObject* pausedTime);
+  //int secondsSpent(PyObject* start, PyObject* finish);
+  //PyObject* pModule;
+  //PyObject* pCurrentTime;
+  //PyObject* pStartTime;
+  //PyObject* pFinishTime;
+  //PyObject* pPausedTime;
 
 private:
   int score;
@@ -197,6 +216,7 @@ int Score::getScore() {
 void Score::resetScore() {
   score = 0;
 }
+/*
 PyObject* Score::getCurrentTime() {
   return PyObject_CallObject(pCurrentTime, NULL);
 }
@@ -218,11 +238,12 @@ int Score::secondsSpent(PyObject* start, PyObject* finish) {
   Py_DECREF(psecondSpentName);
   return time;
 }
+*/
 
 class gameUtilities {
 public:
   ~gameUtilities() {
-	
+	/*
 	Py_DECREF(playerScore.pCurrentTime);
 	Py_DECREF(playerScore.pModule);
 	if (playerScore.pStartTime) {
@@ -235,7 +256,7 @@ public:
 	  Py_DECREF(playerScore.pPausedTime);
 	}
 	Py_Finalize();
-	
+	*/
   }
   bool started_level;
   bool pause;
@@ -287,8 +308,16 @@ public:
   bool isHeartCollected(int heart_index);
   HeartInc hearts = {};
 
-  Point enemy_pos[10];
 
+  void setImmunityColors(u32 color1, u32 color2);
+  u32 getImmunityColor(int color);
+  void swapImmunityColors();
+  bool getImmunColorSwapped();
+  void setImmunColorSwapped(bool set);
+
+  Timer timer = {};
+  
+  Point enemy_pos[10];
   Score playerScore = {};
   Jump jumps = {};
 private:
@@ -298,6 +327,9 @@ private:
   Ability_State PowerUps = {};
   Point lives[3];
   Point heart_pos[2];
+  u32 immunityColor[2];
+  bool immunityColorSwapped;
+
 };
 
 
@@ -466,3 +498,24 @@ int gameUtilities::getLivesLeft() {
   return hp.life[0].lives_left;
 }
 
+
+void gameUtilities::setImmunityColors(u32 color1, u32 color2) {
+  immunityColor[0] = color1;
+  immunityColor[1] = color2;
+
+}
+u32 gameUtilities::getImmunityColor(int color) {
+  return immunityColor[color];
+}
+void gameUtilities::swapImmunityColors() {
+  u32 temp = immunityColor[0];
+  immunityColor[0] = immunityColor[1];
+  immunityColor[1] = temp;
+}
+
+bool gameUtilities::getImmunColorSwapped() {
+  return immunityColorSwapped;
+}
+void gameUtilities::setImmunColorSwapped(bool set) {
+  immunityColorSwapped = set;
+}

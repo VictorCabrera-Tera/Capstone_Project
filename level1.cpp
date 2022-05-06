@@ -38,7 +38,8 @@ internal void simulateLevel1(Input* input, float& dt) {
 
 		game_info.playerScore.resetScore();
 
-		game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
+		//game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
+		game_info.timer.resetTime();
 		levelInfoSet = true;
 	}
 
@@ -148,12 +149,13 @@ internal void simulateLevel1(Input* input, float& dt) {
 		draw_rect(-76, -17, 3, 2.3, RED); //bump2
 
 
-		draw_rect(-53, -9, 11, 0.2, RED); //platform 4
+		//draw_rect(-53, -9, 11, 0.2, RED); //platform 4
 		draw_rect(-51, -8.3, 9, 0.5, RED);
-		draw_right_tri(-51, -8.1, 9, RED);
+		draw_rect(-47, -4.3, 5, 4, RED);
+		//draw_right_tri(-51, -8.1, 9, RED);
 
 		draw_rect(-38, 35, 4, 10, RED); //wall
-		draw_rect(-38, 2, 4, 8, RED); //wall
+		draw_rect(-38, 0.7, 4, 9.5, RED); //wall
 
 		draw_diamond(game_info.enemy_pos[0].x, game_info.enemy_pos[0].y, 3, 3, BLUE); //enemy 1
 
@@ -169,14 +171,18 @@ internal void simulateLevel1(Input* input, float& dt) {
 	collision(&game_info.coins, dt, options);
 	draw_hearts();
 	drawJumps();
+
 	if (game_info.getCoinCollected(0) && game_info.getCoinCollected(1) && game_info.getCoinCollected(2)) {
 		//set the goal to a color when interacted, will make options to level2, thus going to next level
 		//options = LEVEL2;
 		draw_triangles(69, 25, 1.6, 1.6, YELLOW, 1);
 		draw_rect(71, 20, 0.5, 7, YELLOW);
+		game_info.timer.addTime(dt);
 		if ((player_posX >= 70 && player_posX <= 72) && (player_posY >= 14 && player_posY <= 16)) {
-			game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
-			int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
+			float time = game_info.timer.getTime();
+
+			//game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
+			//int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
 
 			game_info.playerScore.addScore(500 * ((float)20 / (float)time));
 			game_info.setCHcolor(0xDA189C, 0xDA189D);
@@ -191,5 +197,8 @@ internal void simulateLevel1(Input* input, float& dt) {
 
 
 		}
+	}
+	else {
+		game_info.timer.addTime(dt);
 	}
 }
