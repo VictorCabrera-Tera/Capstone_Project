@@ -355,14 +355,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 			}
 
 			if ((*lowerL_pixel == BLUE)) {
-				if (!game_info.getPowerUpInLevel(IMMUNITY)) {
-					enemy_touched = true;
-				}
-				else {
-					if (!game_info.getPowerUpCollected(IMMUNITY)) {
-						enemy_touched = true;
-					}
-				}
+			  enemy_touched = true;
 			}
 			if (*lowerL_pixel == game_info.getPowerUpColor(SHRINK)) {
 				game_info.setPowerUpCollected(SHRINK, true);

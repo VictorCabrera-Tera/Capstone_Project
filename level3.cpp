@@ -21,6 +21,7 @@ void simulateLevel3(Input* input, float& dt) {
 		Point phaseThroughPos(86, 36);
 		game_info.setPowerUpPosition(PHASE_THROUGH, phaseThroughPos);
 
+		game_info.setCHcolor(0xDA189C, 0xDA189D);
 		game_info.setCollectableHeart();
 		Point chPos1(1, 1), chPos2(87, -14.5);
 		game_info.setCHpos(chPos1, chPos2);
@@ -55,7 +56,9 @@ void simulateLevel3(Input* input, float& dt) {
 		game_info.enemy_pos[8] = enemy9Pos;
 		game_info.enemy_pos[9] = enemy10Pos;
 
-		game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
+		//game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
+		game_info.timer.resetTime();
+
 		game_info.setLevel3Spawn(-85, -41);
 
 		levelInfoSet = true;
@@ -261,8 +264,9 @@ void simulateLevel3(Input* input, float& dt) {
 		draw_triangles(-30, 26, 1.6, 1.6, YELLOW, 1);
 		draw_rect(-28, 21, 0.5, 7, YELLOW);
 		if ((player_posX >= -29 && player_posX <= -27) && (player_posY >= 14 && player_posY <= 21)) {
-			game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
-			int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
+			//game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
+			//int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
+			float time = game_info.timer.getTime();
 
 			game_info.playerScore.addScore(1000 * ((float)50 / (float)time));
 
@@ -275,5 +279,8 @@ void simulateLevel3(Input* input, float& dt) {
 			}
 
 		}
+	}
+	else {
+	  game_info.timer.addTime(dt);
 	}
 }

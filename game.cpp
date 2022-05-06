@@ -264,7 +264,7 @@ simulate_game(Input* input, float& dt) {
 		game_info.setLevel1Spawn(-82, -41);
 		game_info.setLevel2Spawn(0, 41);
 		game_info.setLevel3Spawn(-85, -41);
-		game_info.setLevel4Spawn(0, 0);
+		game_info.setLevel4Spawn(0, 5);
 		game_info.shrunk = false;
 		game_info.set = true;
 	}

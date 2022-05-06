@@ -50,6 +50,11 @@ int delta16 = 0;
 int delta17 = 1;
 int delta18 = 1;
 int delta19 = 0;
+int delta20 = 0;
+int delta21 = 1;
+int delta22 = 1;
+int delta23 = 0;
+int delta24 = 0;
 
 bool isjumping = false;
 
