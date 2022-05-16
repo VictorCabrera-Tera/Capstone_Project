@@ -7,7 +7,7 @@
 //int max = 10;
 //int min = 0;
 /*
-internal void
+static void
 run_loop(int* delta, int* count, int max, int min) {
   *count += *delta;
   if (*count == min || *count == max) {
@@ -20,7 +20,7 @@ run_loop(int* delta, int* count, int max, int min) {
 // dt =dt , just write dt 
 // speed can be any number, represents how fast you want it to move
 // stop1 is the lower of the 2 values, stop 2 is the higher of two values
-internal void
+static void
 move_sideways(float* enemy1_posX, int* delta, float dt, float speed, float stop1, float stop2) {
 	if (stop2 < *enemy1_posX) {
 		*delta = 0;
@@ -36,7 +36,7 @@ move_sideways(float* enemy1_posX, int* delta, float dt, float speed, float stop1
 	}
 }
 
-internal void
+static void
 move_vertical(float* enemy1_posY, int* delta, float dt, float speed, float stop1, float stop2) {
 	if (stop2 < *enemy1_posY) {
 		*delta = 0;
@@ -54,7 +54,7 @@ move_vertical(float* enemy1_posY, int* delta, float dt, float speed, float stop1
 
 }
 // for stop 1 and stop2 , X position is assumed.
-internal void
+static void
 move_diagonal_tl(float* enemy1_posX, float* enemy1_posY, int* delta, float dt, float speed, float stop1, float stop2) {
 	if (stop2 < *enemy1_posX) {
 		*delta = 0;
@@ -72,7 +72,7 @@ move_diagonal_tl(float* enemy1_posX, float* enemy1_posY, int* delta, float dt, f
 	}
 }
 // for stop 1 and stop2 , X position is assumed.
-internal void
+static void
 move_diagonal_bl(float* enemy1_posX, float* enemy1_posY, int* delta, float dt, float speed, float stop1, float stop2) {
 	if (stop2 < *enemy1_posX) {
 		*delta = 0;

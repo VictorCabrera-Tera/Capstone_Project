@@ -9,7 +9,7 @@
 
    @post type will be either alpha, symbol, integer, or neither
 **/
-internal void
+static void
 determineCharType(const char* string, charType& type) {
 	//const char* type is just a string, but it points to the first char of the string first
 	char c = tolower(*string); //the first char to lower case
@@ -36,7 +36,7 @@ determineCharType(const char* string, charType& type) {
 }
 
 
-internal void
+static void
 printLevelAlpha(const char* string, float x_coord, float y_coord, u32 color) {
 	int resetx = x_coord;
 	int letter = tolower(*string) - 97;
@@ -55,7 +55,7 @@ printLevelAlpha(const char* string, float x_coord, float y_coord, u32 color) {
 		x_coord = resetx;
 	}
 }
-internal void
+static void
 printLevelNum(const char* string, float x_coord, float y_coord, u32 color) {
 
 	int resetx = x_coord;
@@ -92,7 +92,7 @@ printLevelNum(const char* string, float x_coord, float y_coord, u32 color) {
 
    @post spacing has been altered (dependent on the length of the character)
 **/
-internal void
+static void
 printMenuAlpha(const char* string, float x_coord, float y_coord, float size, int& spacing, bool italic, Font font, u32 color) {
 
 	// current_char will provide the index necessary to access the correct element in alphabet
@@ -167,7 +167,7 @@ printMenuAlpha(const char* string, float x_coord, float y_coord, float size, int
 
    @post spacing has been altered (dependent on the length of the character)
 **/
-internal void
+static void
 printMenuSymbol(const char* string, int x_coord, int y_coord, float size, int& spacing, bool italic, Font font, u32 color) {
 
 	// current_char will provide the index necessary to access the correct element in alphabet
@@ -230,7 +230,7 @@ printMenuSymbol(const char* string, int x_coord, int y_coord, float size, int& s
 	spacing = 9 * strlen(segment) / 7;
 }
 
-internal void
+static void
 printMenuNumber(const char* string, int x_coord, int y_coord, float size, int& spacing, bool italic, Font font, u32 color) {
 
 	// current_char will provide the index necessary to access the correct element in alphabet
@@ -301,7 +301,7 @@ printMenuNumber(const char* string, int x_coord, int y_coord, float size, int& s
    @param font will determine what drawing functions to use
    @param color of the text
 **/
-internal void
+static void
 printMenuPhrase(const char* phrase, int x, int y, float size, bool italic, Font font, u32 color) {
 	const char* string = phrase;
 	int length = strlen(string); //obtain the length 
@@ -336,7 +336,7 @@ printMenuPhrase(const char* phrase, int x, int y, float size, bool italic, Font 
 	}
 }
 
-internal void
+static void
 printLevelText(const char* phrase, int x, int y, u32 color) {
 	const char* string = phrase;
 	int x_coord = x;

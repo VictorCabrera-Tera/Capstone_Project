@@ -1,7 +1,7 @@
 //@Param input so I can use the macros for the keys instead of doing it the long way
 //press escape or enter on resume to unpause
 //press enter on resume to quit to desktop
-internal void
+static void
 pauseMenu(Input* input)
 {
   if (pressed(BUTTON_DOWN)) {
@@ -59,7 +59,7 @@ pauseMenu(Input* input)
 
 }
 
-internal void
+static void
 game_over_menu(Input* input)
 {
 	if (pressed(BUTTON_DOWN)) {

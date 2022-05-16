@@ -1,14 +1,12 @@
-//used so its easier to input whole numbers instead of decimals like 100 for 1 when using draw rect
-global_variable float render_scale = 0.01f;
+//used so its easier to input whole numbers instead of decimals like 100 for 1 when using drawing functions
+float percent = 0.01;
 
-#define internal static
-
-
-
-internal void
-clear_screen(u32 color) {
+static void
+fill_window(u32 color) {
+	//get starting pixel
 	u32* pixel = (u32*)render_state.memory;
 
+	//iterate through all the pixels and add the color to it
 	for (int y = 0; y < render_state.height; y++) {
 		for (int x = 0; x < render_state.width; x++) {
 			*pixel = color;
@@ -16,28 +14,24 @@ clear_screen(u32 color) {
 		}
 	}
 }
-internal void
+static void
 draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
-
-	x0 = clamp(0, x0, render_state.width);
-	x1 = clamp(0, x1, render_state.width);
-	y0 = clamp(0, y0, render_state.height);
-	y1 = clamp(0, y1, render_state.height);
 
 	for (int y = y0; y < y1; y++) {
 		u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
 		for (int x = x0; x < x1; x++) {
-			*pixel++ = color;
+			*pixel = color;
+			pixel++;
 		}
 	}
 }
-internal void
+static void
 draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color) {
-	x *= render_state.height * render_scale;
-	y *= render_state.height * render_scale;
+	x *= render_state.height * percent;
+	y *= render_state.height * percent;
 
-	half_size_x *= render_state.height * render_scale;
-	half_size_y *= render_state.height * render_scale;
+	half_size_x *= render_state.height * percent;
+	half_size_y *= render_state.height * percent;
 
 	//Need to center it, the window's center is at 0,0
 	x += render_state.width / 2.f;
@@ -54,19 +48,19 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color) {
 
 }
 
-internal void
+static void
 draw_right_triangle_in_pixels(int x0, int y0, int x1, u32 color) {
 
-	x0 = clamp(0, render_state.width, x0);
-	y0 = clamp(0, render_state.height, y0);
-	x1 = clamp(0, render_state.width, x1);
+	x0 = getWithinBounds(0, render_state.width, x0);
+	y0 = getWithinBounds(0, render_state.height, y0);
+	x1 = getWithinBounds(0, render_state.width, x1);
 
 
 	//know how many rows are need to get a right triangle
 	int iterations = (x1 - x0);
 
 	int y1 = y0 + (iterations);
-	y1 = clamp(0, render_state.height, y1);
+	y1 = getWithinBounds(0, render_state.height, y1);
 
 
 	for (int y = y0; y < y1; y++) {
@@ -81,12 +75,12 @@ draw_right_triangle_in_pixels(int x0, int y0, int x1, u32 color) {
 	}
 }
 
-internal void
+static void
 draw_right_tri(float start_x, float y, float width, u32 color) {
-	start_x *= render_state.height * render_scale;
-	y *= render_state.height * render_scale;
+	start_x *= render_state.height * percent;
+	y *= render_state.height * percent;
 
-	width *= render_state.height * render_scale;
+	width *= render_state.height * percent;
 
 	//Need to center it, the window's center is at 0,0
 
@@ -103,13 +97,13 @@ draw_right_tri(float start_x, float y, float width, u32 color) {
 
 }
 
-internal void
+static void
 draw_triangle_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
-	x0 = clamp(0, render_state.width, x0);
-	y0 = clamp(0, render_state.height, y0);
-	x1 = clamp(0, render_state.width, x1);
-	y1 = clamp(0, render_state.height, y1);
+	x0 = getWithinBounds(0, render_state.width, x0);
+	y0 = getWithinBounds(0, render_state.height, y0);
+	x1 = getWithinBounds(0, render_state.width, x1);
+	y1 = getWithinBounds(0, render_state.height, y1);
 
 	for (int y = y0; y < y1; y++) {
 		u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
@@ -126,13 +120,13 @@ draw_triangle_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 /*
   Will create a triangle, but with a small enough end_y will make a trapezoid
 */
-internal void
+static void
 draw_tri(float start_x, float start_y, float width, float height, u32 color) {
-	start_x *= render_state.height * render_scale;
-	start_y *= render_state.height * render_scale;
+	start_x *= render_state.height * percent;
+	start_y *= render_state.height * percent;
 
-	width *= render_state.height * render_scale;
-	height *= render_state.height * render_scale;
+	width *= render_state.height * percent;
+	height *= render_state.height * percent;
 	//Need to center it, the window's center is at 0,0
 
 	start_x += render_state.width / 2.f;
@@ -147,13 +141,13 @@ draw_tri(float start_x, float start_y, float width, float height, u32 color) {
 
 	draw_triangle_in_pixels(x0, y0, x1, y1, color);
 }
-internal void         //40    //25    //25    //5
+static void         //40    //25    //25    //5
 draw_diamond_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 	u32 blue = BLUE;
-	x0 = clamp(0, render_state.width, x0);
-	y0 = clamp(0, render_state.height, y0);
-	x1 = clamp(0, render_state.width, x1);
-	y1 = clamp(0, render_state.height, y1);
+	x0 = getWithinBounds(0, render_state.width, x0);
+	y0 = getWithinBounds(0, render_state.height, y0);
+	x1 = getWithinBounds(0, render_state.width, x1);
+	y1 = getWithinBounds(0, render_state.height, y1);
 
 	int temp1 = x1;
 	int temp0 = x0;
@@ -186,14 +180,14 @@ draw_diamond_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 	}
 
 }
-internal void //40         //15           //15       //5
+static void //40         //15           //15       //5
 draw_diamond(float start_x, float start_y, float width, float height, u32 color)
 {
-	start_x *= render_state.height * render_scale;
-	start_y *= render_state.height * render_scale;
+	start_x *= render_state.height * percent;
+	start_y *= render_state.height * percent;
 
-	width *= render_state.height * render_scale;
-	height *= render_state.height * render_scale;
+	width *= render_state.height * percent;
+	height *= render_state.height * percent;
 	//Need to center it, the window's center is at 0,0
 
 	start_x += render_state.width / 2.f;
@@ -208,51 +202,18 @@ draw_diamond(float start_x, float start_y, float width, float height, u32 color)
 	draw_diamond_in_pixels(x0, y0, x1, y1, color);
 }
 
-/*internal void
-draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
-	x0 = clamp(0, render_state.width, x0);
-	y0 = clamp(0, render_state.height, y0);
-	x1 = clamp(0, render_state.width, x1);
-	y1 = clamp(0, render_state.height, y1);
-
-	int temp = (x1 - x0);
-	int left = (int)(temp / 4);
-	int right = left + left + left;
-	int ys = (int)(y0 + y1) / 2;
-
-	for (int y = y0; y < y1; y++) {
-		u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
-		for (int x = x0; x < x1; x++) {
-			if ((y == ys) || (y == ys + 1) || (y == ys - 1)) {
-				if (x == (x0 + left) || x == (x0 + right)) {
-					*pixel = 0x000000;
-				}
-				else {
-					*pixel = color;
-				}
-			}
-			else {
-				*pixel = color;
-			}
-			pixel++;
-		}
-	}
-
-}
-*/
-
-internal void
+static void
 draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, bool& vacant, bool& bottom, bool& left, bool& right, bool& top, bool& enemy_touched, bool& touched, Coin_State* coins, HeartInc* hearts) {
 	//Change to pixels
 	//get the percentage of the screen relative to the current dimensions
 
 
-	x *= render_state.height * render_scale;
-	y *= render_state.height * render_scale;
+	x *= render_state.height * percent;
+	y *= render_state.height * percent;
 
-	half_size_x *= render_state.height * render_scale;
-	half_size_y *= render_state.height * render_scale;
+	half_size_x *= render_state.height * percent;
+	half_size_y *= render_state.height * percent;
 
 	//Need to center it, the window's center is at 0,0
 
@@ -267,16 +228,16 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 	int y1 = y + half_size_y;
 
 
-	x0 = clamp(0, render_state.width, x0);
-	y0 = clamp(0, render_state.height, y0);
-	x1 = clamp(0, render_state.width, x1);
-	y1 = clamp(0, render_state.height, y1);
+	x0 = getWithinBounds(0, render_state.width, x0);
+	y0 = getWithinBounds(0, render_state.height, y0);
+	x1 = getWithinBounds(0, render_state.width, x1);
+	y1 = getWithinBounds(0, render_state.height, y1);
 	///////
 
 
 	for (int i = x0; i < x1; i++) {
 		u32* bottom_pixels = (u32*)render_state.memory + i + y0 * render_state.width;
-		if (*bottom_pixels == RED)
+		if (*bottom_pixels == RED || *bottom_pixels == DARKORANGE || *bottom_pixels == PURPLE || *bottom_pixels == DARKGREEN)
 		{
 			bottom = FALSE;
 			break;
@@ -290,7 +251,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 	//if left side touches red set left set left to false
 	for (int i = (y0 + 1); i < (y1 - 1); i++) {
 		u32* left_pixels = (u32*)render_state.memory + x0 + i * render_state.width;
-		if ((*left_pixels == RED))
+		if (*left_pixels == RED || *left_pixels == DARKORANGE || *left_pixels == PURPLE || *left_pixels == DARKGREEN)
 		{
 			left = FALSE;
 			break;
@@ -301,7 +262,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 	//  if right side touches red set right to false
 	for (int i = (y0 + 1); i < (y1 - 1); i++) {
 		u32* right_pixels = (u32*)render_state.memory + (x1 - 1) + i * render_state.width;
-		if ((*right_pixels == RED))
+		if (*right_pixels == RED || *right_pixels == DARKORANGE || *right_pixels == PURPLE || *right_pixels == DARKGREEN)
 		{
 			right = FALSE;
 			break;
@@ -312,7 +273,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 
 	for (int i = (x0 + 2); i < (x1 - 2); i++) {
 		u32* top_pixels = (u32*)render_state.memory + i + y1 * render_state.width;
-		if ((*top_pixels == RED))
+		if (*top_pixels == RED || *top_pixels == DARKORANGE || *top_pixels == PURPLE || *top_pixels == DARKGREEN)
 		{
 			top = FALSE;
 			break;
@@ -325,7 +286,7 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 		u32* lowerL_pixel = (u32*)render_state.memory + x0 + i * render_state.width;
 
 		for (int x = x0; x < x1; x++) {
-			if ((*lowerL_pixel == RED))
+			if (*lowerL_pixel == RED || *lowerL_pixel == DARKORANGE || *lowerL_pixel == PURPLE || *lowerL_pixel == DARKGREEN)
 			{
 				vacant = false;
 				return;
@@ -382,13 +343,13 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 color, boo
 
 }
 
-internal void
+static void
 draw_enemy_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
-	x0 = clamp(0, render_state.width, x0);
-	y0 = clamp(0, render_state.height, y0);
-	x1 = clamp(0, render_state.width, x1);
-	y1 = clamp(0, render_state.height, y1);
+	x0 = getWithinBounds(0, render_state.width, x0);
+	y0 = getWithinBounds(0, render_state.height, y0);
+	x1 = getWithinBounds(0, render_state.width, x1);
+	y1 = getWithinBounds(0, render_state.height, y1);
 
 	int temp1 = x1;
 	int temp0 = x0;
@@ -396,7 +357,7 @@ draw_enemy_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 	int middle = (x1 + x0) / 2;
 	middle = middle - x0;
 	int iterations = y0 + (middle / 2);
-	iterations = clamp(0, render_state.height, iterations);
+	iterations = getWithinBounds(0, render_state.height, iterations);
 	for (int y = y0; y < iterations; y++) {
 		u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
 		for (int x = x0; x < x1; x++) {
@@ -408,7 +369,7 @@ draw_enemy_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 	}
 
 	iterations = y0 - (middle / 2);
-	iterations = clamp(0, render_state.height, iterations);
+	iterations = getWithinBounds(0, render_state.height, iterations);
 	for (int y = y0 - 1; y > iterations; y--) {
 		u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
 		for (int x = x0; x < x1; x++) {
@@ -421,15 +382,15 @@ draw_enemy_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 }
 
 
-internal void
+static void
 draw_enemy(int start_x, int start_y, int width, int height, u32 color) //  Coin_State* Coins, int counter 
 {
 
-	start_x *= render_state.height * render_scale;
-	start_y *= render_state.height * render_scale;
+	start_x *= render_state.height * percent;
+	start_y *= render_state.height * percent;
 
-	width *= render_state.height * render_scale;
-	height *= render_state.height * render_scale;
+	width *= render_state.height * percent;
+	height *= render_state.height * percent;
 	//Need to center it, the window's center is at 0,0
 
 	start_x += render_state.width / 2.f;
@@ -448,15 +409,15 @@ draw_enemy(int start_x, int start_y, int width, int height, u32 color) //  Coin_
 
 
 
-internal void
+static void
 draw_coin_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
 
 
-	x0 = clamp(0, render_state.width, x0);
-	y0 = clamp(0, render_state.height, y0);
-	x1 = clamp(0, render_state.width, x1);
-	y1 = clamp(0, render_state.height, y1);
+	x0 = getWithinBounds(0, render_state.width, x0);
+	y0 = getWithinBounds(0, render_state.height, y0);
+	x1 = getWithinBounds(0, render_state.width, x1);
+	y1 = getWithinBounds(0, render_state.height, y1);
 
 
 	int temp1 = x1;
@@ -466,7 +427,7 @@ draw_coin_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 	int middle = ((x1 + x0) / 2);
 	middle = middle - x0;
 	int iterations = y0 + (middle / 2);
-	iterations = clamp(0, render_state.height, iterations);
+	iterations = getWithinBounds(0, render_state.height, iterations);
 
 	for (int y = y0; y < iterations; y++) {
 		u32* pixel = (u32*)render_state.memory + temp0 + y * render_state.width;
@@ -482,7 +443,7 @@ draw_coin_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 	temp0 = x0;
 
 	iterations = y0 - (middle / 2);
-	iterations = clamp(0, render_state.height, iterations);
+	iterations = getWithinBounds(0, render_state.height, iterations);
 
 	for (int y = y0 - 1; y > iterations; y--) {
 		u32* pixel = (u32*)render_state.memory + temp0 + y * render_state.width;
@@ -496,16 +457,16 @@ draw_coin_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
 }
 
-internal void
+static void
 draw_coin(int start_x, int start_y, int width, int height, u32 color) //  Coin_State* Coins, int counter 
 {
 
 	//Coins->coin[counter].collected= false;
-	start_x *= render_state.height * render_scale;
-	start_y *= render_state.height * render_scale;
+	start_x *= render_state.height * percent;
+	start_y *= render_state.height * percent;
 
-	width *= render_state.height * render_scale;
-	height *= render_state.height * render_scale;
+	width *= render_state.height * percent;
+	height *= render_state.height * percent;
 	//Need to center it, the window's center is at 0,0
 
 	start_x += render_state.width / 2.f;
@@ -524,15 +485,15 @@ draw_coin(int start_x, int start_y, int width, int height, u32 color) //  Coin_S
 
 
 
-internal void
+static void
 draw_ticket_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 
 
 
-	x0 = clamp(0, render_state.width, x0);
-	y0 = clamp(0, render_state.height, y0);
-	x1 = clamp(0, render_state.width, x1);
-	y1 = clamp(0, render_state.height, y1);
+	x0 = getWithinBounds(0, render_state.width, x0);
+	y0 = getWithinBounds(0, render_state.height, y0);
+	x1 = getWithinBounds(0, render_state.width, x1);
+	y1 = getWithinBounds(0, render_state.height, y1);
 
 
 	int temp1 = x1;
@@ -542,7 +503,7 @@ draw_ticket_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 	int middle = ((x1 + x0) / 2);
 	middle = middle - x0;
 	int iterations = y0 + (middle / 2);
-	iterations = clamp(0, render_state.height, iterations);
+	iterations = getWithinBounds(0, render_state.height, iterations);
 
 	for (int y = iterations - 1; y > y0; y--) {
 		u32* pixel = (u32*)render_state.memory + temp0 + y * render_state.width;
@@ -558,7 +519,7 @@ draw_ticket_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 	temp0 = x0;
 
 	iterations = y0 + (middle / 2);
-	iterations = clamp(0, render_state.height, iterations);
+	iterations = getWithinBounds(0, render_state.height, iterations);
 
 	for (int y = y0; y < iterations; y++) {
 		u32* pixel = (u32*)render_state.memory + temp0 + y * render_state.width;
@@ -573,13 +534,13 @@ draw_ticket_in_pixels(int x0, int y0, int x1, int y1, u32 color) {
 }
 
 
-internal void
+static void
 draw_ticket(int start_x, int start_y, int width, int height, u32 color) {
-	start_x *= render_state.height * render_scale;
-	start_y *= render_state.height * render_scale;
+	start_x *= render_state.height * percent;
+	start_y *= render_state.height * percent;
 
-	width *= render_state.height * render_scale;
-	height *= render_state.height * render_scale;
+	width *= render_state.height * percent;
+	height *= render_state.height * percent;
 	//Need to center it, the window's center is at 0,0
 
 	start_x += render_state.width / 2.f;
@@ -596,13 +557,13 @@ draw_ticket(int start_x, int start_y, int width, int height, u32 color) {
 
 
 
-internal void
+static void
 draw_circle_in_pixels(int x0, int y0, int x1, int y1, int radius, int centerX, int centerY, u32 color) {
 
-	x0 = clamp(0, render_state.width, x0);
-	y0 = clamp(0, render_state.height, y0);
-	x1 = clamp(0, render_state.width, x1);
-	y1 = clamp(0, render_state.height, y1);
+	x0 = getWithinBounds(0, render_state.width, x0);
+	y0 = getWithinBounds(0, render_state.height, y0);
+	x1 = getWithinBounds(0, render_state.width, x1);
+	y1 = getWithinBounds(0, render_state.height, y1);
 
 	for (int y = y0; y < y1; y++) {
 		u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
@@ -619,17 +580,17 @@ draw_circle_in_pixels(int x0, int y0, int x1, int y1, int radius, int centerX, i
 }
 
 
-internal void
+static void
 draw_circle(int centerX, int centerY, int radius, u32 color) {
 
-	centerX *= render_state.height * render_scale;
-	centerY *= render_state.height * render_scale;
+	centerX *= render_state.height * percent;
+	centerY *= render_state.height * percent;
 
 
 	centerX += render_state.width / 2.f;
 	centerY += render_state.height / 2.f;
 
-	float r0 = radius * render_state.height * render_scale;
+	float r0 = radius * render_state.height * percent;
 
 	int x0 = centerX - r0;
 	int x1 = centerX + r0;
@@ -640,13 +601,13 @@ draw_circle(int centerX, int centerY, int radius, u32 color) {
 	draw_circle_in_pixels(x0, y0, x1, y1, r0, centerX, centerY, color);
 
 }
-internal void
+static void
 draw_heart_in_pixels(int x0, int y0, int x1, int y1, int start_x, int start_y, float n, u32 color) {
 
-	x0 = clamp(0, render_state.width, x0);
-	y0 = clamp(0, render_state.height, y0);
-	x1 = clamp(0, render_state.width, x1);
-	y1 = clamp(0, render_state.height, y1);
+	x0 = getWithinBounds(0, render_state.width, x0);
+	y0 = getWithinBounds(0, render_state.height, y0);
+	x1 = getWithinBounds(0, render_state.width, x1);
+	y1 = getWithinBounds(0, render_state.height, y1);
 
 	for (int y = y0; y < y1; y++) {
 		u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
@@ -662,11 +623,11 @@ draw_heart_in_pixels(int x0, int y0, int x1, int y1, int start_x, int start_y, f
 
 }
 
-internal void
+static void
 draw_heart(float x, float y, float a, u32 color) {
-	x *= -render_state.height * render_scale;
-	y *= render_state.height * render_scale;
-	a *= render_state.height * render_scale; //size of the heart
+	x *= -render_state.height * percent;
+	y *= render_state.height * percent;
+	a *= render_state.height * percent; //size of the heart
 
 	x -= render_state.width / 2.f;
 	y += render_state.height / 2.f;
@@ -686,12 +647,12 @@ draw_heart(float x, float y, float a, u32 color) {
 //type = 4 facing up
 //type = 5 full diamond
 
-internal void
+static void
 draw_triangles_in_pixels(int x0, int y0, int x1, int y1, u32 color, int type) {
-	x0 = clamp(0, render_state.width, x0);
-	y0 = clamp(0, render_state.height, y0);
-	x1 = clamp(0, render_state.width, x1);
-	y1 = clamp(0, render_state.height, y1);
+	x0 = getWithinBounds(0, render_state.width, x0);
+	y0 = getWithinBounds(0, render_state.height, y0);
+	x1 = getWithinBounds(0, render_state.width, x1);
+	y1 = getWithinBounds(0, render_state.height, y1);
 
 	int temp1 = x1;
 	int temp0 = x0;
@@ -732,14 +693,14 @@ draw_triangles_in_pixels(int x0, int y0, int x1, int y1, u32 color, int type) {
 	}
 }
 
-internal void
+static void
 draw_triangles(float start_x, float start_y, float width, float height, u32 color, int type)
 {
-	start_x *= render_state.height * render_scale;
-	start_y *= render_state.height * render_scale;
+	start_x *= render_state.height * percent;
+	start_y *= render_state.height * percent;
 
-	width *= render_state.height * render_scale;
-	height *= render_state.height * render_scale;
+	width *= render_state.height * percent;
+	height *= render_state.height * percent;
 	//Need to center it, the window's center is at 0,0
 
 	start_x += render_state.width / 2.f;

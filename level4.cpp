@@ -13,6 +13,9 @@ void simulateLevel4(Input* input, float& dt) {
 
 
   if (!levelInfoSet) {
+	game_info.borderColor = PURPLE;
+	game_info.bkgColor = LIGHTPURPLE;
+
 	game_info.resetCoinsCollected(); //makes all coins' collected variable to false
 	game_info.resetPowerUpInfo();
 	game_info.jumps.resetJumps();
@@ -178,7 +181,7 @@ void simulateLevel4(Input* input, float& dt) {
 	draw_rect(-34, -4, 40, 1, RED); //starting platform
 
 	draw_rect(-82, 3, 1, 42, RED); //longest left wall
-	draw_rect(-82, 23, 1, 5, LIGHTPINK); //longest left wall opening
+	draw_rect(-82, 23, 1, 5, LIGHTPURPLE); //longest left wall opening
 
 	draw_rect(-73, -22, 1, 17, RED);//wall making hole
 
@@ -187,7 +190,7 @@ void simulateLevel4(Input* input, float& dt) {
 
 
 
-	draw_rect(-33, -30, 1, 17, RED);//lower wall
+	draw_rect(-33, -29, 1, 16, RED);//lower wall
 	draw_rect(-20, -14, 13, 1, RED); //lower wall platform
 
 	draw_rect(7, -9, 1, 17, RED);//right wall next to spawn
@@ -197,7 +200,7 @@ void simulateLevel4(Input* input, float& dt) {
 	draw_rect(-26, 9, 55, 1, RED); //platform above starting platform
 
 	draw_rect(18, 30, 21, 1, RED); //platform holding goal
-	draw_rect(70, 20, 25, 1, RED); //platform top right
+	draw_rect(67, 20, 23, 1, RED); //platform top right
 	draw_rect(-3, 37, 1, 8, RED);// top right wall
 
 	draw_rect(80, -41, 10, 4, RED); //lower right step

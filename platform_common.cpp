@@ -1,9 +1,10 @@
-struct Button_State {
+class Button_State {
+public:
 	bool is_down;
 	bool changed;
 };
 
-enum {
+enum KEYS{
 	BUTTON_UP,
 	BUTTON_DOWN,
 	BUTTON_LEFT,
@@ -12,6 +13,7 @@ enum {
 	BUTTON_SPACEBAR,
 	BUTTON_ENTER,
 	BUTTON_ESCAPE,
+
 	BUTTON_COUNT, //Should be the last item, used for keeping track for array of buttons
 };
 
@@ -35,6 +37,10 @@ enum COLORS {
 	DARKGREEN = 0x006400,
 	ORANGE = 0xFFA500,
 	BROWN = 0x8B4513,
+	LIGHTPURPLE = 0xE1BEE7,
+	LIGHTGREEN = 0xA5D6A7,
+	LIGHTGRAY = 0xBDBDBD,
+	DARKORANGE = 0xBF360C,
 };
 
 struct Input {

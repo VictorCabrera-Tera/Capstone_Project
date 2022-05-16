@@ -1,8 +1,3 @@
-//#define is_down(b) input->buttons[b].is_down
-//#define pressed(b) (input->buttons[b].is_down && input->buttons[b].changed)
-//#define released(b) (!(input->buttons[b].is_down) && input->buttons[b].changed)
-
-
 #include "game_global_variables.cpp"
 
 void simulateLevel1(Input* input, float& dt);
@@ -13,7 +8,7 @@ void simulateLevel4(Input* input, float& dt);
 void simulateLevelSelect(Input* input, float& dt);
 void simulateFinalScreen(Input* input, float& dt);
 
-internal void
+static void
 restart_pos(GAMEMODE Level) {
 	switch (Level) {
 	case(LEVEL1): {
@@ -43,7 +38,7 @@ restart_pos(GAMEMODE Level) {
 
 
 
-internal void
+static void
 drawColletableHearts() {
 	int collected_coins = 0;
 	static int cc = 0;
@@ -83,7 +78,7 @@ drawColletableHearts() {
 	}
 }
 
-internal void
+static void
 hearts() {
 	//game_info.setHeart(WHITE, BLACK, 3);
 	game_info.setLivesLeft(health_points);
@@ -94,7 +89,7 @@ hearts() {
 	game_info.setHeartPosition(heart1Pos, heart2Pos, heart3Pos);
 }
 
-internal void
+static void
 draw_hearts() {
 	for (int i = 0; i < 3; i++) {
 		draw_heart(game_info.getHeartPos(i).x, game_info.getHeartPos(i).y, 2, game_info.getHeartColor(i));
@@ -102,7 +97,7 @@ draw_hearts() {
 }
 
 
-internal void
+static void
 collision(Coin_State* coins, float dt, GAMEMODE Level) {
 
 
@@ -161,7 +156,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 
 
 
-internal void
+static void
 drawLevelCoins() {
 	int collected_coins = 0;
 	static int cc = 0;
@@ -203,7 +198,7 @@ drawLevelCoins() {
 
 }
 
-internal void
+static void
 drawLevelPowerUps() {
 
 
@@ -222,7 +217,7 @@ drawLevelPowerUps() {
 
 }
 
-internal void
+static void
 drawJumps() {
 	printLevelText("Jumps ", 25, -46, WHITE);
 	if (game_info.jumps.getJumpAvailable() == 2 ) {
@@ -252,10 +247,14 @@ float speed = 50.f; //unit per second
 
 
 
-internal void
+static void
 simulate_game(Input* input, float& dt) {
-	clear_screen(RED);
-	draw_rect(0, 0, 90, 45, LIGHTPINK);
+	if (!game_info.started_level) {
+	  game_info.borderColor = RED;
+	  game_info.bkgColor = WHITE;
+	}
+	fill_window(game_info.borderColor);
+	draw_rect(0, 0, 90, 45, game_info.bkgColor);
 
 
 	if (game_info.set == false) {
