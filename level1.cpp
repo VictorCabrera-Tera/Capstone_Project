@@ -1,9 +1,6 @@
-#define is_down(b) input->buttons[b].is_down
-#define pressed(b) (input->buttons[b].is_down && input->buttons[b].changed)
-#define released(b) (!(input->buttons[b].is_down) && input->buttons[b].changed)
 
 
-internal void simulateLevel1(Input* input, float& dt) {
+static void simulateLevel1(Input* input, float& dt) {
 	mciSendString(L"stop bgm", NULL, 0, 0);
 	printLevelText("Level 1", -10, 49, WHITE);
 	printLevelText("Lives ", 50, 49, WHITE);
@@ -13,34 +10,37 @@ internal void simulateLevel1(Input* input, float& dt) {
 	printLevelText(std::to_string(game_info.playerScore.getScore()).c_str(), -65, -46, WHITE);
 
 	if (!levelInfoSet) {
-		game_info.jumps.resetJumps();
-		game_info.resetCoinsCollected(); //makes all coins' collected variable to false
-		Point coin1Pos(-39, -36);
-		Point coin2Pos(-76, -12);
-		Point coin3Pos(30, 30);
-		game_info.setCoinsPositions(coin1Pos, coin2Pos, coin3Pos); //stores the position of the coins
+	  game_info.borderColor = DARKGREEN;
+	  game_info.bkgColor = LIGHTGREEN;
 
-		game_info.setCHcolor(0xDA189C, RED);
-		game_info.setCollectableHeart();
-		Point chPos1(74, -25);
-		Point chPos2(74, -40);
-		game_info.setCHpos(chPos1, chPos2);
+	  game_info.jumps.resetJumps();
+	  game_info.resetCoinsCollected(); //makes all coins' collected variable to false
+	  Point coin1Pos(-39, -36);
+	  Point coin2Pos(-76, -12);
+	  Point coin3Pos(30, 30);
+	  game_info.setCoinsPositions(coin1Pos, coin2Pos, coin3Pos); //stores the position of the coins
 
-		player_posX = game_info.getLevel1Spawn().x; //get the spawnpoint
-		player_posY = game_info.getLevel1Spawn().y;
-		mciSendString(L"play lvl1 from 0", NULL, 0, 0);
-		musc = 0;
+	  game_info.setCHcolor(0xDA189C, RED);
+	  game_info.setCollectableHeart();
+	  Point chPos1(74, -25);
+	  Point chPos2(74, -40);
+	  game_info.setCHpos(chPos1, chPos2);
 
-		hearts();
-		Point enemy1Pos(-38, 20), enemy2Pos(32, 22);
-		game_info.enemy_pos[0] = enemy1Pos;
-		game_info.enemy_pos[1] = enemy2Pos;
+	  player_posX = game_info.getLevel1Spawn().x; //get the spawnpoint
+	  player_posY = game_info.getLevel1Spawn().y;
+	  mciSendString(L"play lvl1 from 0", NULL, 0, 0);
+	  musc = 0;
 
-		game_info.playerScore.resetScore();
+	  hearts();
+	  Point enemy1Pos(-38, 20), enemy2Pos(32, 22);
+	  game_info.enemy_pos[0] = enemy1Pos;
+	  game_info.enemy_pos[1] = enemy2Pos;
 
-		//game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
-		game_info.timer.resetTime();
-		levelInfoSet = true;
+	  game_info.playerScore.resetScore();
+
+	  //game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
+	  game_info.timer.resetTime();
+	  levelInfoSet = true;
 	}
 
 	// unit / second * second/ frame = unit / frame
@@ -127,7 +127,7 @@ internal void simulateLevel1(Input* input, float& dt) {
 	//move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);	
 
 	{
-		draw_rect(82, -38, 8, 8, RED); //fills in lower right corner
+		draw_rect(82, -37.5, 8, 7.5, RED); //fills in lower right corner
 
 		draw_rect(-69, -44, 5, 1, RED); //bump1
 
@@ -137,7 +137,7 @@ internal void simulateLevel1(Input* input, float& dt) {
 		draw_rect(45, -42, 40, 3, RED); //stairs
 		draw_rect(55, -37, 20, 2, RED);
 		draw_rect(65, -33, 20, 2, RED);
-		draw_rect(75, -29, 20, 2, RED);
+		draw_rect(72.5, -29, 17.5, 2, RED);
 
 		draw_rect(19, -28, 8, 0.5, RED); //plat2
 

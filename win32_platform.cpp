@@ -1,4 +1,3 @@
-#include <Python.h>
 #include <windows.h>
 #include "utils.cpp"
 #include "platform_common.cpp"
@@ -7,22 +6,22 @@
 #include <cmath>
 #pragma comment(lib,"winmm.lib")
 #include <string>
-global_variable bool running = true;
+bool running = true;
 
 bool pause = false;
 int pause_count = 0;
-struct Render_State
+class Render_State
 {
-	void* memory;
+public:
+	BITMAPINFO bitmap_info;
 	int width;
 	int height;
-	//int render_state.size = 0;
-	BITMAPINFO bitmap_info;
+	void* memory;
 };
 
-global_variable Render_State render_state;
+Render_State render_state;
 
-global_variable gameUtilities game_info;
+gameUtilities game_info;
 
 #include "renderer.cpp"
 #include "movement.cpp"
@@ -39,6 +38,12 @@ global_variable gameUtilities game_info;
 #include "pauseMenu.cpp"
 
 
+void update_button(int button, Input& input, bool is_down) {
+
+  input.buttons[button].changed = is_down != input.buttons[button].is_down;
+  input.buttons[button].is_down = is_down;
+;
+}
 
 
 
@@ -51,13 +56,8 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	switch (uMsg)
 	{
-		//If the message is either a WM_CLOSE or WM_DESTROY (from clicking the X on the window) then set running to false
-	case(WM_CLOSE):
-	case(WM_DESTROY): {
-		running = false;
-	}
-					break;
-					//message that window changed size
+
+	//message that window changed size
 	case(WM_SIZE): {
 
 		RECT rect;
@@ -103,8 +103,8 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 
 	}
-				 break;
-				 //Otherwise, do the default behavior for the message
+	 break;
+	//Otherwise, do the default behavior for the message
 
 	case(WM_MOVE): {
 		if (game_info.started_level)
@@ -113,7 +113,14 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			//game_info.playerScore.pPausedTime = game_info.playerScore.getCurrentTime();
 		}
 	}break;
-		//Includes moving the window, minimizing, reshaping
+	 //If the message is either a WM_CLOSE or WM_DESTROY (from clicking the X on the window) then set running to false
+	case(WM_CLOSE): {
+	  running = false;
+	}break;
+	case(WM_DESTROY): {
+	  running = false;
+	}break;
+	//any other message
 	default:
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	};
@@ -124,8 +131,26 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
 
-	//Py_Initialize();
-	//Py_Finalize();
+	float cpu_cycles_per_sec;
+	{
+	  //Will initialize perf, then use function that wil get how many cycles the cpu does in a sec
+	  LARGE_INTEGER perf;
+	  QueryPerformanceFrequency(&perf);
+	  cpu_cycles_per_sec = (float)perf.QuadPart;
+	}
+
+	//initialize the counter used
+	//Use it at the start and end of each frame to know how much time passed
+	LARGE_INTEGER frame_start_time;
+
+	//The time when the frame starts
+	QueryPerformanceCounter(&frame_start_time);
+
+	//To keep track how much time elapsed for the first frame (assume 60 secs) 1 / 60 = 0.01666666666
+
+	float dt = 0.01666666666;
+
+
 	//Create a window class
 	WNDCLASS window_class = {};
 
@@ -152,7 +177,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	//the A in createWindowA states that the window name will have non-special characters
 	//If you remove that then it will decide which to call
 	//Creating an object of HWND will allow us to create the window, and also process the messages from that window
-	HWND window = CreateWindow(window_class.lpszClassName, L"Cube World",
+	HWND window = CreateWindow(window_class.lpszClassName, L"Cubed World",
 		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT,
 		1280, 720, 0, 0, hInstance, 0);
 
@@ -160,36 +185,12 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	//known as a handle, which is what windows use in order to to draw to it
 	HDC hdc = GetDC(window);
 
-	Input input = {};
-
-	//To keep track how much time elapsed for the first frame (assume 60 secs)
-
-	float delta_time = 0.016666f;
-
-
-	//initialize the counter used
-	//Use it at the start and end of each frame to know how much time passed
-	LARGE_INTEGER frame_begin_time;
-
-
-	//The time when the frame starts
-	QueryPerformanceCounter(&frame_begin_time);
-
-
-
-	float performance_frequency;
-	{
-		//Will initialize perf, then use function that wil get how many cycles the cpu does in a sec
-		LARGE_INTEGER perf;
-		QueryPerformanceFrequency(&perf);
-		performance_frequency = (float)perf.QuadPart;
-	}
-
-
 
 	game_info.pause = false;
 	game_info.started_level = false;
 	game_info.set = false;
+
+	Input input = {};
 
 	//Game Loop to keep window open
 	while (running)
@@ -197,9 +198,10 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		//Input
 
 		//Ask windows if there is a message for us
-
-		for (int i = 0; i < BUTTON_COUNT; i++) {
-			input.buttons[i].changed = false;
+		int i = 0;
+		while (i < BUTTON_COUNT) {
+		  input.buttons[i].changed = false;
+		  i++;
 		}
 
 		MSG message;
@@ -209,28 +211,36 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		while (PeekMessage(&message, window, 0, 0, PM_REMOVE)) {
 
 			switch (message.message) {
-			case(WM_KEYUP):
-			case(WM_KEYDOWN): {
+			case(WM_KEYDOWN):
+			case(WM_KEYUP): {
 				u32 vk_code = (u32)message.wParam;
 				//bit 31 hold the transition state of the key
-				bool is_down = ((message.lParam & (1 << 31)) == 0);
-
-#define process_button(b,vk)\
-case (vk): {\
-input.buttons[b].changed = is_down != input.buttons[b].is_down;\
-input.buttons[b].is_down = is_down;\
-} break;
+				u32 transition_state = (message.lParam & (1 << 31));
+				bool is_down = (transition_state == 0);
 
 
 				switch (vk_code) {
-					process_button(BUTTON_UP, VK_UP);
-					process_button(BUTTON_DOWN, VK_DOWN);
-					process_button(BUTTON_LEFT, VK_LEFT);
-					process_button(BUTTON_RIGHT, VK_RIGHT);
-					process_button(BUTTON_SPACEBAR, VK_SPACE);
-					process_button(BUTTON_ENTER, VK_RETURN);
-					process_button(BUTTON_ESCAPE, VK_ESCAPE);
-
+				  case (VK_UP): {
+					update_button(BUTTON_UP, input, is_down);
+				  } break;
+				  case (VK_DOWN): {
+					update_button(BUTTON_DOWN, input, is_down);
+				  } break; 
+				  case (VK_LEFT): {
+					update_button(BUTTON_LEFT, input, is_down);
+				  } break;
+				  case (VK_RIGHT): {
+					update_button(BUTTON_RIGHT, input, is_down);
+				  } break;
+				  case (VK_SPACE): {
+					update_button(BUTTON_SPACEBAR, input, is_down);
+				  } break;
+				  case (VK_RETURN): {
+					update_button(BUTTON_ENTER, input, is_down);
+				  } break;
+				  case (VK_ESCAPE): {
+					update_button(BUTTON_ESCAPE, input, is_down);
+				  } break;
 				}
 			} break;
 			default:
@@ -245,19 +255,6 @@ input.buttons[b].is_down = is_down;\
 			if (game_info.started_level && game_over == false) {
 				game_info.pause = !game_info.pause;
 				pause_selected = 1; //for resume to be the first to be highlighted red
-				/*
-				if (!game_info.pause) {
-					 game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
-					int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
-					game_info.playerScore.pStartTime = game_info.playerScore.addTimePaused(game_info.playerScore.pStartTime, game_info.playerScore.pPausedTime);
-					time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
-					int x = time;
-				}
-				else {
-					game_info.playerScore.pPausedTime = game_info.playerScore.getCurrentTime();
-
-				}
-				*/
 			}
 		}
 		if (health_points < 1 && levelInfoSet)
@@ -266,7 +263,7 @@ input.buttons[b].is_down = is_down;\
 		}
 
 		if (game_info.pause == false && game_over == false) {
-			simulate_game(&input, delta_time);
+			simulate_game(&input, dt);
 			//mciSendString(L"resume bgm", NULL, 0, 0);
 			mciSendString(L"resume lvl1", NULL, 0, 0);
 			mciSendString(L"resume lvl2", NULL, 0, 0);
@@ -295,19 +292,19 @@ input.buttons[b].is_down = is_down;\
 			render_state.memory, &render_state.bitmap_info, DIB_RGB_COLORS, SRCCOPY);
 
 
-		LARGE_INTEGER frame_end_time;
+		LARGE_INTEGER frame_finish_time;
 		//time for when the frame ends
-		QueryPerformanceCounter(&frame_end_time);
+		QueryPerformanceCounter(&frame_finish_time);
 
 		/*
 		(frame_end_time.QuadPart - frame_begin_time.QuadPart) will give cycles / frame
 		performance_frequency is cycles / sec
 		diving gives you sec / frame, which is needed for the speed of the game
 		*/
+		float cycles_took = (float)(frame_finish_time.QuadPart - frame_start_time.QuadPart);
+		dt = cycles_took / cpu_cycles_per_sec;
 
-		delta_time = (float)(frame_end_time.QuadPart - frame_begin_time.QuadPart) / performance_frequency;
-
-		frame_begin_time = frame_end_time;
+		frame_start_time = frame_finish_time;
 
 	}
 	ReleaseDC(window, hdc);

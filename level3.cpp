@@ -10,59 +10,62 @@ void simulateLevel3(Input* input, float& dt) {
 
 
 	if (!levelInfoSet) {
-		game_info.resetCoinsCollected();
-		game_info.resetPowerUpInfo();
-		game_info.jumps.resetJumps();
-		Point coin1pos(-86, 36), coin2pos(-42, 0), coin3pos(16, 2);
-		game_info.setCoinsPositions(coin1pos, coin2pos, coin3pos);
+	  game_info.borderColor = RED;
+	  game_info.bkgColor = LIGHTPINK;
+
+	  game_info.resetCoinsCollected();
+	  game_info.resetPowerUpInfo();
+	  game_info.jumps.resetJumps();
+	  Point coin1pos(-86, 36), coin2pos(-42, 0), coin3pos(16, 2);
+	  game_info.setCoinsPositions(coin1pos, coin2pos, coin3pos);
 
 
-		game_info.setPowerUpColor(PHASE_THROUGH, TURQUOISE);
-		Point phaseThroughPos(86, 36);
-		game_info.setPowerUpPosition(PHASE_THROUGH, phaseThroughPos);
+	  game_info.setPowerUpColor(PHASE_THROUGH, TURQUOISE);
+	  Point phaseThroughPos(86, 36);
+	  game_info.setPowerUpPosition(PHASE_THROUGH, phaseThroughPos);
 
-		game_info.setCHcolor(0xDA189C, 0xDA189D);
-		game_info.setCollectableHeart();
-		Point chPos1(1, 1), chPos2(87, -14.5);
-		game_info.setCHpos(chPos1, chPos2);
+	  game_info.setCHcolor(0xDA189C, 0xDA189D);
+	  game_info.setCollectableHeart();
+	  Point chPos1(1, 1), chPos2(87, -14.5);
+	  game_info.setCHpos(chPos1, chPos2);
 
 
 
-		player_posX = game_info.getLevel3Spawn().x; //get the spawnpoint
-		player_posY = game_info.getLevel3Spawn().y;
-		mciSendString(L"play lvl3 from 0", NULL, 0, 0);
-		musc = 0;
-		hearts();
+	  player_posX = game_info.getLevel3Spawn().x; //get the spawnpoint
+	  player_posY = game_info.getLevel3Spawn().y;
+	  mciSendString(L"play lvl3 from 0", NULL, 0, 0);
+	  musc = 0;
+	  hearts();
 
-		Point	enemy1Pos(-70, -30),
-			enemy2Pos(1, -10),
-			enemy3Pos(0, 33.5),
-			enemy4Pos(15, -28),
-			enemy5Pos(40, -13),
-			enemy6Pos(65, 2),
-			enemy7Pos(0, 18),
-			enemy8Pos(40, 28),
-			enemy9Pos(40, 2),
-			enemy10Pos(15, -13);
+	  Point	enemy1Pos(-70, -30),
+		  enemy2Pos(1, -10),
+		  enemy3Pos(0, 33.5),
+		  enemy4Pos(15, -28),
+		  enemy5Pos(40, -13),
+		  enemy6Pos(65, 2),
+		  enemy7Pos(0, 18),
+		  enemy8Pos(40, 28),
+		  enemy9Pos(40, 2),
+		  enemy10Pos(15, -13);
 
-		game_info.enemy_pos[0] = enemy1Pos;
-		game_info.enemy_pos[1] = enemy2Pos;
-		game_info.enemy_pos[2] = enemy3Pos;
-		game_info.enemy_pos[3] = enemy4Pos;
-		game_info.enemy_pos[4] = enemy5Pos;
-		game_info.enemy_pos[5] = enemy6Pos;
-		game_info.enemy_pos[6] = enemy7Pos;
-		game_info.enemy_pos[7] = enemy8Pos;
-		game_info.enemy_pos[8] = enemy9Pos;
-		game_info.enemy_pos[9] = enemy10Pos;
+	  game_info.enemy_pos[0] = enemy1Pos;
+	  game_info.enemy_pos[1] = enemy2Pos;
+	  game_info.enemy_pos[2] = enemy3Pos;
+	  game_info.enemy_pos[3] = enemy4Pos;
+	  game_info.enemy_pos[4] = enemy5Pos;
+	  game_info.enemy_pos[5] = enemy6Pos;
+	  game_info.enemy_pos[6] = enemy7Pos;
+	  game_info.enemy_pos[7] = enemy8Pos;
+	  game_info.enemy_pos[8] = enemy9Pos;
+	  game_info.enemy_pos[9] = enemy10Pos;
 
-		//game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
-		game_info.timer.resetTime();
+	  //game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
+	  game_info.timer.resetTime();
 
-		game_info.setLevel3Spawn(-85, -41);
+	  game_info.setLevel3Spawn(-85, -41);
 
-		levelInfoSet = true;
-		//hearts();
+	  levelInfoSet = true;
+	  //hearts();
 	}
 
 

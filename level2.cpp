@@ -11,50 +11,53 @@ void simulateLevel2(Input* input, float& dt) {
 
 
 	if (!levelInfoSet) {
-		game_info.resetCoinsCollected();
-		game_info.resetPowerUpInfo();
-		game_info.jumps.resetJumps();
-		Point coin1pos(33, 17), coin2pos(78, -10), coin3pos(-39, -14);
-		game_info.setCoinsPositions(coin1pos, coin2pos, coin3pos);
+	  game_info.borderColor = 0xBF360C;
+	  game_info.bkgColor = LIGHTGRAY;
 
-		game_info.setPowerUpColor(SHRINK, TEAL);
-		Point shrinkPos(-10, -42);
-		game_info.setPowerUpPosition(SHRINK, shrinkPos);
+	  game_info.resetCoinsCollected();
+	  game_info.resetPowerUpInfo();
+	  game_info.jumps.resetJumps();
+	  Point coin1pos(33, 17), coin2pos(78, -10), coin3pos(-39, -14);
+	  game_info.setCoinsPositions(coin1pos, coin2pos, coin3pos);
 
-		game_info.setPowerUpColor(PHASE_THROUGH, TURQUOISE);
-		Point phaseThroughPos(-37, 37);
-		game_info.setPowerUpPosition(PHASE_THROUGH, phaseThroughPos);
+	  game_info.setPowerUpColor(SHRINK, TEAL);
+	  Point shrinkPos(-10, -42);
+	  game_info.setPowerUpPosition(SHRINK, shrinkPos);
 
-		game_info.setCHcolor(0xDA189C, 0xDA189D);
-		game_info.setCollectableHeart();
-		Point chPos1(-25, 13), chPos2(42, -42);
-		game_info.setCHpos(chPos1, chPos2);
+	  game_info.setPowerUpColor(PHASE_THROUGH, TURQUOISE);
+	  Point phaseThroughPos(-37, 37);
+	  game_info.setPowerUpPosition(PHASE_THROUGH, phaseThroughPos);
+
+	  game_info.setCHcolor(0xDA189C, 0xDA189D);
+	  game_info.setCollectableHeart();
+	  Point chPos1(-25, 13), chPos2(42, -42);
+	  game_info.setCHpos(chPos1, chPos2);
 
 
 
-		player_posX = game_info.getLevel2Spawn().x; //get the spawnpoint
-		player_posY = game_info.getLevel2Spawn().y;
-		mciSendString(L"play lvl2 from 0", NULL, 0, 0);
-		musc = 0;
-		hearts();
+	  player_posX = game_info.getLevel2Spawn().x; //get the spawnpoint
+	  player_posY = game_info.getLevel2Spawn().y;
+	  mciSendString(L"play lvl2 from 0", NULL, 0, 0);
+	  musc = 0;
+	  hearts();
 
-		Point enemy1Pos(40, 26), enemy2Pos(70, 26), enemy3Pos(56, -19),
-			enemy4Pos(-75, 40), enemy5Pos(-66, -3), enemy6Pos(-82, -23),
-			enemy7Pos(-36, -33);
-		game_info.enemy_pos[0] = enemy1Pos;
-		game_info.enemy_pos[1] = enemy2Pos;
-		game_info.enemy_pos[2] = enemy3Pos;
-		game_info.enemy_pos[3] = enemy4Pos;
-		game_info.enemy_pos[4] = enemy5Pos;
-		game_info.enemy_pos[5] = enemy6Pos;
-		game_info.enemy_pos[6] = enemy7Pos;
+	  Point enemy1Pos(40, 26), enemy2Pos(70, 26), enemy3Pos(56, -19),
+		  enemy4Pos(-75, 40), enemy5Pos(-66, -3), enemy6Pos(-82, -23),
+		  enemy7Pos(-36, -33);
+	  game_info.enemy_pos[0] = enemy1Pos;
+	  game_info.enemy_pos[1] = enemy2Pos;
+	  game_info.enemy_pos[2] = enemy3Pos;
+	  game_info.enemy_pos[3] = enemy4Pos;
+	  game_info.enemy_pos[4] = enemy5Pos;
+	  game_info.enemy_pos[5] = enemy6Pos;
+	  game_info.enemy_pos[6] = enemy7Pos;
 
-		//game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
-		game_info.timer.resetTime();
+	  //game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
+	  game_info.timer.resetTime();
 
-		jump_height = 3500;
-		levelInfoSet = true;
-		//hearts();
+	  jump_height = 3500;
+	  levelInfoSet = true;
+	  //hearts();
 	}
 	if (!freemode) {
 		if (leftclear == true) {
@@ -149,31 +152,11 @@ void simulateLevel2(Input* input, float& dt) {
 	}
 
 
-	/*
-	  {
 
-
-		//type = 1 facing left
-		//type = 2 facing right
-		//type = 3 facing down
-		//type = 4 facing up
-		//type = 5 full diamond
-		draw_triangles(-63, 10, 1, 15, BLUE, 1);
-		draw_triangles(-50, 10, 1, 15, BLUE, 2);
-		draw_triangles(-57, 5, 2, 15, BLUE, 3);
-		draw_triangles(-57, 15, 7, 15, BLUE, 4);
-
-		draw_triangles(-43, 10, 2, 15, RED, 1);
-		draw_rect(-38, -5, 4, 1.5, RED);
-
-		draw_triangles(-43, 3, 1, 15, RED, 1);
-		draw_rect(-38, -12, 4, 0.5, RED);
-	  }
-	*/
 	{
 		draw_rect(0, 0, 90, 0.8, RED); //BORDER
-		draw_rect(-29, 28, 0.3, 18, RED);
-		draw_rect(29, 28, 0.3, 18, RED);
+		draw_rect(-29, 27.5, 0.3, 17.5, RED);
+		draw_rect(29, 27.5, 0.3, 17.5, RED);
 
 		draw_rect(0, 35, 5, 0.5, RED); //top middle platforms
 		draw_rect(-20, 27, 5, 0.5, RED);
@@ -182,7 +165,7 @@ void simulateLevel2(Input* input, float& dt) {
 		draw_rect(24, 10, 5, 0.5, RED);
 		draw_rect(-24, 10, 5, 0.5, RED);
 
-		draw_right_tri(88, 0, 7, RED); //top right triangle
+		draw_right_tri(86, 0, 4, RED); //top right triangle
 
 		draw_triangles(89, 30, 1, 15, BLUE, 1); //spikes
 		draw_triangles(89, 28, 1, 15, BLUE, 1);
@@ -197,7 +180,7 @@ void simulateLevel2(Input* input, float& dt) {
 		draw_triangles(-88, 26, 2, 15, BLUE, 2);
 
 		draw_rect(-84, 6.8, 6, 2, RED); //top left stairs
-		draw_rect(-74, 2.8, 18, 2, RED);
+		draw_rect(-73, 2.8, 17, 2, RED);
 
 		draw_rect(-67, 17, 5, 0.5, RED); //top left platforms
 		draw_rect(-37, 22, 8, 0.5, RED);
@@ -240,15 +223,15 @@ void simulateLevel2(Input* input, float& dt) {
 		draw_rect(-63, -35.5, 0.5, 3, RED);
 		draw_rect(-39, -33, 24, 0.5, RED);
 
-		draw_rect(-77, -33, 15, 0.5, RED);
-		draw_rect(-75, -28, 16, 0.5, RED);
+		draw_rect(-76, -33, 14, 0.5, RED);
+		draw_rect(-74.5, -28, 15.5, 0.5, RED);
 		draw_rect(-59, -30, 0.5, 2.5, RED);
 
 		draw_rect(-43.5, -23, 27, 0.5, RED);
 		draw_rect(-83, -20, 7, 0.5, RED);
 
-		draw_rect(-88, -16, 3, 0.5, RED);
-		draw_rect(-90, -12, 2, 0.5, RED);
+		draw_rect(-87.5, -16, 2.5, 0.5, RED);
+		draw_rect(-89, -12, 1, 0.5, RED);
 		draw_rect(-80, -12.5, 0.5, 3.5, RED);
 		draw_rect(-61, -9.5, 19, 0.5, RED);
 
