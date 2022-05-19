@@ -46,6 +46,7 @@ pauseMenu(Input* input)
 	  player_sizex = 2;
 	  player_sizey = 2;
 	  health_points = 3;
+	  heart_collected = false;
 	}
 	else {
 	  running = false; //closes the windows interface
