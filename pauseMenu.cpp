@@ -46,6 +46,7 @@ pauseMenu(Input* input)
 	  player_sizex = 2;
 	  player_sizey = 2;
 	  health_points = 3;
+	  heart_collected = false;
 	}
 	else {
 	  running = false; //closes the windows interface
@@ -62,6 +63,13 @@ pauseMenu(Input* input)
 static void
 game_over_menu(Input* input)
 {
+  
+	if (!game_info.ply_game_over_musc) {
+	  mciSendString(L"play over from 0", NULL, 0, 0);
+	  game_info.ply_game_over_musc = true;
+	}
+	
+
 	if (pressed(BUTTON_DOWN)) {
 		over_selected++;
 		if (over_selected > 3) {
@@ -100,6 +108,7 @@ game_over_menu(Input* input)
 			player_sizey = 2;
 			accel = 50;
 			health_points = 3;
+			game_info.ply_game_over_musc = false;
 		}
 		else  if (over_selected == 2) {
 			game_over = !game_over;
@@ -110,6 +119,8 @@ game_over_menu(Input* input)
 			player_sizey = 2;
 			accel = 50;
 			health_points = 3;
+			game_info.ply_game_over_musc = false;
+
 		}
 		else {
 			running = false; //closes the windows interface

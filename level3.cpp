@@ -250,7 +250,6 @@ void simulateLevel3(Input* input, float& dt) {
 	drawColletableHearts();
 	drawLevelPowerUps();
 
-	draw_hearts();
 
 
 
@@ -261,6 +260,7 @@ void simulateLevel3(Input* input, float& dt) {
 
 	drawLevelCoins();
 	collision(&game_info.coins, dt, options);
+	draw_hearts();
 
 	if (game_info.getCoinCollected(0) && game_info.getCoinCollected(1) && game_info.getCoinCollected(2)) {
 		//set the goal to a color when interacted, will make options to level2, thus going to next level
