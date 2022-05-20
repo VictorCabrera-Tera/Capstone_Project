@@ -63,8 +63,12 @@ pauseMenu(Input* input)
 static void
 game_over_menu(Input* input)
 {
-	mciSendString(L"open ..\\sound\\game_over_bad_chest.wav type waveaudio alias over", NULL, 0, 0);
-	mciSendString(L"play over", NULL, 0, 0);
+  
+	if (!game_info.ply_game_over_musc) {
+	  mciSendString(L"play over from 0", NULL, 0, 0);
+	  game_info.ply_game_over_musc = true;
+	}
+	
 
 	if (pressed(BUTTON_DOWN)) {
 		over_selected++;
@@ -104,6 +108,7 @@ game_over_menu(Input* input)
 			player_sizey = 2;
 			accel = 50;
 			health_points = 3;
+			game_info.ply_game_over_musc = false;
 		}
 		else  if (over_selected == 2) {
 			game_over = !game_over;
@@ -114,6 +119,8 @@ game_over_menu(Input* input)
 			player_sizey = 2;
 			accel = 50;
 			health_points = 3;
+			game_info.ply_game_over_musc = false;
+
 		}
 		else {
 			running = false; //closes the windows interface

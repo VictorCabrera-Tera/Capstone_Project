@@ -274,6 +274,8 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 			game_over_menu(&input);
 			mciSendString(L"stop lvl2", NULL, 0, 0);
 			mciSendString(L"stop lvl3", NULL, 0, 0);
+			mciSendString(L"stop lvl1", NULL, 0, 0);
+
 			//mciSendString(L"play gameover from 0", NULL, 0, 0);
 		}
 		else if (game_info.pause)

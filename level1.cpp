@@ -2,6 +2,7 @@
 
 static void simulateLevel1(Input* input, float& dt) {
 	mciSendString(L"stop bgm", NULL, 0, 0);
+	mciSendString(L"stop over", NULL, 0, 0);
 	printLevelText("Level 1", -10, 49, WHITE);
 	printLevelText("Lives ", 50, 49, WHITE);
 	printLevelText("Coins ", -90, 49, WHITE);

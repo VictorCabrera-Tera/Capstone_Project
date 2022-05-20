@@ -3,9 +3,11 @@ void simulateMainMenu(Input* input, float& dt) {
 	mciSendString(L"open ..\\sound\\Level1.wav type waveaudio alias lvl1", NULL, 0, 0);
 	mciSendString(L"open ..\\sound\\Level2.wav type waveaudio alias lvl2", NULL, 0, 0);
 	mciSendString(L"open ..\\sound\\Level3.wav type waveaudio alias lvl3", NULL, 0, 0);
+	mciSendString(L"open ..\\sound\\game_over_bad_chest.wav type waveaudio alias over", NULL, 0, 0);
 	mciSendString(L"stop lvl1", NULL, 0, 0);
 	mciSendString(L"stop lvl2", NULL, 0, 0);
 	mciSendString(L"stop lvl3", NULL, 0, 0);
+	mciSendString(L"stop over", NULL, 0, 0);
 	waveOutSetVolume(0, 0xFFFF / 6); //lower volume by 1/8
 	mciSendString(L"open ..\\sound\\MenuButtonSound.wav type waveaudio alias button", NULL, 0, 0);
 
