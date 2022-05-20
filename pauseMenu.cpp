@@ -62,6 +62,9 @@ pauseMenu(Input* input)
 static void
 game_over_menu(Input* input)
 {
+	mciSendString(L"open ..\\sound\\game_over_bad_chest.wav type waveaudio alias over", NULL, 0, 0);
+	mciSendString(L"play over", NULL, 0, 0);
+
 	if (pressed(BUTTON_DOWN)) {
 		over_selected++;
 		if (over_selected > 3) {
