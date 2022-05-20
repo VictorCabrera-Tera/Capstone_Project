@@ -239,6 +239,7 @@ public:
   bool getImmunColorSwapped();
   void setImmunColorSwapped(bool set);
 
+  bool ply_game_over_musc = false;
   u32 borderColor;
   u32 bkgColor;
   Timer timer = {};
