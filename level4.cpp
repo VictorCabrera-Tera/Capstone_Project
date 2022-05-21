@@ -1,4 +1,9 @@
+/**
+   Will play Level 4
 
+   @param input points to an Input object containing information about what key's state has been modified and if it is pressed
+   @param dt is the amount of time it took for 1 frame in the game
+**/
 void simulateLevel4(Input* input, float& dt) {
   mciSendString(L"stop bgm", NULL, 0, 0);
   mciSendString(L"stop lvl3", NULL, 0, 0);
@@ -34,8 +39,8 @@ void simulateLevel4(Input* input, float& dt) {
 	game_info.setPowerUpColor(IMMUNITY, NAVY);
 	Point immunPos(-73, 22);
 	game_info.setPowerUpPosition(IMMUNITY, immunPos);
-	game_info.setImmunityColors(BLUE, GRAY);
-	game_info.setImmunColorSwapped(false);
+	game_info.setImmunityColors(BLUE, GRAY); //set what color is for active enemies, and what color is for inactive
+	game_info.setImmunColorSwapped(false); //set that the colors for inactive and active enemies has not been swapped yet
 
 	player_posX = game_info.getLevel4Spawn().x; //get the spawnpoint
 	player_posY = game_info.getLevel4Spawn().y;
@@ -125,9 +130,10 @@ void simulateLevel4(Input* input, float& dt) {
 	draw_circle(70, 31, 3, game_info.getImmunityColor(1)); //fake upper right coin
 	draw_circle(-87, 31, 3, game_info.getImmunityColor(1)); //fake upper left coin
   }
+  //once collected the power up, and if the active and inactive enemies haven't been swapped yet
   if (game_info.getPowerUpCollected(IMMUNITY) && game_info.getImmunColorSwapped() == false) {
-	game_info.swapImmunityColors();
-	game_info.setImmunColorSwapped(true);
+	game_info.swapImmunityColors(); //swap the active and inactive enemies
+	game_info.setImmunColorSwapped(true); //swap occured
   }
   if (game_info.getPowerUpCollected(IMMUNITY)) {
 	drawLevelCoins();
@@ -143,6 +149,7 @@ void simulateLevel4(Input* input, float& dt) {
 
   //original enemies 
   {
+	//start off as blue enemies, but once swap occurs they will be gray
 	draw_rect(game_info.enemy_pos[0].x, game_info.enemy_pos[0].y, 1, 40, game_info.getImmunityColor(0)); //left blue wall
 	draw_rect(game_info.enemy_pos[1].x, game_info.enemy_pos[1].y, 15, 1, game_info.getImmunityColor(0)); //longer first lower wall
 	draw_rect(game_info.enemy_pos[2].x, game_info.enemy_pos[2].y, 10, 1, game_info.getImmunityColor(0)); //shoter second lower wall
@@ -154,7 +161,6 @@ void simulateLevel4(Input* input, float& dt) {
   }
   //secondary enemies / obstacles
   {
-	//draw_triangles(-56, -34, 1, 1, game_info.getImmunityColor(1), 2); //spike on platform side (facing right)
 	draw_triangles(-52, -21, 1, 1, game_info.getImmunityColor(1), 1); //spike on platform side (facing left)
 
 	draw_enemy(game_info.enemy_pos[4].x, game_info.enemy_pos[4].y, 4, 4, game_info.getImmunityColor(1)); //enemy diagonal  
@@ -224,8 +230,6 @@ void simulateLevel4(Input* input, float& dt) {
 	draw_rect(7, 38, 0.5, 7, YELLOW);
 
 	if ((player_posX >= 4 && player_posX <= 8) && (player_posY >= 32 && player_posY <= 34)) {
-	  //game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
-	  //int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
 	  float time = game_info.timer.getTime();
 
 	  game_info.playerScore.addScore(2000 * ((float)60 / (float)time));

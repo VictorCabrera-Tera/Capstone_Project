@@ -38,9 +38,18 @@ gameUtilities game_info;
 #include "pauseMenu.cpp"
 
 
+/**
+	Will update a button's state
+	@param button is the button that is being updated
+	@param input holds information about the state of each key, and if its being pressed
+	@param is_down is the value given by the window message WM_KEYUP & WM_KEYDOWN
+**/
 void update_button(int button, Input& input, bool is_down) {
 
+  //if the recorded state for a key is different than what the window says it is, then the state has been changed
+ 
   input.buttons[button].changed = is_down != input.buttons[button].is_down;
+  //record what the window message says the state is
   input.buttons[button].is_down = is_down;
 ;
 }
@@ -257,21 +266,20 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 				pause_selected = 1; //for resume to be the first to be highlighted red
 			}
 		}
-		if (health_points < 1 && levelInfoSet)
+		if (health_points < 1 && levelInfoSet) //levelInfoSet allows us to know if player started a level
 		{
 			game_over = true;
 		}
 
-		if (game_info.pause == false && game_over == false) {
+		if (game_info.pause == false && game_over == false) {//play through the game
 			simulate_game(&input, dt);
-			//mciSendString(L"resume bgm", NULL, 0, 0);
 			mciSendString(L"resume lvl1", NULL, 0, 0);
 			mciSendString(L"resume lvl2", NULL, 0, 0);
 			mciSendString(L"resume lvl3", NULL, 0, 0);
 		}
 		else if (game_over)
 		{
-			game_over_menu(&input);
+			game_over_menu(&input); //game over screen
 			mciSendString(L"stop lvl2", NULL, 0, 0);
 			mciSendString(L"stop lvl3", NULL, 0, 0);
 			mciSendString(L"stop lvl1", NULL, 0, 0);
@@ -280,7 +288,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		}
 		else if (game_info.pause)
 		{
-			pauseMenu(&input);
+			pauseMenu(&input); //pause screen
 			mciSendString(L"pause lvl1", NULL, 0, 0);
 			mciSendString(L"pause lvl2", NULL, 0, 0);
 			mciSendString(L"pause lvl3", NULL, 0, 0);

@@ -1,46 +1,52 @@
 
+/**
+   Will play Level 1
 
+   @param input points to an Input object containing information about what key's state has been modified and if it is pressed
+   @param dt is the amount of time it took for 1 frame in the game
+**/
 static void simulateLevel1(Input* input, float& dt) {
-	mciSendString(L"stop bgm", NULL, 0, 0);
+	mciSendString(L"stop bgm", NULL, 0, 0); //stop any music
 	mciSendString(L"stop over", NULL, 0, 0);
-	printLevelText("Level 1", -10, 49, WHITE);
+	//print wording throughout the border
+	printLevelText("Level 1", -10, 49, WHITE); 
 	printLevelText("Lives ", 50, 49, WHITE);
 	printLevelText("Coins ", -90, 49, WHITE);
 
 	printLevelText("Score ", -90, -46, WHITE);
+	//print score
 	printLevelText(std::to_string(game_info.playerScore.getScore()).c_str(), -65, -46, WHITE);
 
-	if (!levelInfoSet) {
-	  game_info.borderColor = DARKGREEN;
+	if (!levelInfoSet) {//sets the values needed to begin the level. only done in the first frame
+	  game_info.borderColor = DARKGREEN;  //sets colors of border and background
 	  game_info.bkgColor = LIGHTGREEN;
 
-	  game_info.jumps.resetJumps();
+	  game_info.jumps.resetJumps(); //make sure all jumps are available
 	  game_info.resetCoinsCollected(); //makes all coins' collected variable to false
 	  Point coin1Pos(-39, -36);
 	  Point coin2Pos(-76, -12);
 	  Point coin3Pos(30, 30);
 	  game_info.setCoinsPositions(coin1Pos, coin2Pos, coin3Pos); //stores the position of the coins
 
-	  game_info.setCHcolor(0xDA189C, RED);
-	  game_info.setCollectableHeart();
+	  game_info.setCHcolor(0xDA189C, RED); //set the collectable hearts colors
+	  game_info.setCollectableHeart(); //set all the collectable hearts as uncollected
 	  Point chPos1(74, -25);
 	  Point chPos2(74, -40);
-	  game_info.setCHpos(chPos1, chPos2);
+	  game_info.setCHpos(chPos1, chPos2); //set their positions
 
 	  player_posX = game_info.getLevel1Spawn().x; //get the spawnpoint
 	  player_posY = game_info.getLevel1Spawn().y;
-	  mciSendString(L"play lvl1 from 0", NULL, 0, 0);
+	  mciSendString(L"play lvl1 from 0", NULL, 0, 0); //play the music
 	  musc = 0;
 
-	  hearts();
+	  hearts(); //set the values of the hearts representing the lives 
 	  Point enemy1Pos(-38, 20), enemy2Pos(32, 22);
 	  game_info.enemy_pos[0] = enemy1Pos;
 	  game_info.enemy_pos[1] = enemy2Pos;
 
-	  game_info.playerScore.resetScore();
+	  game_info.playerScore.resetScore(); //resets the score
 
-	  //game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
-	  game_info.timer.resetTime();
+	  game_info.timer.resetTime(); //start the timer over. Timer to keep track how long level has been going on for
 	  levelInfoSet = true;
 	}
 
@@ -48,84 +54,61 @@ static void simulateLevel1(Input* input, float& dt) {
 
 	if (leftclear == true) {
 		if (is_down(BUTTON_LEFT)) {
-			//player_posX -= speed * dt;
-			xvelocity = -40; //-50
 
-			/*
-			if (xvelocity > 0) {
-				xvelocity -= 200 * dt;
-			}
-			xvelocity -= 100 * dt;
-			if (xvelocity < -250) {
-				xvelocity = -250;
-			}
-			*/
+			xvelocity = -40; //player is going to move left
 		}
 	}
 
 	if (released(BUTTON_LEFT)) {
-		xvelocity = 0;
+		xvelocity = 0; //stop movement 
 
 	}
 
-	if (rightclear == true) {
-		if (is_down(BUTTON_RIGHT)) { // 
-			//player_posX += speed * dt;
-			xvelocity = 40; //50
-			/*
-			if (xvelocity < 0) {
-				xvelocity += 200 * dt;
-			}
+	if (rightclear == true) { //no obstacle
+		if (is_down(BUTTON_RIGHT)) { 
+			xvelocity = 40; //move right
 
-			xvelocity += 100 * dt;
-			if (xvelocity > 250) {
-				xvelocity = 250;
-			}
-			*/
 		}
 	}
 
 	if (released(BUTTON_RIGHT)) {
-		xvelocity = 0;
+		xvelocity = 0; //stop movement
 
 	}
 
-	if (pressed(BUTTON_SPACEBAR) && game_info.jumps.getJumpAvailable()>0)
+	if (pressed(BUTTON_SPACEBAR) && game_info.jumps.getJumpAvailable()>0) 
 	{
-		//player_posY += speed * dt;
-		game_info.jumps.removeJump();
-		yvelocity += 3500 * 0.0166;
+		game_info.jumps.removeJump(); //used a jump
+		yvelocity += 3500 * 0.0166; //jump movement
 		dtadd = 0;
 	}
 
 	if (game_info.jumps.getJumpAvailable() < 2) {
-		dtadd += dt;
+		dtadd += dt; //timer that will know when a second passes
 		if (dtadd > 1) {
-			game_info.jumps.resetJumps();
+			game_info.jumps.resetJumps(); //gain jumps back
 			dtadd = 0;
 		}
 	}
 	
 
 
-	old_Y = player_posY;
+	old_Y = player_posY; //store values of previous movement
 	old_X = player_posX;
 
-
-	player_posY += ((yvelocity * dt) + (accel * dt * dt * 0.5));
-	player_posX += xvelocity * dt;
+	//apply velocity and acceleration to the player positions
+	player_posY += ((yvelocity * dt) + (accel * dt * dt * 0.5)); 
+	player_posX += xvelocity * dt; 
 	yvelocity += accel * dt;
 
 
 
 
-
+	//movement functions for enemies
 	move_vertical(&game_info.enemy_pos[0].y, &delta, dt, 10, -15, 26);
 
 	move_sideways(&game_info.enemy_pos[1].x, &delta1, dt, 20, -65, 71);
-	//move_sideways(&enemy_x, delta, dt, 20);
-	//move_vertical(&enemy_y, delta, dt, 20);
-	//move_diagonal_tl(&enemy_x, &enemy_y, delta, dt, 20);	
+
 
 	{
 		draw_rect(82, -37.5, 8, 7.5, RED); //fills in lower right corner
@@ -167,27 +150,25 @@ static void simulateLevel1(Input* input, float& dt) {
 	}
 	//draw_heart(6, 6, 1, GREEN);
 
-	drawLevelCoins();
-	drawColletableHearts();
-	collision(&game_info.coins, dt, options);
-	draw_hearts();
-	drawJumps();
+	drawLevelCoins(); //draw coins scattered in level 
+	drawColletableHearts(); //draw any hearts available to collect
+	collision(&game_info.coins, dt, options); //draws the player and checks if the player collides with anything or collects anything
+	draw_hearts(); //draw lives left
+	drawJumps(); //draws the players available jumps
 
 	if (game_info.getCoinCollected(0) && game_info.getCoinCollected(1) && game_info.getCoinCollected(2)) {
 		//set the goal to a color when interacted, will make options to level2, thus going to next level
 		//options = LEVEL2;
 		draw_triangles(69, 25, 1.6, 1.6, YELLOW, 1);
 		draw_rect(71, 20, 0.5, 7, YELLOW);
-		game_info.timer.addTime(dt);
-		if ((player_posX >= 70 && player_posX <= 72) && (player_posY >= 14 && player_posY <= 16)) {
-			float time = game_info.timer.getTime();
+		game_info.timer.addTime(dt); // add time for frame
+		if ((player_posX >= 70 && player_posX <= 72) && (player_posY >= 14 && player_posY <= 16)) { //;evel completed
+			float time = game_info.timer.getTime(); //get how much time it took for player to complete level
 
-			//game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
-			//int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
 
 			game_info.playerScore.addScore(500 * ((float)20 / (float)time));
-			game_info.setCHcolor(0xDA189C, 0xDA189D);
-			options = LEVEL2;
+			game_info.setCHcolor(0xDA189C, 0xDA189D); //reset the heart color since level 1 only had 1 heart with appropriate color 
+			options = LEVEL2; //move to next level
 			levelInfoSet = false;
 			if (heart_collected) {
 				health_points--;
@@ -200,6 +181,6 @@ static void simulateLevel1(Input* input, float& dt) {
 		}
 	}
 	else {
-		game_info.timer.addTime(dt);
+		game_info.timer.addTime(dt); //add how much time passed for that frame
 	}
 }
