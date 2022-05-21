@@ -1,3 +1,9 @@
+/**
+   Will play Level 3
+
+   @param input points to an Input object containing information about what key's state has been modified and if it is pressed
+   @param dt is the amount of time it took for 1 frame in the game
+**/
 void simulateLevel3(Input* input, float& dt) {
 	mciSendString(L"stop bgm", NULL, 0, 0);
 	mciSendString(L"stop lvl2", NULL, 0, 0);
@@ -267,8 +273,7 @@ void simulateLevel3(Input* input, float& dt) {
 		draw_triangles(-30, 26, 1.6, 1.6, YELLOW, 1);
 		draw_rect(-28, 21, 0.5, 7, YELLOW);
 		if ((player_posX >= -29 && player_posX <= -27) && (player_posY >= 14 && player_posY <= 21)) {
-			//game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
-			//int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
+
 			float time = game_info.timer.getTime();
 
 			game_info.playerScore.addScore(1000 * ((float)50 / (float)time));

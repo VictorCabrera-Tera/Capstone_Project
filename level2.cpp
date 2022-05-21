@@ -1,3 +1,9 @@
+/**
+   Will play Level 2
+
+   @param input points to an Input object containing information about what key's state has been modified and if it is pressed
+   @param dt is the amount of time it took for 1 frame in the game
+**/
 void simulateLevel2(Input* input, float& dt) {
 	mciSendString(L"stop bgm", NULL, 0, 0);
 	mciSendString(L"stop lvl1", NULL, 0, 0);
@@ -20,13 +26,13 @@ void simulateLevel2(Input* input, float& dt) {
 	  Point coin1pos(33, 17), coin2pos(78, -10), coin3pos(-39, -14);
 	  game_info.setCoinsPositions(coin1pos, coin2pos, coin3pos);
 
-	  game_info.setPowerUpColor(SHRINK, TEAL);
+	  game_info.setPowerUpColor(SHRINK, TEAL); //set the color for Shrink power up, setting also signifies power up is being used in level
 	  Point shrinkPos(-10, -42);
-	  game_info.setPowerUpPosition(SHRINK, shrinkPos);
+	  game_info.setPowerUpPosition(SHRINK, shrinkPos); //set Shrink's position
 
-	  game_info.setPowerUpColor(PHASE_THROUGH, TURQUOISE);
+	  game_info.setPowerUpColor(PHASE_THROUGH, TURQUOISE); //set Phase color
 	  Point phaseThroughPos(-37, 37);
-	  game_info.setPowerUpPosition(PHASE_THROUGH, phaseThroughPos);
+	  game_info.setPowerUpPosition(PHASE_THROUGH, phaseThroughPos); //set phase position
 
 	  game_info.setCHcolor(0xDA189C, 0xDA189D);
 	  game_info.setCollectableHeart();
@@ -52,28 +58,17 @@ void simulateLevel2(Input* input, float& dt) {
 	  game_info.enemy_pos[5] = enemy6Pos;
 	  game_info.enemy_pos[6] = enemy7Pos;
 
-	  //game_info.playerScore.pStartTime = game_info.playerScore.getCurrentTime();
 	  game_info.timer.resetTime();
 
 	  jump_height = 3500;
 	  levelInfoSet = true;
 	  //hearts();
 	}
-	if (!freemode) {
+	if (!freemode) { //freemode is the "god mode" in the game. Allows for immunity to everything
 		if (leftclear == true) {
 			if (is_down(BUTTON_LEFT)) {
-				//player_posX -= speed * dt;
 				xvelocity = -40;
 
-				/*
-				if (xvelocity > 0) {
-					xvelocity -= 200 * dt;
-				}
-				xvelocity -= 100 * dt;
-				if (xvelocity < -250) {
-					xvelocity = -250;
-				}
-				*/
 			}
 		}
 
@@ -83,19 +78,8 @@ void simulateLevel2(Input* input, float& dt) {
 		}
 
 		if (rightclear == true) {
-			if (is_down(BUTTON_RIGHT)) { // 
-				//player_posX += speed * dt;
+			if (is_down(BUTTON_RIGHT)) { 
 				xvelocity = 40;
-				/*
-				if (xvelocity < 0) {
-					xvelocity += 200 * dt;
-				}
-
-				xvelocity += 100 * dt;
-				if (xvelocity > 250) {
-					xvelocity = 250;
-				}
-				*/
 			}
 		}
 
@@ -106,7 +90,6 @@ void simulateLevel2(Input* input, float& dt) {
 
 		if (pressed(BUTTON_SPACEBAR) && game_info.jumps.getJumpAvailable() > 0)
 		{
-			//player_posY += speed * dt;
 			game_info.jumps.removeJump();
 			yvelocity += jump_height * 0.0166;
 			dtadd = 0;
@@ -135,16 +118,16 @@ void simulateLevel2(Input* input, float& dt) {
 
 	}
 	else {
-		if (is_down(BUTTON_LEFT)) {
+		if (is_down(BUTTON_LEFT) && player_posX > -87) {
 			player_posX -= speed * dt;
 		}
-		if (is_down(BUTTON_RIGHT)) {
+		if (is_down(BUTTON_RIGHT) && player_posX < 87) {
 			player_posX += speed * dt;
 		}
-		if (is_down(BUTTON_DOWN)) {
+		if (is_down(BUTTON_DOWN) && player_posY > -42) {
 			player_posY -= speed * dt;
 		}
-		if (is_down(BUTTON_UP)) {
+		if (is_down(BUTTON_UP) && player_posY < 42) {
 			player_posY += speed * dt;
 		}
 		old_Y = player_posY;
@@ -266,22 +249,23 @@ void simulateLevel2(Input* input, float& dt) {
 
 	}
 
-	if (game_info.getPowerUpCollected(SHRINK)) {
-		if (!game_info.shrunk) {
-			player_sizex = 1;
+	//Shrink functionality
+	if (game_info.getPowerUpCollected(SHRINK)) { //if collected the power up
+		if (!game_info.shrunk) {  //if the player is normal size
+			player_sizex = 1; //make player smaller
 			player_sizey = 1;
-			jump_height = 2500.0; //220
+			jump_height = 2500.0; //decrease jump height
 
 			Point shrinkPos(-3, -4);
-			game_info.setPowerUpPosition(SHRINK, shrinkPos);
+			game_info.setPowerUpPosition(SHRINK, shrinkPos); //draw another shrink power up somewhere else
 			game_info.setPowerUpCollected(SHRINK, false);
 			game_info.shrunk = true;
 		}
 		else {
-			player_sizex = 2;
+			player_sizex = 2; //reset values 
 			player_sizey = 2;
-			jump_height = 3500.0; //140
-			if (!game_info.getCoinCollected(2)) {
+			jump_height = 3500.0; 
+			if (!game_info.getCoinCollected(2)) { //only respawn another shrink if second coin hasn't been collected yet
 				Point shrinkPos(-10, -42);
 				game_info.setPowerUpPosition(SHRINK, shrinkPos);
 				game_info.setPowerUpCollected(SHRINK, false);
@@ -291,9 +275,10 @@ void simulateLevel2(Input* input, float& dt) {
 		}
 	}
 
+	//Phase functionality
 	if (game_info.getPowerUpCollected(PHASE_THROUGH)) {
-		fakeWall = game_info.getPowerUpColor(PHASE_THROUGH);
-		draw_rect(-29, 36.5, 0.3, 3, fakeWall);
+		fakeWall = game_info.getPowerUpColor(PHASE_THROUGH); //the walls that will change color will become the color of the power up 
+		draw_rect(-29, 36.5, 0.3, 3, fakeWall); //draws these shapes over the platforms. allows players to go through them
 		draw_rect(0, 0, 10, 0.8, fakeWall);
 		draw_rect(29, 19.5, 0.3, 6, fakeWall);
 
@@ -318,15 +303,14 @@ void simulateLevel2(Input* input, float& dt) {
 		draw_triangles(-7, -33.5, 1.6, 1.6, YELLOW, 1);
 		draw_rect(-5, -38, 0.5, 7, YELLOW);
 		if ((player_posX >= -6 && player_posX <= -4) && (player_posY >= -45.5 && player_posY <= -37.5)) {
-			//game_info.playerScore.pFinishTime = game_info.playerScore.getCurrentTime();
-			//int time = game_info.playerScore.secondsSpent(game_info.playerScore.pStartTime, game_info.playerScore.pFinishTime);
+
 			float time = game_info.timer.getTime();
 
 			game_info.playerScore.addScore(1000 * ((float)50 / (float)time));
 			options = LEVEL3;
 			player_sizex = 2;
 			player_sizey = 2;
-			accel = 50.0; //140
+			accel = 50.0; 
 			levelInfoSet = false;
 			if (heart_collected) {
 				health_points--;

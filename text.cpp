@@ -58,6 +58,7 @@ printLevelAlpha(const char* string, float x_coord, float y_coord, u32 color) {
 static void
 printLevelNum(const char* string, float x_coord, float y_coord, u32 color) {
 
+
 	int resetx = x_coord;
 	int number = *string - 48;
 

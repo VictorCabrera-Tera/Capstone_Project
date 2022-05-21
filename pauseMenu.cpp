@@ -4,6 +4,7 @@
 static void
 pauseMenu(Input* input)
 {
+  //pause_selected's value will alter the colors for the words 
   if (pressed(BUTTON_DOWN)) {
 	pause_selected++;
 	if (pause_selected > 3) {
@@ -34,11 +35,11 @@ pauseMenu(Input* input)
 	break;
   }
 
-  if (pressed(BUTTON_ENTER)) {
-	if (pause_selected == 1) {
+  if (pressed(BUTTON_ENTER)) { //selected an option in the pause menu
+	if (pause_selected == 1) { //selected to resume the game
 	  game_info.pause = !game_info.pause;
 	}
-	else  if (pause_selected == 2) {
+	else  if (pause_selected == 2) { //selected to go to the main menu
 	  game_info.pause = !game_info.pause;
 	  options = MAINMENU;
 	  levelInfoSet = false; //so u don't start at the same spot u we're on the level 
@@ -48,7 +49,7 @@ pauseMenu(Input* input)
 	  health_points = 3;
 	  heart_collected = false;
 	}
-	else {
+	else { //chose to quit the game
 	  running = false; //closes the windows interface
 	}
   }
@@ -60,6 +61,8 @@ pauseMenu(Input* input)
 
 }
 
+//shows the game over screen
+//@Param input so I can use the macros for the keys instead of doing it the long way
 static void
 game_over_menu(Input* input)
 {
@@ -100,7 +103,7 @@ game_over_menu(Input* input)
 		break;
 	}
 	if (pressed(BUTTON_ENTER)) {
-		if (over_selected == 1) {
+		if (over_selected == 1) { //chose to restart the game
 			game_over = !game_over;
 			options = LEVEL1;
 			levelInfoSet = false;
@@ -110,7 +113,7 @@ game_over_menu(Input* input)
 			health_points = 3;
 			game_info.ply_game_over_musc = false;
 		}
-		else  if (over_selected == 2) {
+		else  if (over_selected == 2) { //chose to go to the main menu
 			game_over = !game_over;
 			options = MAINMENU;
 			levelInfoSet = false; 

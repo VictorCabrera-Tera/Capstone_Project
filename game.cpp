@@ -8,6 +8,11 @@ void simulateLevel4(Input* input, float& dt);
 void simulateLevelSelect(Input* input, float& dt);
 void simulateFinalScreen(Input* input, float& dt);
 
+/**
+   Will reset the player's pos to a spawnpoint
+   @param Level is the current level being played
+   @post player's position will be changed to the current level's spawnpoint
+**/
 static void
 restart_pos(GAMEMODE Level) {
 	switch (Level) {
@@ -37,19 +42,22 @@ restart_pos(GAMEMODE Level) {
 
 
 
-
+/**
+   Will draw the collectable hearts in the level
+**/
 static void
 drawColletableHearts() {
 	int collected_coins = 0;
 	static int cc = 0;
 	mciSendString(L"open ..\\sound\\coin.wav type waveaudio alias coin", NULL, 0, 0);
 
-
-	if (game_info.isHeartCollected(0) == false) {
+	//checks if the heart has been collected
+	if (game_info.isHeartCollected(0) == false) { //not collected
+	  //draw heart at the heart's coordinates using its designated color
 		draw_heart(game_info.getCHpos(0).x, game_info.getCHpos(0).y, 2, game_info.getCHcolor(0));
 	}
-	else if (game_info.isHeartCollected(0) == true) {
-		collected_coins++;
+	else if (game_info.isHeartCollected(0) == true) { 
+		collected_coins++; //variable that keeps track if something has been collected, so sound effect plays once
 	}
 
 	if (game_info.isHeartCollected(1) == false) {
@@ -59,14 +67,15 @@ drawColletableHearts() {
 		collected_coins++;
 	}
 
-	//beeps once when coin is collected
-	if (collected_coins != cc) {
-		mciSendString(L"play coin from 1", NULL, 0, 0);
+	//beeps once when heart is collected
+	if (collected_coins != cc) { 
+		mciSendString(L"play coin from 1", NULL, 0, 0); //plays sound effect
 
 		if (game_info.getLivesLeft() < 3) {
-			game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft() + 1);
+		  //if player is missing any lives, replenish a life by setting +1 hearts to white
+			game_info.setHeart(WHITE, BLACK, game_info.getLivesLeft() + 1); 
 			//health_points--;
-			health_points++;
+			health_points++; //add the extra life
 
 
 		}
@@ -78,6 +87,12 @@ drawColletableHearts() {
 	}
 }
 
+/**
+   Will set the player's lives on top top right
+   @post sets the amount of lives a player has when they begin a level
+   @post sets all of their remaining lives with White hearts
+   @post sets the hearts at their designated positions
+**/
 static void
 hearts() {
 	//game_info.setHeart(WHITE, BLACK, 3);
@@ -89,6 +104,9 @@ hearts() {
 	game_info.setHeartPosition(heart1Pos, heart2Pos, heart3Pos);
 }
 
+/**
+   Will draw the hearts on the top right of the border
+**/
 static void
 draw_hearts() {
 	for (int i = 0; i < 3; i++) {
@@ -96,24 +114,32 @@ draw_hearts() {
 	}
 }
 
-
+/**
+   Will control where a player is allowed to move
+   @param coins is pointer to a coin_state object, which holds 
+		  information about the coin's colors and whether its been collected
+   @param dt is the delta time of the game, meaning how much time the game is taking for a single frame
+   @param Level is the current level of the game
+**/
 static void
 collision(Coin_State* coins, float dt, GAMEMODE Level) {
 
 
+	//attemps to draw the player at a position, while also checking if the player collected coins or power-Ups
 	draw_rect(player_posX, player_posY, player_sizex, player_sizey, GREEN, vacancy, bottom, left, right, top, enemy_touched, touched, coins, &game_info.hearts);
-	if (!vacancy) {
+	if (!vacancy) { //if encountered a wall, platform, or enemy
 		if (enemy_touched) {
 			enemy_touched = false;
-			restart_pos(Level);
+			restart_pos(Level); //go back to spawn
 			health_points--;
-			game_info.setHeart(WHITE, BLACK, health_points);
+			game_info.setHeart(WHITE, BLACK, health_points); //set on of the hearts to black 
 			//health_points--;
 		}
 		else {
 
 			clear = false;
-
+			//found a wall or platform 
+			//depending on what side, stop movement
 			if (bottom == false) {
 				yvelocity = 0;
 				accel = 0;
@@ -137,7 +163,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 				yvelocity = 0;
 
 			}
-			//xvelocity = 0;
+			//redraw the shape at the last free space
 			player_posX = old_X;
 			player_posX2 = old_X2;
 			player_posY = old_Y;
@@ -146,6 +172,7 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 		}
 	}
 	else {
+	  //was able to draw the player at the spot, so apply gravity
 		clear = true;
 		accel = -70.0;
 		yvelocity += accel * dt;
@@ -155,19 +182,22 @@ collision(Coin_State* coins, float dt, GAMEMODE Level) {
 
 
 
-
+/**
+   Will draw the coins in a level
+**/
 static void
 drawLevelCoins() {
 	int collected_coins = 0;
 	static int cc = 0;
 	mciSendString(L"open ..\\sound\\coin.wav type waveaudio alias coin", NULL, 0, 0);
 
-	if (game_info.getCoinCollected(0) == false) {
-		draw_circle(game_info.getCoinPos(0).x, game_info.getCoinPos(0).y, 3, game_info.getCoinColor(0));
-		draw_circle(-69, 48, 2, WHITE);
+	//check if a coin has been collected
+	if (game_info.getCoinCollected(0) == false) { //not collected
+		draw_circle(game_info.getCoinPos(0).x, game_info.getCoinPos(0).y, 3, game_info.getCoinColor(0)); //draw coin at its positions with its color
+		draw_circle(-69, 48, 2, WHITE); //draw the coin slot at the top left border as white
 	}
-	else if (game_info.getCoinCollected(0) == true) {
-		draw_circle(-69, 48, 2, game_info.getCoinColor(0));
+	else if (game_info.getCoinCollected(0) == true) { //collected coin
+		draw_circle(-69, 48, 2, game_info.getCoinColor(0)); //draw the coin at the top left border
 		collected_coins++;
 	}
 
@@ -198,11 +228,15 @@ drawLevelCoins() {
 
 }
 
+/**
+   Will draw any power ups that are within a level
+**/
 static void
 drawLevelPowerUps() {
 
-
+  //checks if a powerUp is a part of the level design and if it has not been collected yet
 	if (game_info.getPowerUpCollected(PHASE_THROUGH) == false && game_info.getPowerUpInLevel(PHASE_THROUGH)) {
+	  //draw power up
 		draw_ticket(game_info.getPowerUpPos(PHASE_THROUGH).x, game_info.getPowerUpPos(PHASE_THROUGH).y, 3, 3, game_info.getPowerUpColor(PHASE_THROUGH));
 	}
 
@@ -217,9 +251,13 @@ drawLevelPowerUps() {
 
 }
 
+/**
+	Draws the Jump text and diamonds signifying how many jumps are left
+**/
 static void
 drawJumps() {
 	printLevelText("Jumps ", 25, -46, WHITE);
+	//White means its available, black if for a jump that is not used
 	if (game_info.jumps.getJumpAvailable() == 2 ) {
 
 		draw_diamond(50, -45.5, 2, 2, WHITE); 
@@ -240,7 +278,7 @@ drawJumps() {
 
 
 
-GAMEMODE options = MAINMENU;
+GAMEMODE options = MAINMENU;  //used for switching between the screen
 int selected = 1;
 
 float speed = 50.f; //unit per second
@@ -249,15 +287,18 @@ float speed = 50.f; //unit per second
 
 static void
 simulate_game(Input* input, float& dt) {
-	if (!game_info.started_level) {
-	  game_info.borderColor = RED;
+	//sets the default border to be red, and background color to be white
+	if (!game_info.started_level) { 
+	  game_info.borderColor = RED; 
 	  game_info.bkgColor = WHITE;
 	}
-	fill_window(game_info.borderColor);
-	draw_rect(0, 0, 90, 45, game_info.bkgColor);
+	fill_window(game_info.borderColor); //draws the border by filling the screen
+	draw_rect(0, 0, 90, 45, game_info.bkgColor); //draws the background ontop of border
 
 
-	if (game_info.set == false) {
+	if (game_info.set == false) { 
+	  //set values shared across the game
+	  //coin colors, collectable heart colors, spawns, and player not being shrunken down
 		game_info.setCHcolor(0xDA189C, 0xDA189D);
 		game_info.setCoinsColor(0xFFD800, 0xFFD900, 0xFFDA00);
 		game_info.setLevel1Spawn(-82, -41);

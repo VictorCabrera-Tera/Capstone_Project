@@ -1,12 +1,12 @@
 bool firstScreen;
 void simulateFinalScreen(Input* input, float& dt) {
-  fill_window(BLUE);
-  draw_rect(0, 0, 90, 45, TURQUOISE);
-  if (!levelInfoSet) {
-	firstScreen = true;
+  fill_window(BLUE); //Fills the screen with blue, but will become the blue border
+  draw_rect(0, 0, 90, 45, TURQUOISE); //Draws a smaller square that becomes the background
+  if (!levelInfoSet) { 
+	firstScreen = true; //firstScreen was never initialized, so it becomes true once you enter the final screen 
 	levelInfoSet = true;
   }
-  if (firstScreen) {
+  if (firstScreen) {  //depending on the value of firstScreen, different text will be drawn
 	printMenuPhrase("G a m e", -30, 20, 20, false, ticket, PURPLE);
 	printMenuPhrase("C o m p l e t e d !", -83, 10, 20, false, ticket, PURPLE);
 
@@ -36,7 +36,7 @@ void simulateFinalScreen(Input* input, float& dt) {
   if (pressed(BUTTON_ENTER)) {
 	running = false;
   }
-  if (pressed(BUTTON_RIGHT)) {
+  if (pressed(BUTTON_RIGHT)) { //left and right adjusts the value of firstScreen
 	firstScreen = false;
   }
   if (pressed(BUTTON_LEFT)) {
